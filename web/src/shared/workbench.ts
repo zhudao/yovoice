@@ -82,6 +82,8 @@ export interface Activity {
   errorCode: MessageCode | null;
   errorParams: MessageParams | null;
 }
+// 本机接口的设置与运行状态，由 localApi.* 调用返回，不属于作品状态。
+export interface LocalAPIStatus { enabled: boolean; port: number; token: string; running: boolean; url?: string; error?: { code: MessageCode; params?: MessageParams } }
 export interface Preferences { downloadSource: string; backend: string; modelDirectory: string | null; uiLocale: UiLocale; proxyURL?: string; proxyEnabled?: boolean; aiTimeout?: number }
 export interface State {
   characters: Character[]; previews: CharacterPreview[]; drafts: Draft[]; voices: Voice[]; models: InstalledModel[]; history: Generation[];
@@ -148,10 +150,16 @@ export const isSoundFont = (id: string) => id.endsWith('-sf2');
 export const isVoiceModel = (id: string) => !isMusicModel(id) && !isSoundFont(id);
 export const isVoxModel = (id: string) => id.startsWith('voxcpm2-');
 export const isReferenceModel = (id: string) => id.startsWith('omnivoice-') || id.startsWith('qwen3-tts-');
-export const requiresVoice = (draft: Draft) => isKokoroModel(draft.modelId) || !isVoiceModel(draft.modelId) ? false : draft.modelId.startsWith('qwen3-tts-') ? !/customvoice|voicedesign/.test(draft.modelId) : draft.modelId.startsWith('omnivoice-') ? draft.voiceMode === 'clone' : !isVoxModel(draft.modelId) || ['clone', 'continuation'].includes(draft.voxMode ?? 'design');
+export const isBreezeModel = (id: string) => id.startsWith('breeze-tts-');
+export const requiresVoice = (draft: Draft) => isKokoroModel(draft.modelId) || !isVoiceModel(draft.modelId) ? false : draft.modelId.startsWith('qwen3-tts-') ? !/customvoice|voicedesign/.test(draft.modelId) : draft.modelId.startsWith('omnivoice-') || isBreezeModel(draft.modelId) ? draft.voiceMode === 'clone' : !isVoxModel(draft.modelId) || ['clone', 'continuation'].includes(draft.voxMode ?? 'design');
 
 // 旧字幕的身份与 Go 保持一致，编辑后不再依赖数组位置。
-export function withCueIds(draft: Draft): Draft {
-  if (!draft.subtitles || draft.subtitles.cues.every(c => c.id)) return draft;
-  return { ...draft, subtitles: { ...draft.subtitles, cues: draft.subtitles.cues.map((cue, index) => ({ ...cue, id: cue.id ?? `legacy-${draft.id}-${index}` })) } };
+export const emptyScore = (): Score => ({ tempo: 100, timeSignature: [4, 4], key: '', sections: [], tracks: [] });
+
+// 打开或修改作品时统一补齐旧数据：台词补上稳定 ID，缺少乐谱的编曲作品补一份空乐谱，避免渲染时崩溃。
+export function normalizeDraft(draft: Draft): Draft {
+  let next = draft;
+  if (next.kind === 'score' && !Array.isArray(next.score?.tracks)) next = { ...next, score: { ...emptyScore(), ...next.score, tracks: [] } };
+  if (!next.subtitles || next.subtitles.cues.every(c => c.id)) return next;
+  return { ...next, subtitles: { ...next.subtitles, cues: next.subtitles.cues.map((cue, index) => ({ ...cue, id: cue.id ?? `legacy-${next.id}-${index}` })) } };
 }

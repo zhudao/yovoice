@@ -18,6 +18,7 @@ const (
 
 	ErrModelImportRequired      Code = "@yovoice.error.modelImportRequired"
 	ErrOmniReferenceRequired    Code = "@yovoice.error.omniReferenceRequired"
+	ErrBreezeReferenceRequired  Code = "@yovoice.error.breezeReferenceRequired"
 	ErrVoiceDescriptionRequired Code = "@yovoice.error.voiceDescriptionRequired"
 	ErrOmniAttributes           Code = "@yovoice.error.omniAttributes"
 	ErrSpeakerInvalid           Code = "@yovoice.error.speakerInvalid"
@@ -123,6 +124,14 @@ const (
 	ErrAIModelsPath      Code = "@yovoice.error.aiModelsPath"
 	ErrAIResultInvalid   Code = "@yovoice.error.aiResultInvalid"
 	ErrAITimeout         Code = "@yovoice.error.aiTimeout"
+	// OrcaRouter 免费模型的四种拒绝：窗口已满、通道繁忙、单次提示超长、账号未满足免费条件。
+	ErrAIFreeRate      Code = "@yovoice.error.aiFreeRate"
+	ErrAIFreeBusy      Code = "@yovoice.error.aiFreeBusy"
+	ErrAIFreePromptCap Code = "@yovoice.error.aiFreePromptCap"
+	ErrAIFreeAccess    Code = "@yovoice.error.aiFreeAccess"
+	// 本机接口：端口超出范围、端口已被占用。
+	ErrLocalAPIPort      Code = "@yovoice.error.localApiPort"
+	ErrLocalAPIPortInUse Code = "@yovoice.error.localApiPortInUse"
 	ErrUnknown           Code = "@yovoice.error.unknown"
 )
 
@@ -163,7 +172,7 @@ func All() []Code {
 	return []Code{ErrProjectPackage, ErrProjectPackageLimit, ErrTimelineImportDuration, ErrTimelineInvalid, ErrTimelineInUse, ErrSubtitleInvalid, ActivitySubtitle,
 		ErrVoiceInUse, ErrVoiceReferenced, ErrCharacterInvalid,
 		ErrModelImportRequired,
-		ErrOmniReferenceRequired,
+		ErrOmniReferenceRequired, ErrBreezeReferenceRequired,
 		ErrVoiceDescriptionRequired, ErrOmniAttributes, ErrSpeakerInvalid,
 		ActivityDownload, ActivityDownloading, ActivityVerifying, ActivityImport,
 		ActivityRuntimeDownload, ActivityRuntimeExtract, ActivityEngineStart,
@@ -187,6 +196,8 @@ func All() []Code {
 		ErrVoxModeInvalid, ErrVoxTextLimits, ErrVoxReferenceRequired, ErrVoxParams,
 		ErrMusicStyle, ErrMusicLyrics, ErrMusicParams, ErrMusicLyricsRequired, ErrEngineUpgradeRequired, ErrScoreInvalid, ErrMidiInvalid,
 		ErrAIProviderInvalid, ErrAINotConfigured, ErrAIAuth, ErrAIRateLimit, ErrAINetwork, ErrAIResponse, ErrAIModelsPath, ErrAIResultInvalid, ErrAITimeout,
+		ErrAIFreeRate, ErrAIFreeBusy, ErrAIFreePromptCap, ErrAIFreeAccess,
+		ErrLocalAPIPort, ErrLocalAPIPortInUse,
 		ErrLegacyRestore, ErrUnknown,
 	}
 }

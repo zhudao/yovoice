@@ -15,6 +15,8 @@ import { AISettings } from './ai-settings';
 import { ModelGroups } from './model-list';
 import { SettingsGroup, SettingsRow } from './settings-group';
 import { overflowTitle } from '../../shared/ui/overflow-title';
+import { UpdateSettings } from '../update/update-settings';
+import { LocalAPISettings } from './local-api-settings';
 
 // AI 请求超时的可选值（秒）。
 const aiTimeouts = [60, 120, 300, 600, 1200, 1800];
@@ -52,6 +54,7 @@ export function Settings({ state, catalog, engine, draft, run, focus }: { focus?
       <Tab value="ai" label={t('@yovoice.settings.tabAI')} panelId="ai-panel" />
     </TabList>
     {tab === 'general' ? <VStack className="settings-panel" gap={6} id="general-panel" role="tabpanel" aria-label={t('@yovoice.settings.tabGeneral')}>
+      <UpdateSettings />
       <SettingsGroup title={t('@yovoice.settings.preferences')}>
         <SettingsRow label={t('@yovoice.settings.uiLocale')} hint={t('@yovoice.settings.uiLocaleHint')}>
           <Selector data-testid="ui-locale" size="sm" label={t('@yovoice.settings.uiLocale')} isLabelHidden value={preferences.uiLocale}
@@ -74,6 +77,7 @@ export function Settings({ state, catalog, engine, draft, run, focus }: { focus?
             onChange={value => run(() => call('preferences.save', { ...preferences, aiTimeout: Number(value) === aiTimeoutDefault ? undefined : Number(value) }))} />
         </SettingsRow>
       </SettingsGroup>
+      <LocalAPISettings run={run} />
       <SettingsGroup title={t('@yovoice.settings.diagnosticsGroup')}>
         <SettingsRow label={t('@yovoice.settings.diagnostics')} hint={t('@yovoice.settings.diagnosticsHint')}>
           <Button size="sm" label={t('@yovoice.settings.openLogs')} icon={<ArrowUpRight size={15} />} onClick={() => run(() => call('logs.open'))} />

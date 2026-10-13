@@ -28,9 +28,11 @@ import { ConfirmDelete } from '../shared/ui/app-dialog';
 import { call, isDesktop } from '../shared/lib/client';
 import { noticeMessage } from '../shared/lib/call-error';
 import { formatNotice } from '../shared/i18n/format';
-import { isKokoroModel, isVoiceModel, isReferenceModel, modelEngineReady, runtimeStatus, runtimeUsable, isVoxModel, requiresVoice, projectKind, createDraft, synthesisSettings, performanceSettings, cueSettings, withCueIds, type Character, type Draft, type EngineInfo, type State, type ModelPackage, type Voice, type Generation, type Track } from '../shared/workbench';
+import { isKokoroModel, isVoiceModel, isReferenceModel, isBreezeModel, modelEngineReady, runtimeStatus, runtimeUsable, isVoxModel, requiresVoice, projectKind, createDraft, synthesisSettings, performanceSettings, cueSettings, normalizeDraft, type Character, type Draft, type EngineInfo, type State, type ModelPackage, type Voice, type Generation, type Track } from '../shared/workbench';
 import { SidebarNav } from './sidebar-nav';
 import { Notifications } from './notifications';
+import { UpdateDialogHost } from '../features/update/update-dialog';
+import { UpdateNotice } from '../features/update/update-notice';
 import { PronunciationDialog, type Pronunciation } from './pronunciation-dialog';
 import type { DraftSession } from './use-draft-session';
 const Settings = lazy(() => import('../features/settings/settings').then(module => ({ default: module.Settings })));
@@ -49,7 +51,21 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
     return () => window.removeEventListener('workbench-toggle-sidebar', toggleSidebar);
   }, [toggleSidebar]);
   const previousVoices = useRef<Voice[]>([]);
-  const [page, setPage] = useState('create');
+  const [page, setPage] = useState(() => {
+    if (isDesktop) {
+      try {
+        const saved = localStorage.getItem('yovoice-active-page');
+        const listPages = ['text', 'story', 'music', 'score', 'characters', 'settings'];
+        return saved && listPages.includes(saved) ? saved : 'text';
+      } catch {
+        return 'text';
+      }
+    }
+    return 'create';
+  });
+  useEffect(() => {
+    try { localStorage.setItem('yovoice-active-page', page); } catch { /* 存储不可用时忽略 */ }
+  }, [page]);
   const [settingsFocus, setSettingsFocus] = useState<{ tab: string; modelId: string; request: number } | undefined>();
   // 缺的是音色库时打开独立的音色库页，其余模型在“模型”页。
   const openSettings = (modelId = draft.modelId, requested = 'models') => { const tab = requested === 'models' && catalog.find(m => m.id === modelId)?.family === 'soundfont' ? 'soundfonts' : requested; setSettingsFocus({ tab, modelId, request: performance.now() }); setPage('settings'); };
@@ -100,7 +116,7 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
     setTrack(refresh); setPreviewTrack(refresh);
   }, [state.voices, state.history, ready, setDraft]);
   useEffect(() => { setPreviewTrack(null); setTrack(current => current ? { ...current, playRequest: undefined } : null); }, [page]);
-  useEffect(() => { if (ready) setDraft(current => Timeline.accept(withCueIds(current), state.history)); }, [state.history, draft.id, ready, setDraft]);
+  useEffect(() => { if (ready) setDraft(current => Timeline.accept(normalizeDraft(current), state.history)); }, [state.history, draft.id, ready, setDraft]);
   const generate = () => {
     if (state.activity?.status === 'running') return;
     if (draft.subtitles) {
@@ -127,9 +143,9 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
   }, []);
   async function newDraft(next: Draft) {
     if (draftPersisted) await persistDraft(draft); await persistDraft(next);
-    setDraft(withCueIds(next)); setPage('create');
+    setDraft(normalizeDraft(next)); setPage('create');
   }
-  function selectDraft(item: Draft) { run(async () => { if (draftPersisted) await persistDraft(draft); setDraft(withCueIds(item.id === draft.id ? draft : item)); setDraftPersisted(true); setPage('create'); }); }
+  function selectDraft(item: Draft) { run(async () => { if (draftPersisted) await persistDraft(draft); setDraft(normalizeDraft(item.id === draft.id ? draft : item)); setDraftPersisted(true); setPage('create'); }); }
   function selectVoice(voice: Voice) { if (voicePicker !== 'add') change(voicePicker === 'emotion' ? { emotionVoiceId: voice.id } : { voiceId: voice.id, referenceText: voice.referenceText ?? '' }); setVoicePicker(null); }
   function annotate(selection: TextSelection) {
     setPronunciation({ ...selection, sound: '' });
@@ -161,7 +177,7 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
   const projectList = state.drafts.map(d => d.id === draft.id ? { ...draft, createdAt: d.createdAt, updatedAt: d.updatedAt } : d);
   const [voiceQuery, setVoiceQuery] = useState('');
   const [historyQuery, setHistoryQuery] = useState('');
-  const openHistory = (item: Draft) => run(async () => { if (draftPersisted) await persistDraft(draft); setDraft(withCueIds(item)); setDraftPersisted(true); setHistoryQuery(''); setPreviewTrack(null); setPage('history'); });
+  const openHistory = (item: Draft) => run(async () => { if (draftPersisted) await persistDraft(draft); setDraft(normalizeDraft(item)); setDraftPersisted(true); setHistoryQuery(''); setPreviewTrack(null); setPage('history'); });
   const [characterEditor, setCharacterEditor] = useState<Character | null>(null);
   const characterActive = !!characterEditor && page === 'characters';
   const characterReturnPage = useRef('create');
@@ -185,7 +201,7 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
     const source = draftId === 'new' ? { ...createDraft(false, state.preferences.uiLocale), kind: 'text' as const } : projectList.find(d => d.id === draftId);
     if (!source || (source.subtitles && !source.subtitles.speakers.some(s => s.id === speakerId))) throw new Error('@yovoice.error.draftIDInvalid');
     const next = source.subtitles ? { ...source, subtitles: { ...source.subtitles, cues: source.subtitles.cues.map(cue => cue.speakerId === speakerId ? { ...cue, performance: undefined } : cue), speakers: source.subtitles.speakers.map(s => s.id === speakerId ? { ...s, characterId: voice.id, settings: structuredClone(voice.settings) } : s) } } : { ...source, ...structuredClone(voice.settings), characterId: voice.id, performance: undefined };
-    if (draftId === draft.id) { await persistDraft(next); setDraft(withCueIds(next)); setPage('create'); }
+    if (draftId === draft.id) { await persistDraft(next); setDraft(normalizeDraft(next)); setPage('create'); }
     else await newDraft(next);
     if (next.subtitles) setCueSelection(current => ({ draftId: next.id, index: Math.max(0, next.subtitles!.cues.findIndex(c => c.speakerId === speakerId)), revision: (current?.revision ?? 0) + 1 }));
   }
@@ -254,7 +270,7 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
           {scoring ? <><ScoreEditor key={draft.id} draft={draft} state={state} configureAI={() => openSettings(draft.modelId, 'ai')} change={change} locale={state.preferences.uiLocale} onError={onError} />{editorFooter()}</> : music ? <><MusicEditor key={draft.id} draft={draft} state={state} configureAI={() => openSettings(draft.modelId, 'ai')} change={change} locale={state.preferences.uiLocale} takes={generations} current={track?.kind === 'outputs' ? track.id : undefined} select={item => setTrack({ id: item.id, name: item.title, fileName: item.fileName, kind: 'outputs', subtitle: t('@yovoice.app.subtitleOutput'), playRequest: performance.now() })} />{editorFooter()}</> : draft.subtitles ? <SubtitleEditor key={draft.id} history={state.history} playingCue={playingCue} failedCue={activity?.projectId === draft.id && activity.status === 'failed' ? activity.cueId : undefined} draft={draft} characters={state.characters ?? []} change={change} selectedCue={selectedCue} selectCue={selectCue} renderFooter={editorFooter} /> : <><textarea ref={editor} className="script-editor" aria-label={t('@yovoice.app.scriptLabel')} placeholder={t('@yovoice.app.scriptPlaceholder')} maxLength={12000} value={draft.text} spellCheck={false} dir={draft.language === 'ar' ? 'rtl' : 'auto'} onChange={e => change({ text: e.target.value })} />{editorFooter()}</>}
         </Studio>
           </VStack>
-          {(['story', 'text', 'music', 'score'] as const).map(kind => <VStack key={kind} className="page-panel" gap={0} style={{ display: page === kind ? 'flex' : 'none' }}>
+          {(['text', 'story', 'music', 'score'] as const).map(kind => <VStack key={kind} className="page-panel" gap={0} style={{ display: page === kind ? 'flex' : 'none' }}>
             <Projects onError={onError} kind={kind} drafts={projectList} open={selectDraft} history={openHistory} create={<NewProject kind={kind} locale={state.preferences.uiLocale} modelId={defaultModelId} create={newDraft} onError={onError} />} copy={item => run(() => newDraft({ ...structuredClone(item), id: crypto.randomUUID().replaceAll('-', ''), title: (item.title + t('@yovoice.draft.copySuffix')).slice(0, 120), createdAt: undefined, updatedAt: undefined }))} remove={setDeleteTarget} save={async next => { await persistDraft(draft); await persistDraft(next); if (next.id === draft.id) setDraft(next); }} />
           </VStack>)}
           <VStack id="voice-library-panel" className="page-panel" gap={0} style={{ display: page === 'characters' ? 'flex' : 'none' }}>
@@ -277,8 +293,9 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
       </VStack>} /></VStack>
     </VStack></AppShell>
     <Notifications error={error} clearError={() => setError('')} activity={activity} draftId={draft.id} page={page} cancel={() => run(() => call('operation.cancel'))}
-      aiTask={state.aiTask} aiTitle={state.drafts.find(item => item.id === state.aiTask?.projectId)?.title} openAITask={() => { const target = state.drafts.find(item => item.id === state.aiTask?.projectId); if (target) selectDraft(target); }} />
-    {ready && !draft.subtitles && !instrumental && !isKokoroModel(draft.modelId) && !isVoxModel(draft.modelId) && !isReferenceModel(draft.modelId) && page === 'create' && !voicePicker && !pronunciation && !deleteTarget ? <SelectionAction key={draft.id} editor={editor} onEdit={annotate} /> : null}
+      aiTask={state.aiTask} aiTitle={state.drafts.find(item => item.id === state.aiTask?.projectId)?.title} openAITask={() => { const target = state.drafts.find(item => item.id === state.aiTask?.projectId); if (target) selectDraft(target); }}><UpdateNotice /></Notifications>
+    <UpdateDialogHost />
+    {ready && !draft.subtitles && !instrumental && !isKokoroModel(draft.modelId) && !isVoxModel(draft.modelId) && !isReferenceModel(draft.modelId) && !isBreezeModel(draft.modelId) && page === 'create' && !voicePicker && !pronunciation && !deleteTarget ? <SelectionAction key={draft.id} editor={editor} onEdit={annotate} /> : null}
 
     {voiceTarget ? <VoiceTarget voice={voiceTarget} drafts={projectList} apply={applyToTarget} close={() => setVoiceTarget(null)} /> : null}
     {deleteTarget ? <ConfirmDelete title={t('@yovoice.app.deleteProjectTitle')} description={t('@yovoice.app.deleteProjectBody', { title: deleteTarget.title })}

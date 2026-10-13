@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { seedState } from './seed';
 import { emptyState } from '../src/shared/workbench';
 import { createScoreDraft, exampleScore, scoreDuration } from '../src/features/score/score-draft';
 import { midiToScore, scoreToMidi } from '../src/features/score/score-midi';
@@ -33,6 +34,20 @@ test('新建编曲作品：示例乐谱、音块总览、声部调整与持久�
   await expect(mute).toHaveAttribute('aria-pressed', 'true');
   await mute.click();
   await expect(mute).toHaveAttribute('aria-pressed', 'false');
+  // 音色选择器弹窗宽度充足（>=220px），乐器名称完整可读不被挤压。
+  await rows.first().locator('.score-instrument').click();
+  const popup = page.locator('.astryx-selector-popup:visible');
+  await expect(popup).toBeVisible();
+  const popupWidth = await popup.evaluate(el => el.clientWidth);
+  expect(popupWidth).toBeGreaterThanOrEqual(220);
+  await expect(page.getByRole('option', { name: 'Bright Acoustic Piano' })).toBeVisible();
+  // 在下拉弹窗内滚动滚轮时，不误触发外部轨道的横向滚动。
+  const beforeWheelScrollLeft = await page.locator('.score-scroll').evaluate(el => el.scrollLeft);
+  await popup.evaluate(el => { el.dispatchEvent(new WheelEvent('wheel', { deltaY: 80, bubbles: true, cancelable: true })); });
+  const afterWheelScrollLeft = await page.locator('.score-scroll').evaluate(el => el.scrollLeft);
+  expect(afterWheelScrollLeft).toBe(beforeWheelScrollLeft);
+  await page.keyboard.press('Escape');
+  await expect(popup).toBeHidden();
   // 角色收在色点菜单里：切换后行颜色随之变化。
   await page.getByRole('button', { name: '琶音 的角色' }).click();
   await page.getByRole('menuitem', { name: '钢琴' }).click();
@@ -138,4 +153,21 @@ test('乐谱时长按段落变速累加', () => {
   const score = exampleScore('zh-CN');
   // 1–18 小节 100 BPM（43.2 秒），19–22 小节 88 BPM（约 10.9 秒）。
   expect(scoreDuration(score)).toBeCloseTo(18 * 4 * 0.6 + 4 * 4 * 60 / 88, 6);
+});
+
+test('缺少乐谱的旧编曲作品可以正常打开，不再白屏', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await page.getByTestId('nav-new').click();
+  await page.getByRole('menuitem', { name: '编曲', exact: true }).click();
+  await expect(page.locator('.saved')).toContainText('已保存');
+  const state = await page.evaluate(() => JSON.parse(localStorage.getItem('voice-workbench-v1')!));
+  for (const draft of state.drafts) if (draft.kind === 'score') { delete draft.score; draft.title = '旧编曲'; }
+  await seedState(page, state);
+  await page.reload();
+  await expect(page.getByLabel('作品名称')).toHaveValue('旧编曲');
+  await page.getByTestId('nav-score').click();
+  await expect(page.locator('.project-library-row').filter({ hasText: '旧编曲' })).toBeVisible();
+  expect(errors).toEqual([]);
 });

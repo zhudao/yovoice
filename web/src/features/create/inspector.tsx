@@ -14,7 +14,8 @@ import { useTranslator } from '@astryxdesign/core/i18n';
 import { ChevronUp, ChevronRight, LoaderCircle } from 'lucide-react';
 import { ReferenceControls } from './reference-controls';
 import { VoxControls } from './vox-controls';
-import { isVoiceModel, isReferenceModel, isVoxModel, formatTime, type Draft, type Mode, type State, type ModelPackage } from '../../shared/workbench';
+import { BreezeControls } from './breeze-controls';
+import { isVoiceModel, isReferenceModel, isVoxModel, isBreezeModel, formatTime, type Draft, type Mode, type State, type ModelPackage } from '../../shared/workbench';
 import type { Track } from '../../shared/workbench';
 import { formatActivity } from '../../shared/i18n/format';
 
@@ -74,7 +75,7 @@ export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEm
   const voiceModels = catalog.filter(model => isVoiceModel(model.id));
   return <VStack as="aside" className={embedded ? undefined : "inspector"} gap={0}>
     {!embedded ? <VStack className="generation-action" gap={3}>
-      {generationAction ?? (generating ? <Button label={t('@yovoice.create.cancelGenerate')} onClick={cancel} width="100%" /> : <Button label={t('@yovoice.create.generate')} variant="primary" width="100%" size="lg" aria-keyshortcuts="Control+Enter" isDisabled={busy || !(draft.subtitles ? draft.subtitles.cues.some(cue => cue.text.trim()) : draft.text.trim())} onClick={generate} />)}
+      {generationAction ?? (generating ? <Button label={t('@yovoice.create.cancelGenerate')} onClick={cancel} width="100%" /> : <Button label={t('@yovoice.create.generate')} variant="primary" width="100%" aria-keyshortcuts="Control+Enter" isDisabled={busy || !(draft.subtitles ? draft.subtitles.cues.some(cue => cue.text.trim()) : draft.text.trim())} onClick={generate} />)}
       {generating && !generationAction ? <HStack className="generation-status" gap={2} vAlign="center">
         <LoaderCircle size={14} className="generation-spinner" aria-hidden="true" />
         <small className="grow" role="status">{state.activity ? formatActivity(t, state.activity) : ''}</small>
@@ -91,7 +92,7 @@ export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEm
 
     </VStack>
     <HStack className="inspector-heading" hAlign="between" vAlign="center"><h2 className="inspector-section-title">{t('@yovoice.create.voiceSettings')}</h2>{!embedded ? <Button label={t('@yovoice.create.backToScript')} className="inspector-toggle" variant="secondary" onClick={close} /> : null}</HStack>
-      {catalog.find(model => model.id === draft.modelId)?.family === 'kokoro_tts' ? <KokoroControls advanced={advanced} setAdvanced={setAdvanced} draft={draft} model={catalog.find(model => model.id === draft.modelId)!} change={change} /> : isReferenceModel(draft.modelId) ? <ReferenceControls advanced={advanced} setAdvanced={setAdvanced} draft={draft} state={state} change={change} chooseVoice={chooseVoice} play={play} /> : isVoxModel(draft.modelId) ? <VoxControls draft={draft} state={state} change={change} chooseVoice={chooseVoice} play={play} advanced={advanced} setAdvanced={setAdvanced} /> : <>
+      {catalog.find(model => model.id === draft.modelId)?.family === 'kokoro_tts' ? <KokoroControls advanced={advanced} setAdvanced={setAdvanced} draft={draft} model={catalog.find(model => model.id === draft.modelId)!} change={change} /> : isReferenceModel(draft.modelId) ? <ReferenceControls advanced={advanced} setAdvanced={setAdvanced} draft={draft} state={state} change={change} chooseVoice={chooseVoice} play={play} /> : isBreezeModel(draft.modelId) ? <BreezeControls draft={draft} state={state} change={change} chooseVoice={chooseVoice} play={play} advanced={advanced} setAdvanced={setAdvanced} /> : isVoxModel(draft.modelId) ? <VoxControls draft={draft} state={state} change={change} chooseVoice={chooseVoice} play={play} advanced={advanced} setAdvanced={setAdvanced} /> : <>
       <ReferenceVoice voice={voice} choose={chooseVoice} play={play} />
       <VStack gap={3}>
         <h3>{t('@yovoice.create.expression')}</h3>
@@ -106,10 +107,10 @@ export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEm
             <HStack hAlign="between" vAlign="center"><h3>{t('@yovoice.create.emotionPresets')}</h3><Button label={t('@yovoice.action.reset')} size="sm" variant="secondary" onClick={() => change({ emotions: Array(8).fill(0) })} /></HStack>
             <HStack className="emotion-preset-grid" gap={2} role="group" aria-label={t('@yovoice.create.emotionPresets')}>{emotionPresets.slice(0, 3).map(preset => <Button key={preset.id} label={t(`@yovoice.emotion.preset.${preset.id}`)} size="sm" variant="secondary" aria-pressed={selectedPreset === preset} onClick={() => change({ emotions: [...preset.values] })} />)}</HStack>
             {moreEmotions ? <HStack id="more-emotion-presets" className="emotion-preset-grid" gap={2} role="group" aria-label={t('@yovoice.create.moreEmotionPresets')}>{emotionPresets.slice(3).map(preset => <Button key={preset.id} label={t(`@yovoice.emotion.preset.${preset.id}`)} size="sm" variant="secondary" aria-pressed={selectedPreset === preset} onClick={() => change({ emotions: [...preset.values] })} />)}</HStack> : null}
-            <Button className="emotion-disclosure" label={moreEmotions ? t('@yovoice.create.collapseEmotions') : t('@yovoice.create.moreEmotions')} size="sm" variant="secondary" icon={moreEmotions ? <ChevronUp aria-hidden="true" /> : <ChevronRight aria-hidden="true" />} aria-expanded={moreEmotions} aria-controls={moreEmotions ? 'more-emotion-presets' : undefined} onClick={() => setMoreEmotions(!moreEmotions)} />
+            <Button className="emotion-disclosure" label={moreEmotions ? t('@yovoice.create.collapseEmotions') : t('@yovoice.create.moreEmotions')} size="sm" variant="ghost" icon={moreEmotions ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronRight size={14} aria-hidden="true" />} aria-expanded={moreEmotions} aria-controls={moreEmotions ? 'more-emotion-presets' : undefined} onClick={() => setMoreEmotions(!moreEmotions)} />
           </VStack>
           <VStack gap={2}>
-            <Button className="emotion-disclosure" label={t('@yovoice.create.tuneEmotions')} size="sm" variant="secondary" icon={tuneEmotions ? <ChevronUp aria-hidden="true" /> : <ChevronRight aria-hidden="true" />} aria-expanded={tuneEmotions} aria-controls={tuneEmotions ? 'emotion-sliders' : undefined} onClick={() => setTuneEmotions(!tuneEmotions)} />
+            <Button className="emotion-disclosure" label={t('@yovoice.create.tuneEmotions')} size="sm" variant="ghost" icon={tuneEmotions ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronRight size={14} aria-hidden="true" />} aria-expanded={tuneEmotions} aria-controls={tuneEmotions ? 'emotion-sliders' : undefined} onClick={() => setTuneEmotions(!tuneEmotions)} />
             {tuneEmotions ? <VStack id="emotion-sliders" gap={3}>{emotionKeys.map((key, i) => <Slider key={key} label={t(`@yovoice.emotion.${key}`)} min={0} max={1} step={0.05} value={draft.emotions[i]} onChange={(value: number) => change({ emotions: draft.emotions.map((v, n) => n === i ? value : v) })} valueDisplay="text" formatValue={v => `${Math.round(v * 100)}%`} />)}</VStack> : null}
           </VStack>
         </VStack> : null}

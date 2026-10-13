@@ -1052,6 +1052,15 @@
   "@yovoice.vox.voiceDescriptionPlaceholder": {
     "defaultMessage": "如：温柔女声，舒缓语速；留空自然演绎"
   },
+  "@yovoice.breeze.voiceDescriptionPlaceholder": {
+    "defaultMessage": "如：温暖的女声，语速平稳，吐字清晰；留空自然演绎"
+  },
+  "@yovoice.breeze.instructionHelp": {
+    "defaultMessage": "可描述语速、情绪和语气，与正文使用同一种语言。正文中可插入 [笑]、[叹气]，英文用 (laugh)、(sigh)。"
+  },
+  "@yovoice.breeze.referenceTextHelp": {
+    "defaultMessage": "逐字填写参考音频说的内容，重复的话也要写上。参考音频宜为 5–15 秒、无背景噪声的干净人声。"
+  },
   "@yovoice.reference.transcript": {
     "defaultMessage": "参考音频原文（可选）"
   },
@@ -1063,6 +1072,9 @@
   },
   "@yovoice.settings.modelDesc.omni": {
     "defaultMessage": "多语言 · 声音设计与音色克隆"
+  },
+  "@yovoice.settings.modelDesc.breeze": {
+    "defaultMessage": "中文、英语 · 声音设计与音色克隆 · 建议使用显卡。模型许可仅限研究与非商业用途。"
   },
   "@yovoice.settings.modelDesc.qwen": {
     "defaultMessage": "10 种语言 · 参考音频克隆"
@@ -1105,6 +1117,9 @@
   },
   "@yovoice.options.top_p": {
     "defaultMessage": "Top P"
+  },
+  "@yovoice.options.depth_temperature": {
+    "defaultMessage": "细节解码温度"
   },
   "@yovoice.options.repetition_penalty": {
     "defaultMessage": "重复惩罚"
@@ -1378,6 +1393,9 @@
   },
   "@yovoice.error.omniReferenceRequired": {
     "defaultMessage": "OmniVoice 克隆需要填写参考音频原文。"
+  },
+  "@yovoice.error.breezeReferenceRequired": {
+    "defaultMessage": "Breeze TTS 2 克隆需要填写参考音频的完整原文。"
   },
   "@yovoice.reference.omniTranscriptHelp": {
     "defaultMessage": "原文须与参考音频一致。"
@@ -2394,7 +2412,7 @@
     "defaultMessage": "AI 服务拒绝了密钥（HTTP {status}），请检查 API 密钥。"
   },
   "@yovoice.error.aiRateLimit": {
-    "defaultMessage": "AI 服务限流或额度不足，请稍后重试。"
+    "defaultMessage": "AI 服务暂时限流或额度不足。免费模型使用的人多时容易限流，请等一两分钟再试，或在写作栏换一个模型。"
   },
   "@yovoice.error.aiNetwork": {
     "defaultMessage": "无法连接 AI 服务：{detail}"
@@ -2641,5 +2659,206 @@
   },
   "@yovoice.settings.modelDesc.soundfontSgm": {
     "defaultMessage": "更真实的 GM 音色库，钢琴、弦乐、吉他与铜管采样更丰富，体积较大、渲染稍慢。作者未明示许可，商用前请自行确认。"
+  },
+  "@yovoice.update.group": {
+    "defaultMessage": "版本与更新"
+  },
+  "@yovoice.update.title": {
+    "defaultMessage": "软件更新"
+  },
+  "@yovoice.update.currentVersion": {
+    "defaultMessage": "yovoice {version}"
+  },
+  "@yovoice.update.versionChange": {
+    "defaultMessage": "当前 {current} → 新版本 {version}"
+  },
+  "@yovoice.update.published": {
+    "defaultMessage": "发布于 {date}"
+  },
+  "@yovoice.update.autoHint": {
+    "defaultMessage": "启动时和每 4 小时自动检查，新版本会在后台下载。"
+  },
+  "@yovoice.update.latestHint": {
+    "defaultMessage": "已是最新版本 · 上次检查 {time}"
+  },
+  "@yovoice.update.checking": {
+    "defaultMessage": "正在检查更新…"
+  },
+  "@yovoice.update.check": {
+    "defaultMessage": "检查更新"
+  },
+  "@yovoice.update.foundTitle": {
+    "defaultMessage": "发现新版本 {version}"
+  },
+  "@yovoice.update.downloading": {
+    "defaultMessage": "正在下载 {version}"
+  },
+  "@yovoice.update.downloadStarting": {
+    "defaultMessage": "正在连接…"
+  },
+  "@yovoice.update.verifying": {
+    "defaultMessage": "正在校验更新包…"
+  },
+  "@yovoice.update.progress": {
+    "defaultMessage": "下载进度"
+  },
+  "@yovoice.update.background": {
+    "defaultMessage": "在后台继续"
+  },
+  "@yovoice.update.readyTitle": {
+    "defaultMessage": "{version} 已准备好"
+  },
+  "@yovoice.update.readyBody": {
+    "defaultMessage": "更新已下载并通过校验。重启后自动安装，当前作品会先保存。"
+  },
+  "@yovoice.update.restart": {
+    "defaultMessage": "重启并更新"
+  },
+  "@yovoice.update.later": {
+    "defaultMessage": "稍后"
+  },
+  "@yovoice.update.installingTitle": {
+    "defaultMessage": "正在保存并重启…"
+  },
+  "@yovoice.update.installingBody": {
+    "defaultMessage": "保存作品、关闭本地服务后安装更新，完成后会自动重新打开。"
+  },
+  "@yovoice.update.failedTitle": {
+    "defaultMessage": "未能完成更新"
+  },
+  "@yovoice.update.failedBody": {
+    "defaultMessage": "更新暂时不可用，请稍后重试。"
+  },
+  "@yovoice.update.retry": {
+    "defaultMessage": "重试"
+  },
+  "@yovoice.update.openDownloads": {
+    "defaultMessage": "打开下载页"
+  },
+  "@yovoice.update.latestTitle": {
+    "defaultMessage": "已是最新版本"
+  },
+  "@yovoice.update.disabled": {
+    "defaultMessage": "开发版本不检查更新，请安装正式版本。"
+  },
+  "@yovoice.update.close": {
+    "defaultMessage": "关闭"
+  },
+  "@yovoice.update.whatsNew": {
+    "defaultMessage": "更新内容"
+  },
+  "@yovoice.update.thisVersion": {
+    "defaultMessage": "本版本更新内容"
+  },
+  "@yovoice.update.fullNotes": {
+    "defaultMessage": "在 GitHub 查看"
+  },
+  "@yovoice.update.viewNotes": {
+    "defaultMessage": "查看更新内容"
+  },
+  "@yovoice.update.noticeFound": {
+    "defaultMessage": "发现新版本 {version}，正在后台下载"
+  },
+  "@yovoice.update.noticeReady": {
+    "defaultMessage": "新版本 {version} 已准备好，重启即可更新"
+  },
+  "@yovoice.update.noticeUpdated": {
+    "defaultMessage": "已更新到 {version}"
+  },
+  "@yovoice.update.sidebarDownloading": {
+    "defaultMessage": "正在下载 {version}"
+  },
+  "@yovoice.update.sidebarReady": {
+    "defaultMessage": "新版本 {version}"
+  },
+  "@yovoice.ai.orca.connect": {
+    "defaultMessage": "免费连接 OrcaRouter"
+  },
+  "@yovoice.ai.orca.waiting": {
+    "defaultMessage": "已在浏览器中打开 OrcaRouter，登录并点“同意授权”后会自动连接。"
+  },
+  "@yovoice.ai.orca.hint": {
+    "defaultMessage": "不用复制密钥：在浏览器登录 OrcaRouter 并同意授权后自动添加，默认使用免费模型。"
+  },
+  "@yovoice.error.aiFreeRate": {
+    "defaultMessage": "免费模型的使用次数暂时用完了，约 {seconds} 秒后会恢复，到时再试一次即可。"
+  },
+  "@yovoice.error.aiFreeBusy": {
+    "defaultMessage": "免费模型现在用的人太多，请稍等片刻再试，或在写作栏换一个模型。"
+  },
+  "@yovoice.error.aiFreePromptCap": {
+    "defaultMessage": "这次内容超过了免费模型单次请求的长度上限，重试也不会成功。可以缩短描述，或在 OrcaRouter 领取额度（orcarouter.ai/offers）或充值后换用付费模型。"
+  },
+  "@yovoice.error.aiFreeAccess": {
+    "defaultMessage": "OrcaRouter 需要账号绑定一个注册较久的 GitHub 账号才能使用免费模型。请在 OrcaRouter 个人设置中绑定 GitHub，或充值后再用。"
+  },
+  "@yovoice.settings.localApi": {
+    "defaultMessage": "本机接口"
+  },
+  "@yovoice.settings.localApiIntro": {
+    "defaultMessage": "让本机其他软件通过 HTTP 或 MCP 调用 yovoice 生成语音。只在 127.0.0.1 上监听，局域网中的其他设备无法访问。"
+  },
+  "@yovoice.settings.localApiEnabled": {
+    "defaultMessage": "启用本机接口"
+  },
+  "@yovoice.settings.localApiOff": {
+    "defaultMessage": "未开启，不占用端口。"
+  },
+  "@yovoice.settings.localApiRunning": {
+    "defaultMessage": "运行中：{url}"
+  },
+  "@yovoice.settings.localApiRunningShort": {
+    "defaultMessage": "运行中"
+  },
+  "@yovoice.settings.localApiFailed": {
+    "defaultMessage": "未能启动"
+  },
+  "@yovoice.settings.localApiPort": {
+    "defaultMessage": "端口"
+  },
+  "@yovoice.settings.localApiPortHint": {
+    "defaultMessage": "1024–65535，默认 8080。"
+  },
+  "@yovoice.settings.localApiToken": {
+    "defaultMessage": "访问令牌"
+  },
+  "@yovoice.settings.localApiTokenHint": {
+    "defaultMessage": "请求头带上 Authorization: Bearer 和此令牌。重置后旧令牌立即失效。"
+  },
+  "@yovoice.settings.localApiCopy": {
+    "defaultMessage": "复制"
+  },
+  "@yovoice.settings.localApiCopied": {
+    "defaultMessage": "已复制"
+  },
+  "@yovoice.settings.localApiReset": {
+    "defaultMessage": "重置"
+  },
+  "@yovoice.settings.localApiExample": {
+    "defaultMessage": "调用示例"
+  },
+  "@yovoice.settings.localApiExampleHint": {
+    "defaultMessage": "HTTP 接口位于 {url}/v1，MCP 地址为 {url}/mcp。把 YOUR_TOKEN 换成上方复制的令牌。"
+  },
+  "@yovoice.error.localApiPort": {
+    "defaultMessage": "端口需在 1024–65535 之间。"
+  },
+  "@yovoice.error.localApiPortInUse": {
+    "defaultMessage": "端口 {port} 已被其他程序占用，请换一个端口。"
+  },
+  "@yovoice.import.file": {
+    "defaultMessage": "导入文件配音"
+  },
+  "@yovoice.import.unsupported": {
+    "defaultMessage": "只支持导入 TXT、Markdown 文本或 SRT、VTT、ASS 字幕。"
+  },
+  "@yovoice.import.empty": {
+    "defaultMessage": "文件里没有可朗读的文字。"
+  },
+  "@yovoice.import.tooLong": {
+    "defaultMessage": "文本超过 12000 字，请拆分成几个文件后分别导入。"
+  },
+  "@yovoice.import.tooLarge": {
+    "defaultMessage": "文件超过 2 MB，请拆分后再导入。"
   }
 }

@@ -30,6 +30,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         makeMenu()
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1280, height: 840), styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
         window.title = "yovoice"
+        window.titlebarSeparatorStyle = .none
+        window.titlebarAppearsTransparent = true
+        window.backgroundColor = NSColor(srgbRed: 247.0 / 255.0, green: 247.0 / 255.0, blue: 247.0 / 255.0, alpha: 1.0)
         let accessory = NSTitlebarAccessoryViewController()
         accessory.layoutAttribute = .left
         let sidebarButton = NSButton(image: NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: HostL10n.t("sidebar.toggle"))!, target: self, action: #selector(toggleSidebar))
@@ -46,9 +49,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         inspectorButton.frame = NSRect(x: 0, y: 0, width: 32, height: 28)
         rightAccessory.view = inspectorButton
         // 只有工作区有右侧面板，由前端在进入或离开工作区时通知显示。
-        rightAccessory.isHidden = true
         self.inspectorAccessory = rightAccessory
-        window.addTitlebarAccessoryViewController(rightAccessory)
         window.minSize = NSSize(width: 390, height: 600)
         window.isReleasedWhenClosed = false
         window.delegate = self
@@ -70,6 +71,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
     @objc private func toggleInspector() {
         // 检查器状态由前端统一管理，标题栏仅发送切换事件。
         web?.evaluateJavaScript("window.dispatchEvent(new Event('workbench-toggle-inspector'))", completionHandler: nil)
+    }
+
+    private func updateInspectorAccessory(visible: Bool) {
+        guard let accessory = inspectorAccessory else { return }
+        let isPresent = window.titlebarAccessoryViewControllers.contains(accessory)
+        if visible && !isPresent {
+            window.addTitlebarAccessoryViewController(accessory)
+        } else if !visible && isPresent {
+            if let index = window.titlebarAccessoryViewControllers.firstIndex(of: accessory) {
+                window.removeTitlebarAccessoryViewController(at: index)
+            }
+        }
     }
 
     @objc private func showAbout() {
@@ -97,6 +110,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         let updateItem = NSMenuItem(title: HostL10n.t("menu.checkUpdates"), action: nil, keyEquivalent: "")
         appItem.submenu?.addItem(updateItem)
         updater = AppUpdater(menuItem: updateItem, root: root)
+        updater?.onChange = { [weak self] snapshot in
+            guard let self, self.web != nil else { return }
+            self.post(["event": "update", "update": snapshot.json])
+        }
+        // 菜单“检查更新”在界面内打开更新详情；界面尚未就绪时由更新器弹原生对话框。
+        updater?.showInApp = { [weak self] in
+            guard let self, let web = self.web, web.url != nil else { return false }
+            self.window.makeKeyAndOrderFront(nil)
+            web.evaluateJavaScript("window.dispatchEvent(new Event('workbench-show-update'))", completionHandler: nil)
+            return true
+        }
         appItem.submenu?.addItem(.separator())
         appItem.submenu?.addItem(withTitle: HostL10n.t("menu.quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         let edit = NSMenuItem()
@@ -201,6 +225,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         web.navigationDelegate = self
         web.uiDelegate = self
         web.isInspectable = ProcessInfo.processInfo.environment["WORKBENCH_DEBUG"] == "1"
+        web.underPageBackgroundColor = window.backgroundColor
         let cookie = HTTPCookie(properties: [.name: cookieName, .value: token, .domain: "127.0.0.1", .path: "/", .init("HttpOnly"): "TRUE"])!
         configuration.websiteDataStore.httpCookieStore.setCookie(cookie) { [weak self] in
             Task { @MainActor in
@@ -286,7 +311,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         let method = message["method"] as? String ?? ""
         if method == "inspector.available" {
             let available = data["available"] as? Bool == true
-            inspectorAccessory?.isHidden = !available
+            updateInspectorAccessory(visible: available)
             return ["id": message["id"]!, "result": true]
         }
         if method == "sidebar.save" {
@@ -373,6 +398,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             guard NSWorkspace.shared.open(directory) else { throw failure(HostL10n.t("err.modelDirOpen")) }
             return ["id": message["id"]!, "result": true]
+        }
+        if method == "app.update.get" {
+            return ["id": message["id"]!, "result": updater.map { $0.snapshot.json as Any } ?? NSNull()]
+        }
+        if method == "app.update.check" {
+            updater?.checkFromApp()
+            return ["id": message["id"]!, "result": true]
+        }
+        if method == "app.update.install" {
+            return ["id": message["id"]!, "result": updater?.install() ?? false]
         }
         if method == "logs.open" {
             NSWorkspace.shared.open(root.appendingPathComponent("logs"))
