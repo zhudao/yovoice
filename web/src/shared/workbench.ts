@@ -84,10 +84,24 @@ export interface Activity {
 }
 // 本机接口的设置与运行状态，由 localApi.* 调用返回，不属于作品状态。
 export interface LocalAPIStatus { enabled: boolean; port: number; token: string; running: boolean; url?: string; error?: { code: MessageCode; params?: MessageParams } }
+// 存储空间状态与清理结果，由 storage.* 调用返回。
+export interface StorageInfo {
+  root: string;
+  modelsBytes: number;
+  outputsBytes: number;
+  voicesBytes: number;
+  downloadsBytes: number;
+  totalBytes: number;
+  pendingPath?: string;
+}
+export interface CleanupReport {
+  cleanedCount: number;
+  freedBytes: number;
+}
 export interface Preferences { downloadSource: string; backend: string; modelDirectory: string | null; uiLocale: UiLocale; proxyURL?: string; proxyEnabled?: boolean; aiTimeout?: number }
 export interface State {
   characters: Character[]; previews: CharacterPreview[]; drafts: Draft[]; voices: Voice[]; models: InstalledModel[]; history: Generation[];
-  preferences: Preferences; runtimePath: string | null; runtimeBackend: string | null; runtimeVersion: string | null; runtimes?: Record<string, { path: string; version: string }>; activity: Activity | null;
+  preferences: Preferences; runtimePath: string | null; runtimeBackend: string | null; runtimeVersion: string | null; runtimes?: Record<string, { path: string; version: string }>; activity: Activity | null; modelActivity?: Activity | null;
   aiProviders?: AIProvider[]; aiProviderID?: string; aiTask?: AITask;
 }
 
@@ -115,7 +129,7 @@ export const createDraft = (example = false, locale: UiLocale = 'zh-CN', modelId
   intervalSilenceMs: 200, doSample: true, numBeams: 3, lengthPenalty: 0, seed: null,
 };
 };
-export const emptyState = (): State => ({ characters: [], previews: [], drafts: [createDraft(true)], voices: [], models: [], history: [], preferences: { downloadSource: 'modelscope', backend: 'cpu', modelDirectory: null, uiLocale: 'zh-CN' }, runtimePath: null, runtimeBackend: null, runtimeVersion: null, activity: null });
+export const emptyState = (): State => ({ characters: [], previews: [], drafts: [createDraft(true)], voices: [], models: [], history: [], preferences: { downloadSource: 'modelscope', backend: 'cpu', modelDirectory: null, uiLocale: 'zh-CN' }, runtimePath: null, runtimeBackend: null, runtimeVersion: null, activity: null, modelActivity: null });
 // version 是推荐安装的 audio.cpp 版本，minimum 是当前应用可用的最低版本。
 export interface EngineInfo { version: string; minimum: string }
 // 服务未报告版本要求（如浏览器预览）时不做限制。
@@ -138,6 +152,14 @@ export const runtimeUsable = (status: RuntimeStatus) => status === 'ready' || st
 export const modelEngineReady = (state: State, model?: ModelPackage) => !model?.engineMinimum || versionAtLeast(state.runtimeVersion, model.engineMinimum);
 export const formatTime = (seconds: number) => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 export const formatSize = (bytes: number) => `${(bytes / 1e9).toFixed(2)} GB`;
+export function formatBytes(bytes: number): string {
+  if (!bytes || bytes <= 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  const value = bytes / Math.pow(1024, i);
+  if (i === 0) return `${Math.round(value)} B`;
+  return `${value.toFixed(2)} ${units[i]}`;
+}
 export interface Track { id: string; name: string; fileName: string; kind: 'voices' | 'outputs'; subtitle: string; playRequest?: number }
 
 export const isKokoroModel = (id: string) => id.startsWith('kokoro-');

@@ -8,14 +8,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
     private var window: NSWindow!
     private var web: WKWebView!
     private var inspectorAccessory: NSTitlebarAccessoryViewController?
-    private let service = Process()
-    private let input = Pipe()
+    // 服务崩溃后可在应用内重新启动：Process 只能运行一次，每次启动都换新的进程与管道。
+    private var service = Process()
+    private var input = Pipe()
     private var origin: URL?
+    private var restartingService = false
+    // 服务重启前页面里尚未落盘的修改，新服务就绪后先补存再刷新页面。
+    private var pendingDraft: [String: Any]?
     private let token = UUID().uuidString + UUID().uuidString
     private var closing = false
     private var shutdownComplete = false
+    // 数据目录迁移完成后旧目录已冻结写入：退出时不再保存正文，并在退出后自动重新打开应用。
+    private var storageRelocated = false
+    private var relaunchOnExit = false
     private var updater: AppUpdater?
-    private let root = ProcessInfo.processInfo.environment["WORKBENCH_DATA"].map { URL(fileURLWithPath: $0, isDirectory: true) } ?? FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".yovoice", isDirectory: true)
+    // 延迟到单实例检查之后解析，数据目录缺失时才弹出处理选项。
+    private lazy var root: URL = DataRoot.confirmAvailable(DataRoot.resolve())
     private var cookieName: String { "vw-" + token.prefix(12) }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -50,7 +58,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         rightAccessory.view = inspectorButton
         // 只有工作区有右侧面板，由前端在进入或离开工作区时通知显示。
         self.inspectorAccessory = rightAccessory
-        window.minSize = NSSize(width: 390, height: 600)
+        window.minSize = NSSize(width: 960, height: 600)
         window.isReleasedWhenClosed = false
         window.delegate = self
         window.center()
@@ -152,6 +160,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             guard migration.terminationStatus == 0 else { throw failure(HostL10n.t("err.migrateFailed")) }
         }
         try FileManager.default.createDirectory(at: root.appendingPathComponent("logs"), withIntermediateDirectories: true)
+        self.service = Process()
+        self.input = Pipe()
+        let service = self.service, input = self.input
         service.executableURL = executable
         var environment = ProcessInfo.processInfo.environment
         environment["WORKBENCH_DATA"] = root.path
@@ -163,18 +174,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         let output = Pipe()
         service.standardOutput = output
         let log = root.appendingPathComponent("logs/host-service.log")
-        FileManager.default.createFile(atPath: log.path, contents: nil)
-        service.standardError = try FileHandle(forWritingTo: log)
+        // 服务日志追加写入同一文件，超过 5MB 才滚动为 .1；崩溃后重启时上一轮的出错原因仍在文件中。
+        let size = (try? FileManager.default.attributesOfItem(atPath: log.path)[.size] as? NSNumber)?.int64Value ?? 0
+        if size >= 5 * 1024 * 1024 {
+            let previous = root.appendingPathComponent("logs/host-service.log.1")
+            try? FileManager.default.removeItem(at: previous)
+            try? FileManager.default.moveItem(at: log, to: previous)
+        }
+        if !FileManager.default.fileExists(atPath: log.path) { FileManager.default.createFile(atPath: log.path, contents: nil) }
+        let handle = try FileHandle(forWritingTo: log)
+        _ = handle.seekToEndOfFile()
+        handle.write("\n===== \(ISO8601DateFormatter().string(from: Date())) service =====\n".data(using: .utf8)!)
+        service.standardError = handle
         service.terminationHandler = { [weak self] process in
             Task { @MainActor in
-                guard let self, !self.closing else { return }
-                self.showError(self.failure(HostL10n.t("err.serviceStopped", process.terminationStatus)))
+                guard let self, !self.closing, process === self.service else { return }
+                self.serviceStopped(process.terminationStatus)
             }
         }
         try service.run()
+        // 子进程已继承日志文件，宿主侧的句柄随即关闭，避免每次重启服务都泄漏一个。
+        try? handle.close()
         Task {
             try? await Task.sleep(for: .seconds(30))
-            if origin == nil && service.isRunning && !closing {
+            if origin == nil && service.isRunning && service === self.service && !closing {
                 try? input.fileHandleForWriting.close()
                 showError(failure(HostL10n.t("err.serviceTimeout")))
             }
@@ -198,6 +221,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
     private func loadWeb(_ address: String) {
         guard let url = URL(string: address), url.host == "127.0.0.1", url.scheme == "http" else { showError(failure(HostL10n.t("err.invalidAddress"))); return }
         origin = url
+        // 服务重启后重建页面，先解除旧页面对宿主的引用。
+        web?.configuration.userContentController.removeScriptMessageHandler(forName: "workbench")
         let configuration = WKWebViewConfiguration()
         configuration.mediaTypesRequiringUserActionForPlayback = []
         configuration.userContentController.add(self, name: "workbench")
@@ -230,6 +255,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         configuration.websiteDataStore.httpCookieStore.setCookie(cookie) { [weak self] in
             Task { @MainActor in
                 guard let self else { return }
+                await self.restorePendingDraft()
                 self.window.contentView = self.web
                 self.web.load(URLRequest(url: url))
             }
@@ -300,7 +326,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard message.frameInfo.isMainFrame, Self.trusted(message.frameInfo.securityOrigin, localOrigin: origin), let body = message.body as? [String: Any], let id = body["id"] as? String else { return }
         Task {
-            do { post(try await handle(body)) }
+            do {
+                post(try await handle(body))
+                if body["method"] as? String == "storage.directory", storageRelocated, !closing { promptRelaunch() }
+            }
             catch { post(["id": id, "error": error.localizedDescription]) }
         }
     }
@@ -378,9 +407,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)])
             return ["id": message["id"]!, "result": true]
         }
-        if ["voice.import", "model.import", "model.directory"].contains(method) {
+        if ["voice.import", "model.import", "model.directory", "storage.directory"].contains(method) {
             let panel = NSOpenPanel()
-            panel.canChooseDirectories = method == "model.directory" || (data["directory"] as? Bool == true)
+            panel.canChooseDirectories = ["model.directory", "storage.directory"].contains(method) || (data["directory"] as? Bool == true)
             panel.canChooseFiles = !panel.canChooseDirectories
             panel.allowsMultipleSelection = false
             if panel.canChooseFiles { panel.allowedContentTypes = method == "voice.import" ? [.audio] : [UTType(filenameExtension: "gguf") ?? .data] }
@@ -388,6 +417,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             guard response == .OK, let url = panel.url else { return ["id": message["id"]!, "result": NSNull()] }
             data["path"] = url.path
             message["data"] = data
+            if method == "storage.directory" {
+                // 迁移以服务端当前状态为准，先保存界面里尚在防抖窗口内的正文，避免迁移后丢字。
+                if let draft = try await web.evaluateJavaScript("window.__workbenchDraft ?? null") as? [String: Any] {
+                    let saved = try await request("api/call", body: ["id": "relocate-save", "method": "draft.save", "data": draft])
+                    if saved["error"] != nil { return ["id": message["id"]!, "error": saved["error"]!] }
+                }
+                // 跨盘复制模型可能远超普通请求的 120 秒上限，进度通过状态推送展示。
+                let relocated = try await request("api/call", body: ["id": message["id"]!, "method": "storage.relocate", "data": data], timeout: 24 * 60 * 60)
+                if relocated["error"] == nil { storageRelocated = true }
+                return relocated
+            }
+        }
+        if method == "storage.directory.open" {
+            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            guard NSWorkspace.shared.open(root) else { throw failure(HostL10n.t("err.modelDirOpen")) }
+            return ["id": message["id"]!, "result": true]
         }
         if method == "model.directory.open" {
             let response = try await request("api/call", body: ["id": "model-directory", "method": "state.get", "data": [:]])
@@ -423,15 +468,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         }
         return try await request("api/call", body: message)
     }
-    private func request(_ path: String, body: [String: Any]) async throws -> [String: Any] {
+    private func request(_ path: String, body: [String: Any], timeout: TimeInterval = 120) async throws -> [String: Any] {
         guard let origin else { throw failure(HostL10n.t("err.serviceNotReady")) }
         var request = URLRequest(url: origin.appendingPathComponent(path))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("\(cookieName)=\(token)", forHTTPHeaderField: "Cookie")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        // AI 写作在服务端后台运行，调用立即返回，所有请求统一 120 秒上限。
-        request.timeoutInterval = 120
+        // AI 写作在服务端后台运行，调用立即返回，普通请求统一 120 秒上限。
+        request.timeoutInterval = timeout
         let (data, response) = try await URLSession.shared.data(for: request)
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw failure(HostL10n.t("err.serviceRequest")) }
         if data.isEmpty { return [:] }
@@ -441,10 +486,109 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         guard let data = try? JSONSerialization.data(withJSONObject: message), let json = String(data: data, encoding: .utf8) else { return }
         web.evaluateJavaScript("window.__workbenchReceive(\(json))", completionHandler: nil)
     }
+    private static let storageRestartRequired = "@yovoice.error.storageRestartRequired"
     private static func hostErrorMessage(_ error: Any?) -> String? {
         if let text = error as? String { return text }
-        if let object = error as? [String: Any], let code = object["code"] as? String { return code }
+        if let object = error as? [String: Any], let code = object["code"] as? String {
+            if code == "@yovoice.error.dataRootMissing", let path = (object["params"] as? [String: Any])?["path"] as? String { return HostL10n.t("err.dataRootMissing", path) }
+            if code == "@yovoice.error.diskFull" { return HostL10n.t("err.diskFull") }
+            if let detail = (object["params"] as? [String: Any])?["detail"] as? String, !detail.isEmpty { return code + "\n" + detail }
+            return code
+        }
         return nil
+    }
+    private static func hostErrorCode(_ error: Any?) -> String? {
+        (error as? [String: Any])?["code"] as? String
+    }
+    // 本地服务意外退出：提供重新启动或退出，不再要求用户自行重开应用。
+    private func serviceStopped(_ status: Int32) {
+        guard !restartingService else { return }
+        restartingService = true
+        Task { @MainActor in
+            defer { restartingService = false }
+            var draft: [String: Any]?
+            if web != nil { draft = try? await web.evaluateJavaScript("window.__workbenchDraft ?? null") as? [String: Any] }
+            var message = HostL10n.t("err.serviceStopped", status)
+            while !closing {
+                let alert = NSAlert()
+                alert.alertStyle = .warning
+                alert.messageText = HostL10n.t("alert.serviceStopped.title")
+                alert.informativeText = message
+                alert.addButton(withTitle: HostL10n.t("alert.serviceStopped.restart"))
+                alert.addButton(withTitle: HostL10n.t("alert.serviceStopped.quit"))
+                guard alert.runModal() == .alertFirstButtonReturn else {
+                    // 退出流程会对未保存的修改提供备份。
+                    NSApp.terminate(nil)
+                    return
+                }
+                pendingDraft = draft
+                origin = nil
+                do {
+                    try startService()
+                    return
+                } catch {
+                    message = error.localizedDescription
+                }
+            }
+        }
+    }
+    // 新服务就绪后补存重启前未落盘的修改；保存失败时允许备份到文件，避免刷新页面丢字。
+    private func restorePendingDraft() async {
+        guard let draft = pendingDraft else { return }
+        pendingDraft = nil
+        var message = HostL10n.t("err.serviceRequest")
+        if let saved = try? await request("api/call", body: ["id": "restart-save", "method": "draft.save", "data": draft]) {
+            guard let error = Self.hostErrorMessage(saved["error"]) else { return }
+            message = error
+        }
+        while true {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = HostL10n.t("alert.restoreDraftFailed.title")
+            alert.informativeText = HostL10n.t("alert.restoreDraftFailed.body", message)
+            alert.addButton(withTitle: HostL10n.t("alert.restoreDraftFailed.backup"))
+            alert.addButton(withTitle: HostL10n.t("alert.restoreDraftFailed.discard")).hasDestructiveAction = true
+            if alert.runModal() != .alertFirstButtonReturn || backupDraft(draft) { return }
+        }
+    }
+    // 把作品正文另存为恢复文件；用户取消或写入失败时返回 false。
+    private func backupDraft(_ draft: [String: Any]) -> Bool {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.json]
+        let stamp = DateFormatter()
+        stamp.dateFormat = "yyyyMMdd-HHmmss"
+        panel.nameFieldStringValue = "yovoice-recovery-\(stamp.string(from: Date())).json"
+        guard panel.runModal() == .OK, let url = panel.url else { return false }
+        do {
+            try JSONSerialization.data(withJSONObject: draft, options: [.prettyPrinted, .sortedKeys]).write(to: url, options: .atomic)
+            return true
+        } catch {
+            let failed = NSAlert()
+            failed.messageText = HostL10n.t("alert.exitSaveFailed.backupFailed")
+            failed.informativeText = error.localizedDescription
+            failed.runModal()
+            return false
+        }
+    }
+    // 退出保存失败时与 Windows 一致：可备份正文后退出、直接退出或返回编辑。
+    private func confirmExitAfterSaveFailure(_ error: String, draft: [String: Any]) -> Bool {
+        while true {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = HostL10n.t("alert.exitSaveFailed.title")
+            alert.informativeText = HostL10n.t("alert.exitSaveFailed.body", error)
+            alert.addButton(withTitle: HostL10n.t("alert.exitSaveFailed.backup"))
+            alert.addButton(withTitle: HostL10n.t("alert.exitSaveFailed.return"))
+            alert.addButton(withTitle: HostL10n.t("alert.exitSaveFailed.quit")).hasDestructiveAction = true
+            switch alert.runModal() {
+            case .alertFirstButtonReturn:
+                if backupDraft(draft) { return true }
+            case .alertThirdButtonReturn:
+                return true
+            default:
+                return false
+            }
+        }
     }
     private func refreshHostMenus() {
         guard let menu = NSApp.mainMenu else { return }
@@ -463,6 +607,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         alert.informativeText = error.localizedDescription
         alert.beginSheetModal(for: window)
     }
+    // 迁移完成后提示并自动重启，让新数据目录立即生效。
+    private func promptRelaunch() {
+        let alert = NSAlert()
+        alert.messageText = HostL10n.t("alert.relocated.title")
+        alert.informativeText = HostL10n.t("alert.relocated.body")
+        alert.addButton(withTitle: HostL10n.t("alert.relocated.restart"))
+        alert.runModal()
+        relaunchOnExit = true
+        NSApp.terminate(nil)
+    }
+    // 由独立的 shell 等待当前进程退出后再打开应用，避免 LaunchServices 只激活正在退出的旧实例。
+    private func scheduleRelaunch() {
+        let relauncher = Process()
+        relauncher.executableURL = URL(fileURLWithPath: "/bin/sh")
+        relauncher.arguments = ["-c", "while kill -0 \"$1\" 2>/dev/null; do sleep 0.2; done; exec /usr/bin/open \"$2\"", "yovoice-relaunch", String(ProcessInfo.processInfo.processIdentifier), Bundle.main.bundleURL.path]
+        do { try relauncher.run() } catch {
+            let alert = NSAlert()
+            alert.messageText = HostL10n.t("err.relaunch")
+            alert.runModal()
+        }
+    }
     // 关闭窗口后保留应用和后台任务，退出仍由菜单或 Command-Q 触发。
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { window.makeKeyAndOrderFront(nil); return true }
@@ -473,10 +638,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         Task {
             do {
                 if service.isRunning, web != nil {
-                    let state = try await request("api/call", body: ["id": "exit-state", "method": "state.get", "data": [:]])
-                    let result = state["result"] as? [String: Any]
-                    let activity = (result?["state"] as? [String: Any])?["activity"] as? [String: Any]
-                    if activity?["status"] as? String == "running" {
+                    let response = try await request("api/call", body: ["id": "exit-state", "method": "state.get", "data": [:]])
+                    let result = response["result"] as? [String: Any]
+                    // 生成与模型下载分别记录，任一进行中都需要确认。
+                    let state = result?["state"] as? [String: Any]
+                    let running = ["activity", "modelActivity"].contains { ((state?[$0] as? [String: Any])?["status"] as? String) == "running" }
+                    if running {
                         let alert = NSAlert()
                         alert.messageText = HostL10n.t("alert.quitBusy.title")
                         alert.informativeText = HostL10n.t("alert.quitBusy.body")
@@ -485,22 +652,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
                         if alert.runModal() != .alertFirstButtonReturn { closing = false; updater?.cancelInstall(); return }
                     }
                     // 读取最新编辑内容，避免自动保存的防抖窗口丢失最后输入。
-                    if let draft = try await web.evaluateJavaScript("window.__workbenchDraft ?? null") as? [String: Any] {
+                    if !storageRelocated, let draft = try await web.evaluateJavaScript("window.__workbenchDraft ?? null") as? [String: Any] {
                         let saved = try await request("api/call", body: ["id": "exit-save", "method": "draft.save", "data": draft])
-                        if let error = Self.hostErrorMessage(saved["error"]) { throw failure(HostL10n.t("err.exitSave", error)) }
+                        // 迁移完成后旧目录冻结写入，此时保存必然失败且没有意义，不能因此挡住退出。
+                        if let error = Self.hostErrorMessage(saved["error"]), Self.hostErrorCode(saved["error"]) != Self.storageRestartRequired {
+                            // 数据目录被删除、磁盘已满或外置盘断开时保存会一直失败，必须给出退出路径，而不是只能强制结束。
+                            guard confirmExitAfterSaveFailure(error, draft: draft) else { closing = false; updater?.cancelInstall(); return }
+                            updater?.cancelInstall()
+                        }
                     }
+                }
+                // 本地服务已停止时无法保存，页面里还有未保存的修改就提供备份，不能静默丢弃。
+                if !service.isRunning, web != nil, !storageRelocated,
+                   let draft = try? await web.evaluateJavaScript("window.__workbenchDraft ?? null") as? [String: Any] {
+                    guard confirmExitAfterSaveFailure(HostL10n.t("err.serviceNotReady"), draft: draft) else { closing = false; updater?.cancelInstall(); return }
+                    updater?.cancelInstall()
                 }
                 // 先确认更新助手可启动，再关闭服务；失败时仍可继续使用应用。
                 try updater?.installBeforeTermination()
                 if service.isRunning { _ = try await request("shutdown", body: [:]) }
                 try? input.fileHandleForWriting.close()
+                if relaunchOnExit { scheduleRelaunch() }
                 shutdownComplete = true
                 NSApp.terminate(nil)
             } catch {
-                closing = false
                 updater?.cancelInstall()
-                showError(error)
-
+                try? error.localizedDescription.write(to: root.appendingPathComponent("logs/last-host-error.txt"), atomically: true, encoding: .utf8)
+                // 服务无响应或更新准备失败时必须留出退出路径，否则只能强制结束应用。
+                let alert = NSAlert()
+                alert.alertStyle = .warning
+                alert.messageText = HostL10n.t("alert.quitFailed.title")
+                alert.informativeText = HostL10n.t("alert.quitFailed.body", error.localizedDescription)
+                alert.addButton(withTitle: HostL10n.t("alert.quitFailed.force"))
+                alert.addButton(withTitle: HostL10n.t("alert.quitFailed.back"))
+                guard alert.runModal() == .alertFirstButtonReturn else { closing = false; return }
+                try? input.fileHandleForWriting.close()
+                if service.isRunning { service.terminate() }
+                if relaunchOnExit { scheduleRelaunch() }
+                shutdownComplete = true
+                NSApp.terminate(nil)
             }
         }
         // 先返回事件循环，异步保存完成后再次退出，避免 AppKit 终止循环阻塞 Swift 任务。

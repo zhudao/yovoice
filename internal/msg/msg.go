@@ -41,6 +41,7 @@ const (
 	ActivityPaused          Code = "@yovoice.activity.paused"
 	ActivityFailed          Code = "@yovoice.activity.failed"
 	ActivityInterrupted     Code = "@yovoice.activity.interrupted"
+	ActivityRelocate        Code = "@yovoice.activity.relocate"
 
 	ErrBusy                  Code = "@yovoice.error.busy"
 	ErrProxyURL              Code = "@yovoice.error.proxyURL"
@@ -132,7 +133,17 @@ const (
 	// 本机接口：端口超出范围、端口已被占用。
 	ErrLocalAPIPort      Code = "@yovoice.error.localApiPort"
 	ErrLocalAPIPortInUse Code = "@yovoice.error.localApiPortInUse"
-	ErrUnknown           Code = "@yovoice.error.unknown"
+	// 存储迁移：不能在应用安装目录内、目标目录非空、不能与当前目录相同。
+	ErrStorageInsideApp      Code = "@yovoice.error.storageInsideApp"
+	ErrStorageTargetNotEmpty Code = "@yovoice.error.storageTargetNotEmpty"
+	ErrStorageSame           Code = "@yovoice.error.storageSame"
+	ErrStorageInsideData     Code = "@yovoice.error.storageInsideData"
+	ErrStorageRestart        Code = "@yovoice.error.storageRestartRequired"
+	// 数据目录在运行中被删除或断开（外置盘拔出），写入无法完成。
+	ErrDataRootMissing Code = "@yovoice.error.dataRootMissing"
+	// 磁盘已满：写入状态、音频或下载时系统返回空间不足。
+	ErrDiskFull Code = "@yovoice.error.diskFull"
+	ErrUnknown  Code = "@yovoice.error.unknown"
 )
 
 // Params carries ICU values. Keys match catalog placeholders.
@@ -157,7 +168,7 @@ func Err(code Code, params Params) *CallError {
 }
 
 func Encode(err error) map[string]any {
-	if ce, ok := err.(*CallError); ok && ce != nil {
+	if ce, ok := Classify(err).(*CallError); ok && ce != nil {
 		out := map[string]any{"code": ce.Code}
 		if len(ce.Params) > 0 {
 			out["params"] = ce.Params
@@ -177,7 +188,7 @@ func All() []Code {
 		ActivityDownload, ActivityDownloading, ActivityVerifying, ActivityImport,
 		ActivityRuntimeDownload, ActivityRuntimeExtract, ActivityEngineStart,
 		ActivityGenerate, ActivitySynthesizing, ActivitySavingAudio, ActivityRendering,
-		ActivityCompleted, ActivityCancelled, ActivityPaused, ActivityFailed, ActivityInterrupted,
+		ActivityCompleted, ActivityCancelled, ActivityPaused, ActivityFailed, ActivityInterrupted, ActivityRelocate,
 		ErrBusy, ErrProxyURL, ErrModelDirAbsolute, ErrModelDirSpace,
 		ErrDownloadHTTP, ErrDownloadRange, ErrDownloadSize, ErrDownloadIncomplete,
 		ErrDownloadStale, ErrDownloadChecksum, ErrDownloadOversized,
@@ -198,6 +209,7 @@ func All() []Code {
 		ErrAIProviderInvalid, ErrAINotConfigured, ErrAIAuth, ErrAIRateLimit, ErrAINetwork, ErrAIResponse, ErrAIModelsPath, ErrAIResultInvalid, ErrAITimeout,
 		ErrAIFreeRate, ErrAIFreeBusy, ErrAIFreePromptCap, ErrAIFreeAccess,
 		ErrLocalAPIPort, ErrLocalAPIPortInUse,
+		ErrStorageInsideApp, ErrStorageTargetNotEmpty, ErrStorageSame, ErrStorageInsideData, ErrStorageRestart, ErrDataRootMissing, ErrDiskFull,
 		ErrLegacyRestore, ErrUnknown,
 	}
 }
