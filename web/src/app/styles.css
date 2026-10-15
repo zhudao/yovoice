@@ -86,7 +86,8 @@
   .astryx-button:not(:disabled):active { filter: brightness(.95); }
   .app-dialog-layout, .app-dialog-layout > * { max-height: 75vh; max-height: 75dvh; }
   /* 弹窗遮罩：半透明加虚化，底层界面仍隐约可见。 */
-  .app-dialog::backdrop { background-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent); backdrop-filter: blur(calc(var(--spacing-1) / 2)); }
+  /* 不用 backdrop-filter：WebKit（macOS 窗口）合成弹窗阴影时会在模糊背景上留下一圈矩形边线。 */
+  .app-dialog::backdrop { background-color: color-mix(in srgb, var(--color-text-primary) 16%, transparent); }
   .app-dialog-header > div > div { align-items: center; }
   .app-dialog-header > div > div > div { margin-block: 0; }
   .dialog-error { padding: var(--spacing-3); border-radius: var(--radius-element); background: var(--color-error-muted); color: var(--color-text-primary); font-size: var(--app-ui-font); }
@@ -122,7 +123,7 @@
   .sidebar .astryx-resize-handle-pill { display: none; }
   .sidebar-bottom { margin-top: auto; }
   .content-frame { height: 100%; min-height: 0; }
-  .studio { flex: 1; min-height: 0; height: 100%; overflow: hidden; }
+  .studio { flex: 1; min-height: 0; height: 100%; overflow: hidden; position: relative; }
   .document { flex: 1; min-width: 0; overflow: auto; }
   .document-heading { flex-shrink: 0; min-height: var(--spacing-10); }
   .document-heading .document-title { flex: 1; min-width: 0; }
@@ -183,6 +184,7 @@
   .multitrack-clip[aria-pressed="true"] { outline: var(--border-width) solid var(--app-wave); outline-offset: calc(var(--border-width) * -1); background: color-mix(in srgb, var(--app-wave) 8%, var(--color-background-surface)); }
   .multitrack-clip .subtitle-avatar { width: var(--spacing-4); height: var(--spacing-4); flex-shrink: 0; }
   .multitrack-clip .clip-waveform { position: absolute; inset: 50% 0 0; width: 100%; height: 50%; opacity: 0.4; stroke: var(--color-text-secondary); pointer-events: none; }
+  .multitrack-clip[data-unavailable] { background: var(--color-error-muted); }
   .multitrack-trim.astryx-button { position: absolute; top: 0; bottom: 0; width: min(var(--spacing-3), 30%); min-width: 0; height: 100%; padding: 0; border-radius: var(--radius-inner); color: var(--color-text-primary); cursor: ew-resize; touch-action: none; opacity: 0; }
   .multitrack-trim[data-edge="start"] { left: 0; }
   .multitrack-trim[data-edge="end"] { right: 0; }
@@ -245,6 +247,7 @@
   .time-ruler small { position: absolute; top: 0; height: var(--spacing-4); border-left: 1px solid var(--app-line); padding-left: var(--spacing-1); font-size: var(--font-size-xs); font-variant-numeric: tabular-nums; }
   .waveform { width: 100%; position: relative; height: var(--spacing-10); margin-block: var(--spacing-1); flex-shrink: 0; background: color-mix(in srgb, var(--app-wave) 12%, var(--app-white)); border: 1px solid color-mix(in srgb, var(--app-wave) 25%, var(--app-white)); border-radius: var(--radius-element); }
   .waveform svg { width: 100%; height: 100%; padding-block: var(--spacing-2); }
+  .waveform-unavailable { display: flex; align-items: center; justify-content: center; color: var(--app-muted); font-size: var(--font-size-xs); background: var(--color-background-surface); border-color: var(--app-line); }
   .waveform line { stroke: color-mix(in srgb, var(--app-wave) 45%, var(--app-white)); stroke-width: 1; stroke-linecap: round; }
   .waveform line.played { stroke: var(--app-wave); }
   .playhead { position: absolute; top: calc(-1 * (var(--audio-ruler-height) + var(--spacing-1))); bottom: 0; width: 1px; background: var(--app-ink); pointer-events: none; }
@@ -382,10 +385,31 @@
   .settings-help { color: var(--app-muted); font-size: var(--app-small-font); }
   .settings-help summary { justify-content: start; gap: var(--spacing-3); }
   .time { font-variant-numeric: tabular-nums; }
-  /* 正文与检查器按创作区实际宽度排布（侧栏可拖宽），宽度不足时检查器改为与正文切换显示，正文不被挤压变形。 */
+  /* 正文与检查器按创作区实际宽度排布（侧栏可拖宽），宽度不足时检查器自动收起；展开时保持与宽屏一致的面板宽度浮出，正文不被全屏覆盖。 */
   .studio { container: studio / inline-size; }
   @container studio (min-width: 861px) { .collapse-inspector .inspector { display: none; } .collapse-inspector .document-heading > .inspector-collapsed-action { display: flex; } }
-  @container studio (max-width: 860px) { .inspector { display: none; } .inspector-toggle { display: inline-flex; } .inspector-collapse { display: none; } .document-heading > .inspector-collapsed-action { display: flex; } .show-inspector .document { display: none; } .show-inspector .inspector-document-actions { display: flex; } .show-inspector .inspector { display: grid; grid-template-rows: auto minmax(0, 1fr); width: 100%; border-left: 0; } }
+  @container studio (max-width: 860px) {
+    .inspector { display: none; }
+    .inspector-toggle { display: inline-flex; }
+    .inspector-collapse { display: none; }
+    .document-heading > .inspector-collapsed-action { display: flex; }
+    .show-inspector .inspector-document-actions { display: flex; }
+    .show-inspector .document-heading > .inspector-collapsed-action { display: none; }
+    .show-inspector .inspector {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--app-inspector);
+      max-width: 100%;
+      border-left: 1px solid var(--app-line);
+      background: var(--app-white);
+      box-shadow: var(--shadow-high);
+      z-index: 10;
+    }
+  }
   @media (max-width: 1190px) { :root { --app-nav: calc(var(--spacing-10) * 4.5); --app-inspector: calc(var(--spacing-8) * 11); --app-editor-font: var(--font-size-lg); --app-title-font: var(--font-size-3xl); } .player { gap: var(--spacing-3); } }
   @media (max-width: 900px) { :root { --app-nav: calc(var(--spacing-10) * 4); --app-inspector: calc(var(--spacing-8) * 11); } .sidebar { padding-inline: var(--spacing-2); } .settings-page,.library-page { padding: var(--spacing-5) var(--spacing-6) var(--spacing-6); } }
   @media (max-width: 600px) { :root { --app-nav: calc(var(--spacing-8) * 2); --app-player: calc(var(--spacing-9) * 2); --app-title-font: var(--font-size-3xl); --app-editor-font: var(--font-size-lg); } .nav-item { font-size: 0; justify-content: center; padding: var(--spacing-2); gap: 0; } .new-project { font-size: 0; gap: 0; padding: var(--spacing-2); } .recent-projects { display: none; } .writing { min-height: calc(var(--spacing-10) * 14); padding-top: var(--spacing-5); } .sidebar { padding-bottom: var(--spacing-2); } .audio-panel { margin: var(--spacing-2); } .play-main { min-width: var(--spacing-10); min-height: var(--spacing-10); } .volume-control input { display: none; } .timeline .transport { min-height: var(--spacing-12); } .transport-time { font-size: var(--font-size-xs); } .transport { padding-inline: var(--spacing-2); } .time-ruler small:nth-child(even) { visibility: hidden; } .settings-page,.library-page { padding: var(--spacing-5); } }
@@ -663,11 +687,21 @@
   .release-link { font-size: var(--app-small-font); white-space: nowrap; }
   @media (max-width: 600px) { .sidebar-update { display: none; } }
 
-  /* 音乐：三个区块之间用细线分隔，选中的标签描边加勾，不再整块涂黑。 */
+  /* 音乐：区块分隔，风格标签采用一体化输入盒，右侧配置区与情绪预设统一。 */
   .music-block + .music-block { padding-top: var(--spacing-4); border-top: var(--border-width) solid var(--app-line); }
   .music-tag.astryx-button[aria-pressed="true"] { border-color: var(--app-ink); background: var(--app-surface); color: var(--app-ink); }
   .music-tag.astryx-button { transition: background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard); }
   .music-block .astryx-segmented-control { flex: none; width: max-content; }
+  .music-style-box { position: relative; min-height: calc(var(--spacing-10) * 1.5); padding: var(--spacing-2) var(--spacing-3); border: var(--border-width) solid var(--app-line); border-radius: var(--radius-element); background: var(--app-paper); cursor: text; transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); }
+  .music-style-box:focus-within { border-color: var(--app-ink); box-shadow: 0 0 0 1px var(--app-ink); }
+  .music-style-field { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .music-inline-input { border: none; background: transparent; outline: none; font-size: calc(var(--app-ui-font) + var(--spacing-0-5)); color: var(--app-ink); min-width: 140px; padding: var(--spacing-0-5) var(--spacing-1); font-family: inherit; }
+  .music-inline-input::placeholder { color: var(--app-muted); font-size: var(--app-ui-font); }
+  .music-style-header, .style-presets-header { min-height: var(--spacing-8); }
+  .music-inspector .style-presets { margin-top: var(--spacing-1); }
+  .music-inspector .music-tag-panel { padding: var(--spacing-2) var(--spacing-3); border-radius: var(--radius-element); background: var(--app-surface); border: var(--border-width) solid var(--app-line); }
+  .music-tag-group-col { width: 100%; margin-block: var(--spacing-1); }
+  .music-tag-group-title { color: var(--app-muted); font-size: var(--app-small-font); font-weight: var(--font-weight-medium); }
 
   /* 编曲轨道视图：单行轨头固定宽度，轨道向右延伸贴紧检查器，右侧音块与段落标尺共用时间轴。 */
   /* 轨道区放在底部全宽面板里，与下方播放器同宽，横向贯穿检查器下方。 */
