@@ -2219,6 +2219,9 @@
   "@yovoice.error.scoreInvalid": {
     "defaultMessage": "The score is invalid: check tempo, meter, tracks and note positions (up to 512 bars, 32 tracks, 20,000 notes, 10 minutes)."
   },
+  "@yovoice.error.scoreTooLong": {
+    "defaultMessage": "The score is too long: up to {minutes} minutes and {bars} bars. Remove some bars or raise the tempo, then try again."
+  },
   "@yovoice.error.midiInvalid": {
     "defaultMessage": "This MIDI file can't be read. Use a standard type 0 or 1 MIDI file with notes."
   },
@@ -2965,5 +2968,44 @@
   },
   "@yovoice.app.pageError.reload": {
     "defaultMessage": "Reload"
+  },
+  "@yovoice.app.deleteVersion": {
+    "defaultMessage": "Delete version {n}"
+  },
+  "@yovoice.app.deleteVersionTitle": {
+    "defaultMessage": "Delete version {n}?"
+  },
+  "@yovoice.app.deleteVersionConfirm": {
+    "defaultMessage": "Delete version"
+  },
+  "@yovoice.library.batchDelete": {
+    "defaultMessage": "Bulk delete"
+  },
+  "@yovoice.library.selectAll": {
+    "defaultMessage": "Select all"
+  },
+  "@yovoice.library.pickVoice": {
+    "defaultMessage": "Select “{name}”"
+  },
+  "@yovoice.library.finishPicking": {
+    "defaultMessage": "Done"
+  },
+  "@yovoice.library.deletePicked": {
+    "defaultMessage": "Delete selected ({n})"
+  },
+  "@yovoice.library.deletePickedTitle": {
+    "defaultMessage": "Delete {n} selected reference audio clips?"
+  },
+  "@yovoice.library.deletePickedBody": {
+    "defaultMessage": "The selected reference audio and their files will be permanently deleted. "
+  },
+  "@yovoice.library.batchDeleteReferenced": {
+    "defaultMessage": "“{names}” are still used by characters or projects and were not deleted. Replace or remove those references first."
+  },
+  "@yovoice.app.exportVersion": {
+    "defaultMessage": "Export audio"
+  },
+  "@yovoice.app.allVersions": {
+    "defaultMessage": "Version history"
   }
 }

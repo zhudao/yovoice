@@ -2219,6 +2219,9 @@
   "@yovoice.error.scoreInvalid": {
     "defaultMessage": "乐谱格式不正确：请检查速度、拍号、声部和音符位置（最多 512 小节、32 个声部、20000 个音符、10 分钟）。"
   },
+  "@yovoice.error.scoreTooLong": {
+    "defaultMessage": "乐谱太长：最多 {minutes} 分钟、{bars} 小节，请删减小节或调快速度后再试。"
+  },
   "@yovoice.error.midiInvalid": {
     "defaultMessage": "无法读取这个 MIDI 文件，请使用含音符的标准类型 0 或 1 MIDI。"
   },
@@ -2965,5 +2968,44 @@
   },
   "@yovoice.app.pageError.reload": {
     "defaultMessage": "重新加载"
+  },
+  "@yovoice.app.deleteVersion": {
+    "defaultMessage": "删除版本 {n}"
+  },
+  "@yovoice.app.deleteVersionTitle": {
+    "defaultMessage": "删除版本 {n}？"
+  },
+  "@yovoice.app.deleteVersionConfirm": {
+    "defaultMessage": "删除版本"
+  },
+  "@yovoice.library.batchDelete": {
+    "defaultMessage": "批量删除"
+  },
+  "@yovoice.library.selectAll": {
+    "defaultMessage": "全选"
+  },
+  "@yovoice.library.pickVoice": {
+    "defaultMessage": "选择“{name}”"
+  },
+  "@yovoice.library.finishPicking": {
+    "defaultMessage": "完成"
+  },
+  "@yovoice.library.deletePicked": {
+    "defaultMessage": "删除所选（{n}）"
+  },
+  "@yovoice.library.deletePickedTitle": {
+    "defaultMessage": "删除所选的 {n} 条参考音频？"
+  },
+  "@yovoice.library.deletePickedBody": {
+    "defaultMessage": "将删除所选参考音频及其音频文件，无法撤销。"
+  },
+  "@yovoice.library.batchDeleteReferenced": {
+    "defaultMessage": "「{names}」仍被角色或作品使用，未删除，请先替换或移除引用。"
+  },
+  "@yovoice.app.exportVersion": {
+    "defaultMessage": "导出音频"
+  },
+  "@yovoice.app.allVersions": {
+    "defaultMessage": "版本记录"
   }
 }
