@@ -5,10 +5,22 @@
 <p align="center">让文字拥有你的声音，让创意谱成完整乐章。</p>
 <p align="center">
   <a href="https://yovoice.leemysw.com"><img src="https://img.shields.io/badge/website-yovoice.leemysw.com-10b981?style=flat-square" alt="官网" /></a>
-  <a href="web/package.json"><img src="https://img.shields.io/badge/version-0.2.0-blue?style=flat-square" alt="Version 0.2.0" /></a>
+  <a href="web/package.json"><img src="https://img.shields.io/badge/version-0.2.1-blue?style=flat-square" alt="Version 0.2.1" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-orange?style=flat-square" alt="License: Apache-2.0" /></a>
   <img src="https://img.shields.io/badge/macOS-14%2B-black?style=flat-square" alt="macOS 14+ (Apple Silicon)" />
   <img src="https://img.shields.io/badge/Windows-10%2F11-0078D4?style=flat-square" alt="Windows 10/11 (x64)" />
+</p>
+<p align="center">
+  <a href="https://www.star-history.com/leemysw/yovoice">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=leemysw/yovoice&type=rank&theme=dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=leemysw/yovoice&type=rank" />
+      <img alt="Star History Rank" src="https://api.star-history.com/badge?repo=leemysw/yovoice&type=rank" width="250" height="55" />
+    </picture>
+  </a>
+  <a href="https://trendshift.io/repositories/239687?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-239687" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/239687/daily?language=TypeScript" alt="leemysw%2Fyovoice | Trendshift" width="250" height="55"/>
+  </a>
 </p>
 <p align="center"><a href="README.md">English</a> · 简体中文</p>
 
@@ -42,7 +54,7 @@ yovoice 是一款适用于 macOS 和 Windows 的开源、本地优先（Local-fi
 - **音乐生成** — 描述风格、写下带段落标记的歌词，用 ACE-Step 1.5 生成整首歌曲或纯音乐，每次生成都保留为可对比的版本。
 - **编曲** — 按小节和拍写下每个声部，或导入 MIDI、交给 Agent 写谱，用 General MIDI 音色库渲染并按角色对齐电平混音；结果可精确复现，可导出 MIDI 和分轨。详见[编曲](docs/score_zh.md)。
 - **可选 AI 服务** — 接入 DeepSeek、通义千问、Kimi、OpenAI、Anthropic、Ollama 或任意兼容接口，让 AI 写谱、写歌词；密钥只保存在本机。详见[AI 服务](docs/ai_zh.md)。
-- **本地模型** — 通过 audio.cpp 运行 IndexTTS 2.0 / 2.5、VoxCPM2、OmniVoice、Qwen3-TTS、Breeze TTS 2 和 Kokoro，支持模型下载续传与 GGUF 导入。
+- **本地模型** — 通过 audio.cpp 运行 IndexTTS 2.0 / 2.5、VoxCPM2、OmniVoice、Qwen3-TTS、Breeze TTS 2 和 Kokoro，支持模型下载续传与自动校验。
 - **硬件加速** — Apple Silicon 支持 Metal；Windows 支持 CPU、NVIDIA CUDA 和实验性 Vulkan。
 - **Agent Skill & MCP** — 让 AI Agent 准备本地语音生成环境，根据文稿和参考音频完成配音。
 
@@ -72,8 +84,7 @@ yovoice 是一款适用于 macOS 和 Windows 的开源、本地优先（Local-fi
 | Qwen3-TTS VoiceDesign | 1.7B | Q8 · 2.82 GB<br>BF16 · 4.18 GB | 自然语言描述设计音色，无需参考音频 |
 | Breeze TTS 2 | 约 3B | Q4 · 3.79 GB<br>Q8 · 5.08 GB<br>BF16 · 7.34 GB | 中英自然语言设计音色、音色克隆与演绎指导；建议使用显卡，需要 v0.9.1 内核 |
 | Kokoro-82M 1.0 Official | 82M | Q8 · 189.55 MB<br>BF16 · 211.95 MB | 49 种内置音色、多语言生成，不含日语 |
-| Kokoro-82M 1.0 | 82M | Q8 · 932.66 MB | 54 种内置音色、包含日语的完整多语言资源；仅支持导入 |
-| Kokoro-82M 1.1-zh | 82M | Q8 · 255.32 MB | 100 种中文音色及 3 种英文音色；实验性，仅支持导入 |
+| Kokoro-82M 1.1-zh | 82M | Q8 · 255.32 MB | 100 种中文音色及 3 种英文音色；实验性 |
 | ACE-Step 1.5 Turbo | — | BF16 · 10.09 GB | 根据风格描述和歌词生成歌曲或纯音乐，支持 50 多种演唱语言；需要 v0.9.1 内核 |
 
 App 与 CLI 均支持以上模型，输入要求与示例见[模型选择](docs/models_zh.md)。OmniVoice 权重采用 CC-BY-NC 许可，Breeze TTS 2 权重采用 BreezeBlue 研究与非商业许可，均仅限非商业用途。
