@@ -42,8 +42,8 @@ Rules:
 - Write the title, section and track names in %s.`
 
 func scoreLanguage(locale schema.UiLocale) string {
-	if locale == schema.UiLocaleZhCN {
-		return "Simplified Chinese"
+	if name, ok := schema.UiLocaleNames[locale]; ok {
+		return name
 	}
 	return "English"
 }
@@ -204,6 +204,8 @@ type LyricsBrief struct {
 	Instrumental bool            `json:"instrumental"`
 	Language     string          `json:"language"`
 	Locale       schema.UiLocale `json:"locale"`
+	// Model 是作品当前的音乐模型；YuE2 的风格要写清演唱语言和速度。
+	Model string `json:"model"`
 }
 
 // Lyrics 是写给音乐作品的风格描述与带段落标记的歌词。
@@ -242,6 +244,9 @@ func (w *Workbench) WriteLyrics(ctx context.Context, in LyricsBrief) (Lyrics, er
 	}
 	brief := strings.TrimSpace(in.Brief)
 	extra := ""
+	if strings.HasPrefix(in.Model, "yue2-") {
+		extra = "\n- The song is sung by YuE2: start style with the sung language, then genre, instruments, vocal character and tempo, e.g. \"Mandarin, city pop, warm synths, soft female vocal, 96 BPM\"."
+	}
 	if in.Instrumental {
 		extra = "\n- This is an instrumental: leave lyrics empty except section markers describing the arrangement, e.g. [intro]\\n[verse]\\n[chorus]."
 	}

@@ -38,6 +38,8 @@ type aiState struct {
 	secrets sync.Mutex
 	// connect 是进行中的 OrcaRouter 一键授权。
 	connect *connectSession
+	// codexLogin 结束进行中的 `codex login`。
+	codexLogin context.CancelFunc
 }
 
 // aiKeysPrivate 是状态库私有设置中保存 AI 服务密钥的键，值为服务 ID 到密钥的映射。
@@ -91,7 +93,12 @@ func (w *Workbench) SaveAIProvider(in AIProviderInput) (schema.AIProvider, error
 	if p.Name == "" {
 		p.Name = preset.Name
 	}
-	if !slices.Contains(llm.Formats, p.Format) || !validEndpoint(p.BaseURL) || schema.TextLen(p.Name) > 60 || len(p.Model) > 200 || len(p.ModelsPath) > 500 {
+	// Codex 订阅经本机 CLI 调用，没有地址和密钥。
+	cli := preset.Endpoint == "cli"
+	if cli && in.Key != nil && *in.Key != "" {
+		return schema.AIProvider{}, bad
+	}
+	if !cli && (!slices.Contains(llm.Formats, p.Format) || !validEndpoint(p.BaseURL)) || schema.TextLen(p.Name) > 60 || len(p.Model) > 200 || len(p.ModelsPath) > 500 {
 		return schema.AIProvider{}, bad
 	}
 	if in.Key != nil && len(*in.Key) > 4096 {
@@ -264,7 +271,7 @@ func (w *Workbench) complete(ctx context.Context, request llm.Request) (llm.Resu
 	if e != nil {
 		return llm.Result{}, e
 	}
-	if c.Model == "" {
+	if c.Model == "" && c.Format != llm.FormatCodex {
 		return llm.Result{}, msg.Err(msg.ErrAINotConfigured, nil)
 	}
 	timeout := aiTimeout(w.Store.Read().Preferences)
@@ -285,13 +292,11 @@ func (w *Workbench) complete(ctx context.Context, request llm.Request) (llm.Resu
 	return result, e
 }
 
-// logAIOutput 记录无法使用的模型输出的开头和结尾，便于排查格式问题。
+// logAIOutput 记录无法使用的模型输出的形态，便于排查格式问题；不记录输出内容，其中可能有 AI 写的歌词。
 func (w *Workbench) logAIOutput(kind, issue, text string) {
-	head, tail := text, ""
-	if r := []rune(text); len(r) > 600 {
-		head, tail = string(r[:400]), string(r[len(r)-200:])
-	}
-	diag.Log(w.Store.Root, "ai.output_invalid", "kind", kind, "issue", issue, "chars", len(text), "head", head, "tail", tail)
+	trimmed := strings.TrimSpace(text)
+	diag.Log(w.Store.Root, "ai.output_invalid", "kind", kind, "issue", issue, "chars", len(text), "lines", strings.Count(trimmed, "\n")+1,
+		"fenced", strings.Contains(text, "```"), "json", json.Valid([]byte(trimmed)))
 }
 
 // startAI 在后台运行一次 AI 写作任务并立即返回任务；同一时间只运行一个，CancelAI 可中止。
@@ -301,23 +306,30 @@ func (w *Workbench) startAI(kind, projectID, brief string, work func(context.Con
 	if e != nil {
 		return schema.AITask{}, e
 	}
-	if c.Model == "" {
+	if c.Model == "" && c.Format != llm.FormatCodex {
 		return schema.AITask{}, msg.Err(msg.ErrAINotConfigured, nil)
 	}
+	task := schema.AITask{Kind: kind, ProjectID: projectID, Brief: brief, Stage: "writing", Provider: p.Name, Model: c.Model}
+	return w.runAI(task, p.ID, work)
+}
+
+// runAI 写入任务并在后台运行 work；同一时间只运行一个 AI 任务，结束后结果或错误写回状态。
+func (w *Workbench) runAI(task schema.AITask, providerID string, work func(context.Context) (any, error)) (schema.AITask, error) {
 	w.ai.mu.Lock()
 	defer w.ai.mu.Unlock()
 	if w.ai.cancel != nil {
 		return schema.AITask{}, msg.Err(msg.ErrBusy, nil)
 	}
-	task := schema.AITask{ID: schema.NewID(), Kind: kind, ProjectID: projectID, Brief: brief, Status: "running", Stage: "writing", Provider: p.Name, Model: c.Model,
-		Timeout: int(aiTimeout(w.Store.Read().Preferences).Seconds()), StartedAt: time.Now().UTC()}
-	if e = w.Store.Update(func(s *schema.State) { s.AITask = &task }, false); e != nil {
+	kind := task.Kind
+	task.ID, task.Status, task.StartedAt = schema.NewID(), "running", time.Now().UTC()
+	task.Timeout = int(aiTimeout(w.Store.Read().Preferences).Seconds())
+	if e := w.Store.Update(func(s *schema.State) { s.AITask = &task }, false); e != nil {
 		return schema.AITask{}, e
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan struct{})
 	w.ai.cancel, w.ai.task, w.ai.done = cancel, task.ID, done
-	diag.Log(w.Store.Root, "ai.task_started", "task_id", task.ID, "kind", kind, "project_id", projectID, "provider_id", p.ID, "model", c.Model, "timeout_s", task.Timeout)
+	diag.Log(w.Store.Root, "ai.task_started", "task_id", task.ID, "kind", kind, "project_id", task.ProjectID, "provider_id", providerID, "model", task.Model, "timeout_s", task.Timeout)
 	go func() {
 		defer close(done)
 		defer cancel()
@@ -371,6 +383,21 @@ func (w *Workbench) setAIStage(stage string) {
 	}, false)
 }
 
+// setAIProgress 更新分段任务的进度。
+func (w *Workbench) setAIProgress(done, total int) {
+	w.ai.mu.Lock()
+	id := w.ai.task
+	w.ai.mu.Unlock()
+	if id == "" {
+		return
+	}
+	_ = w.Store.Update(func(s *schema.State) {
+		if s.AITask != nil && s.AITask.ID == id && s.AITask.Status == "running" {
+			s.AITask.Done, s.AITask.Total = done, total
+		}
+	}, false)
+}
+
 // CancelAI 取消正在进行的 AI 任务。
 func (w *Workbench) CancelAI() {
 	w.ai.mu.Lock()
@@ -391,6 +418,9 @@ func (w *Workbench) stopAI() {
 	}
 	w.ai.mu.Lock()
 	done := w.ai.done
+	if w.ai.codexLogin != nil {
+		w.ai.codexLogin()
+	}
 	if w.ai.cancel != nil {
 		w.ai.cancel()
 	}
