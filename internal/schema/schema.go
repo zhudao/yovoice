@@ -255,6 +255,12 @@ type Preferences struct {
 	UiLocale       UiLocale `json:"uiLocale"`
 	// AITimeout 是单次 AI 请求的超时秒数，0 表示默认值。
 	AITimeout int `json:"aiTimeout,omitempty"`
+	// IntroSeen 表示已看过首次启动的开场画面，之后启动只显示简短的加载动画。
+	IntroSeen bool `json:"introSeen,omitempty"`
+	// TourSeen 表示已看过或跳过首次进入主界面的功能引导。
+	TourSeen bool `json:"tourSeen,omitempty"`
+	// AssistantQuiet 关闭助手的主动提示（生成完成、失败等时刻在角落出现的气泡）。
+	AssistantQuiet bool `json:"assistantQuiet,omitempty"`
 }
 type State struct {
 	Characters     []Character        `json:"characters"`
@@ -278,6 +284,11 @@ type State struct {
 	AITask       *AITask      `json:"aiTask,omitempty"`
 	// Melody 是最近一次出谱或扒谱的结果，等界面填入作品；只属于本次会话。
 	Melody *MelodyResult `json:"melody,omitempty"`
+	// AssistantSessions 是助手会话的持久化记录；AssistantLive 只随状态广播（进行中的一轮与界面事件）。
+	AssistantSessions *AssistantSessions `json:"assistantSessions,omitempty"`
+	AssistantLive     *AssistantLive     `json:"assistantLive,omitempty"`
+	// AssistantMemory 是助手记住的用户偏好，所有会话共用。
+	AssistantMemory []AssistantMemo `json:"assistantMemory,omitempty"`
 }
 
 // MelodyResult 是引擎写出的旋律谱：Source 为 plan（YuE2 按歌词出谱）或 cover（从歌曲扒谱）。

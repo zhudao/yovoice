@@ -2,6 +2,7 @@ package workbench
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"os"
 	"path/filepath"
@@ -65,16 +66,48 @@ func TestGenerationKeepsMelody(t *testing.T) {
 	if wb.Store.Read().Drafts[0].Abc != "" {
 		t.Fatal("作品本身的谱不被引擎结果改写")
 	}
+	// 作品没有谱时，YuE2 写的谱作为出谱结果交给界面填入。
+	if m := wb.Store.Read().Melody; m == nil || m.ProjectID != d.ID || m.Abc != testkit.ABC || m.Source != "plan" {
+		t.Fatalf("%+v", m)
+	}
+	must(t, wb.DismissMelody(wb.Store.Read().Melody.ID))
 	d.Abc, _ = score.StripABCChords(testkit.ABC)
 	must(t, wb.Generate(d))
 	<-wb.Done()
 	if h := wb.Store.Read().History; len(h) != 2 || h[0].Settings.Abc != d.Abc {
 		t.Fatalf("%+v", h[0].Settings.Abc)
 	}
+	if wb.Store.Read().Melody != nil {
+		t.Fatal("作品已有谱时不再提供出谱结果")
+	}
 	var ce *msg.CallError
 	d.Abc = strings.Replace(testkit.ABC, "c16|", "c8|", 1)
 	if err := wb.Generate(d); !errors.As(err, &ce) || ce.Code != msg.ErrMelodyInvalid || ce.Params["bar"] != 1 {
 		t.Fatal(err)
+	}
+}
+
+// YuE2 纯音乐：没谱时先出谱，再把人声旋律移到器乐声部生成，版本里存实际演奏的谱；歌词可以留空。
+func TestInstrumentalGeneration(t *testing.T) {
+	wb, d := yueWorkbench(t)
+	d.Instrumental, d.Lyrics = true, ""
+	must(t, wb.Generate(d))
+	<-wb.Done()
+	state := wb.Store.Read()
+	if state.Activity.Status != "completed" || len(state.History) != 1 {
+		t.Fatalf("%+v", state.Activity)
+	}
+	played, err := score.ParseABC(state.History[0].Settings.Abc)
+	must(t, err)
+	if len(played.Vocal().Notes) != 0 || len(played.Ins().Notes) == 0 || !played.HasChords() {
+		t.Fatal(state.History[0].Settings.Abc)
+	}
+	// 已有谱时直接转谱生成，作品里的谱保持原样。
+	d.Abc = testkit.ABC
+	must(t, wb.Generate(d))
+	<-wb.Done()
+	if h := wb.Store.Read().History; len(h) != 2 || h[0].Settings.Abc != state.History[0].Settings.Abc || wb.Store.Read().Drafts[0].Abc != testkit.ABC {
+		t.Fatalf("%+v", h[0].Settings.Abc)
 	}
 }
 
@@ -105,26 +138,132 @@ func TestInspectAndTransformMelody(t *testing.T) {
 	if out, err = TransformMelody(out, "stripChords", 0); err != nil || InspectMelody(out).Chords {
 		t.Fatal(out, err)
 	}
+	if out, err = TransformMelody(testkit.ABC, "instrumental", 0); err != nil || len(InspectMelody(out).Score.Tracks) != 3 || !strings.Contains(out, `"C"z`) {
+		t.Fatal(out, err)
+	}
 	if _, err = TransformMelody(out, "transpose", 0); err == nil {
 		t.Fatal("未知操作应失败")
 	}
 }
 
-func TestDecodeMelody(t *testing.T) {
-	answer := "SUMMARY: 副歌升高了一个全音\nSTYLE: unchanged\n```abc\n" + testkit.ABC + "```\n"
-	edit, err := decodeMelody(answer)
-	if err != nil || edit.Summary != "副歌升高了一个全音" || edit.Style != "" || edit.Abc != testkit.ABC {
-		t.Fatalf("%+v %v", edit, err)
+// 助手经 update_work 写旋律谱：与界面导入同一套方言校验，出错时指出小节；只适用于音乐作品。
+func TestAssistantWritesMelody(t *testing.T) {
+	wb, d := yueWorkbench(t)
+	must(t, wb.saveDraft(d))
+	bad := strings.Replace(testkit.ABC, "c16|", "c8|", 1)
+	if _, _, err := wb.updateWorkTool(context.Background(), toolReq, updateWorkInput{ID: d.ID, Abc: &bad}); err == nil || !strings.Contains(err.Error(), "invalid ABC") {
+		t.Fatalf("非法谱应被拒绝：%v", err)
 	}
-	edit, err = decodeMelody(strings.Replace(answer, "unchanged", "jazz, upright bass, 88 BPM", 1))
-	if err != nil || edit.Style != "jazz, upright bass, 88 BPM" {
-		t.Fatal(edit, err)
-	}
-	var issue *score.ABCIssue
-	if _, err = decodeMelody(strings.Replace(answer, "c16|", "c8|", 1)); !errors.As(err, &issue) || issue.Bar != 1 {
+	abc := testkit.ABC
+	if _, _, err := wb.updateWorkTool(context.Background(), toolReq, updateWorkInput{ID: d.ID, Abc: &abc}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = decodeMelody("no score"); err == nil {
-		t.Fatal("缺少谱应失败")
+	saved, err := wb.assistantWork(d.ID)
+	must(t, err)
+	if saved.Abc != strings.TrimSpace(testkit.ABC)+"\n" {
+		t.Fatalf("旋律谱未写入：%q", saved.Abc)
 	}
+	text := schema.DefaultDraft()
+	must(t, wb.saveDraft(text))
+	if _, _, err = wb.updateWorkTool(context.Background(), toolReq, updateWorkInput{ID: text.ID, Abc: &abc}); err == nil {
+		t.Fatal("非音乐作品不应接受旋律谱")
+	}
+}
+
+// 助手的旋律谱工具：出谱结果经 get_generation_status 读到，update_work 填入后不再等界面确认；
+// 转谱直接改写作品；扒谱需要 SheetSage2；不是 YuE2 的作品不接受。
+func TestAssistantMelodyTools(t *testing.T) {
+	wb, d := yueWorkbench(t)
+	must(t, wb.saveDraft(d))
+	// 工具注册时会推导参数 schema，写法不合规会直接 panic。
+	_ = wb.newAssistantServer()
+	ctx := context.Background()
+	_, _, err := wb.planMelodyTool(ctx, toolReq, workIDInput{ID: d.ID})
+	must(t, err)
+	<-wb.Done()
+	_, status, err := wb.getGenerationStatusTool(ctx, toolReq, workIDInput{ID: d.ID})
+	must(t, err)
+	melody, _ := status.(map[string]any)["melody"].(map[string]any)
+	if melody == nil || melody["abc"] != testkit.ABC || melody["source"] != "plan" || melody["bars"] != 2 || melody["vocalMelody"] != true {
+		t.Fatalf("%+v", status)
+	}
+	abc := melody["abc"].(string)
+	_, _, err = wb.updateWorkTool(ctx, toolReq, updateWorkInput{ID: d.ID, Abc: &abc})
+	must(t, err)
+	if wb.Store.Read().Melody != nil {
+		t.Fatal("填入作品后应清除等待中的出谱结果")
+	}
+	_, out, err := wb.transformMelodyTool(ctx, toolReq, transformMelodyInput{ID: d.ID, Op: "instrumental"})
+	must(t, err)
+	summary := out.(map[string]any)
+	if summary["melody"].(map[string]any)["vocalMelody"] != false || len(summary["melodyChanges"].(score.ABCChanges).Vocal) != 2 {
+		t.Fatalf("%+v", summary)
+	}
+	saved, err := wb.assistantWork(d.ID)
+	must(t, err)
+	if parsed, e := score.ParseABC(saved.Abc); e != nil || len(parsed.Vocal().Notes) != 0 {
+		t.Fatal(saved.Abc)
+	}
+	song := filepath.Join(t.TempDir(), "song.wav")
+	must(t, os.WriteFile(song, wav(), 0600))
+	var ce *msg.CallError
+	if _, _, err = wb.coverMelodyTool(ctx, toolReq, coverMelodyInput{ID: d.ID, Path: song}); !errors.As(err, &ce) || ce.Code != msg.ErrCoverModelRequired {
+		t.Fatal(err)
+	}
+	text := schema.DefaultDraft()
+	must(t, wb.saveDraft(text))
+	if _, _, err = wb.planMelodyTool(ctx, toolReq, workIDInput{ID: text.ID}); err == nil {
+		t.Fatal("非 YuE2 作品不应出谱")
+	}
+}
+
+// 试听旋律谱：用已装的音色库渲染，不进历史；只保留最近一次的试听文件；没有音色库时提示下载。
+func TestListenMelody(t *testing.T) {
+	wb, _ := yueWorkbench(t)
+	var ce *msg.CallError
+	if _, err := wb.ListenMelody(context.Background(), testkit.ABC); !errors.As(err, &ce) || ce.Code != msg.ErrMelodySoundFontRequired {
+		t.Fatal(err)
+	}
+	font := filepath.Join(wb.Store.Root, "models", "test.sf2")
+	must(t, os.WriteFile(font, testkit.SoundFont(), 0600))
+	must(t, wb.Store.Update(func(s *schema.State) {
+		s.Models = append(s.Models, schema.InstalledModel{ID: "generaluser-gs-sf2", Path: font})
+	}, true))
+	first, err := wb.ListenMelody(context.Background(), testkit.ABC)
+	must(t, err)
+	second, err := wb.ListenMelody(context.Background(), testkit.ABC)
+	must(t, err)
+	if _, err := os.Stat(filepath.Join(wb.Store.Root, "outputs", second)); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(wb.Store.Root, "outputs", first)); !os.IsNotExist(err) {
+		t.Fatal("旧的试听文件应删除", err)
+	}
+	if len(wb.Store.Read().History) != 0 {
+		t.Fatal("试听不进历史")
+	}
+	if _, err := wb.ListenMelody(context.Background(), strings.Replace(testkit.ABC, "c16|", "c8|", 1)); !errors.As(err, &ce) || ce.Code != msg.ErrMelodyInvalid {
+		t.Fatal(err)
+	}
+}
+
+// 助手为按谱生成的 YuE2 作品发起生成前必须先有谱；自由发挥或用户明确不看谱时直接生成。
+func TestAssistantGenerateNeedsScore(t *testing.T) {
+	wb, d := yueWorkbench(t)
+	d.ID = schema.NewID()
+	must(t, wb.Store.Update(func(s *schema.State) { s.Drafts = []schema.Draft{d} }, true))
+	if _, _, err := wb.generateWorkTool(context.Background(), nil, generateWorkInput{ID: d.ID}); err == nil || !strings.Contains(err.Error(), "plan_melody") {
+		t.Fatal("没谱时应先出谱", err)
+	}
+	variant := func(change func(*schema.Draft)) schema.Draft { v := d; change(&v); return v }
+	free := func(v *schema.Draft) { v.ModelOptions = map[string]map[string]any{"yue2": {"cot": "off"}} }
+	if !needsScoreReview(variant(func(v *schema.Draft) { free(v); v.Instrumental = true })) {
+		t.Fatal("纯音乐总是按谱")
+	}
+	if needsScoreReview(variant(free)) || needsScoreReview(variant(func(v *schema.Draft) { v.Abc = testkit.ABC })) || needsScoreReview(variant(func(v *schema.Draft) { v.ModelID = "ace-step-1.5-turbo-q8" })) {
+		t.Fatal("自由发挥、已有谱或 ACE-Step 不需要先出谱")
+	}
+	_, _, err := wb.generateWorkTool(context.Background(), nil, generateWorkInput{ID: d.ID, WithoutScore: true})
+	must(t, err)
+	<-wb.Done()
 }

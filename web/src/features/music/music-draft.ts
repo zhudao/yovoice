@@ -1,4 +1,4 @@
-import { createDraft, isUntitled, type Draft, type UiLocale } from '../../shared/workbench';
+import { createDraft, type Draft, type UiLocale } from '../../shared/workbench';
 import { seedLocale, type SeedLocale } from '../../shared/i18n/locale';
 
 export const musicModelId = 'ace-step-1.5-turbo-bf16';
@@ -45,7 +45,9 @@ export const applyPresetTags = (preset: StylePreset, currentTags: readonly strin
 // 标签的界面语言释义，降低理解门槛；目录键由标签派生。
 export const tagHintKey = (tag: string) => `@yovoice.music.tagHint.${tag.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}` as const;
 
-export const lyricSections = ['intro', 'verse', 'pre-chorus', 'chorus', 'bridge', 'outro'] as const;
+// 段落标记：演唱段落在前，器乐段落在后；首字母大写与 YuE2 官方写法一致，ACE-Step 不区分大小写。
+export const lyricSections = ['Intro', 'Verse', 'Pre-Chorus', 'Chorus', 'Post-Chorus', 'Hook', 'Bridge', 'Final Chorus', 'Outro'] as const;
+export const instrumentalSections = ['Interlude', 'Break', 'Guitar Solo', 'Piano Solo', 'Instrumental'] as const;
 
 // 常用演唱语言放在前面，完整列表与 Go 的 schema.MusicLanguages 一致。
 export const musicLanguages = ['zh', 'en', 'yue', 'ja', 'ko', 'es', 'fr', 'de', 'pt', 'ru', 'it'] as const;
@@ -83,15 +85,3 @@ export function createMusicDraft(locale: UiLocale, example = true): Draft {
   };
 }
 
-interface Lyrics { title?: string; style?: string; lyrics?: string; language?: string }
-
-// AI 写歌词：填入风格与歌词；作品尚未命名（空标题或“未命名作品”）时一并起名，歌词语言只接受 ACE-Step 支持的。
-export function lyricsPatch(draft: Pick<Draft, 'title' | 'instrumental'>, value: unknown): Partial<Draft> {
-  const result = value as Lyrics;
-  return {
-    ...(result.style ? { text: result.style } : {}),
-    ...(!draft.instrumental && result.lyrics ? { lyrics: result.lyrics } : {}),
-    ...(result.language && (musicLanguages as readonly string[]).includes(result.language) ? { synthesisLanguage: result.language } : {}),
-    ...(result.title?.trim() && isUntitled(draft.title) ? { title: result.title.trim().slice(0, 120) } : {}),
-  };
-}

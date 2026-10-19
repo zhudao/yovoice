@@ -7,19 +7,17 @@ import { TextArea } from '@astryxdesign/core/TextArea';
 import { Token } from '@astryxdesign/core/Token';
 import { useTranslator } from '@astryxdesign/core/i18n';
 import { Lightbulb } from 'lucide-react';
-import { call } from '../../shared/lib/client';
-import { AIComposer } from '../../shared/ui/ai-composer';
-import { isUntitled, isYuE, type Draft, type State, type UiLocale } from '../../shared/workbench';
-import { createMusicDraft, lyricSections, lyricsPatch, splitTags } from './music-draft';
+import { isUntitled, isYuE, type Draft, type State, type Track, type UiLocale } from '../../shared/workbench';
+import { createMusicDraft, instrumentalSections, lyricSections, splitTags } from './music-draft';
 import { MelodyScore } from './melody-score';
 
-// 音乐创作区：参照 Suno、Udio 的写法，从上到下是“一句话交给 AI → 风格 → 歌词”；生成的版本在“版本记录”里查看。
-// 一句话可以直接写出风格和歌词，也可以手动填写；纯音乐与填写歌词是并列的两种模式。YuE2 还可以先出旋律谱、改谱后再生成。
-export function MusicEditor({ draft, state, change, locale, configureAI }: {
-  draft: Draft; state: State; change: (patch: Partial<Draft>) => void; locale: UiLocale; configureAI: () => void;
+// 音乐创作区：从上到下是“风格 → 歌词”，生成的版本在“版本记录”里查看；让 AI 写风格和歌词走创作助手。
+// 纯音乐与填写歌词是并列的两种模式。YuE2 还可以先出旋律谱、改谱后再生成。
+export function MusicEditor({ draft, state, change, locale, play, onError }: {
+  draft: Draft; state: State; change: (patch: Partial<Draft>) => void; locale: UiLocale; play: (track: Track) => void; onError: (message: string) => void;
 }) {
   const t = useTranslator();
-  // YuE2 只能生成带人声的歌曲，选中时隐藏纯音乐切换。
+  // YuE2 的纯音乐先出谱，再把人声旋律交给乐器演奏；歌词可留空，或只写段落标记安排结构。
   const yue = isYuE(draft.modelId);
   const lyrics = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,11 +66,7 @@ export function MusicEditor({ draft, state, change, locale, configureAI }: {
     requestAnimationFrame(() => { element?.focus(); element?.setSelectionRange(start + tag.length, start + tag.length); });
   };
   const empty = !draft.text.trim() && !draft.lyrics?.trim();
-  const applyLyrics = (value: unknown) => change(lyricsPatch(draft, value));
   return <VStack className="music-editor" gap={5}>
-    <AIComposer kind="lyrics" projectId={draft.id} state={state} overwrite={!empty} configure={configureAI} apply={applyLyrics}
-      placeholder={t(draft.instrumental ? '@yovoice.ai.lyricsPlaceholderInstrumental' : '@yovoice.ai.lyricsPlaceholder')} submitLabel={t('@yovoice.ai.lyricsSubmit')}
-      start={brief => call('ai.lyrics', { projectId: draft.id, brief, instrumental: !!draft.instrumental, language: draft.synthesisLanguage ?? '', locale, model: draft.modelId })} />
     <VStack className="music-block" gap={3}>
       <HStack className="music-style-header" hAlign="between" vAlign="center" gap={2}>
         <h2>{t('@yovoice.music.style')}</h2>
@@ -114,17 +108,16 @@ export function MusicEditor({ draft, state, change, locale, configureAI }: {
       <HStack vAlign="center" gap={2} wrap="wrap">
         <h2 className="grow">{t('@yovoice.music.lyrics')}</h2>
         {!draft.instrumental || yue ? <DropdownMenu hasChevron alignment="end" button={{ size: 'sm', variant: 'ghost', label: t('@yovoice.music.insertSection') }}
-          items={lyricSections.map(section => ({ label: `[${section}]`, onClick: () => insertSection(section) }))} /> : null}
-        {yue ? <small>{t('@yovoice.music.yueVocalOnly')}</small> : <SegmentedControl label={t('@yovoice.music.lyricsMode')} size="sm" value={draft.instrumental ? 'instrumental' : 'vocal'} onChange={value => change({ instrumental: value === 'instrumental' })}>
+          items={[...lyricSections.map(section => ({ label: `[${section}]`, onClick: () => insertSection(section) })), { type: 'divider' as const }, ...instrumentalSections.map(section => ({ label: `[${section}]`, onClick: () => insertSection(section) }))]} /> : null}
+        <SegmentedControl label={t('@yovoice.music.lyricsMode')} size="sm" value={draft.instrumental ? 'instrumental' : 'vocal'} onChange={value => change({ instrumental: value === 'instrumental' })}>
           <SegmentedControlItem value="vocal" label={t('@yovoice.music.vocal')} />
           <SegmentedControlItem value="instrumental" label={t('@yovoice.music.instrumental')} />
-        </SegmentedControl>}
+        </SegmentedControl>
       </HStack>
-      {draft.instrumental && !yue
-        ? <p className="music-instrumental">{t('@yovoice.music.instrumentalHint')}</p>
-        : <TextArea ref={lyrics} className="music-lyrics" label={t('@yovoice.music.lyrics')} isLabelHidden value={draft.lyrics ?? ''} maxLength={4000} rows={14} hasSpellCheck={false} placeholder={t('@yovoice.music.lyricsPlaceholder')} onChange={value => change({ lyrics: value.slice(0, 4000) })} />}
+      {draft.instrumental && !yue ? null
+        : <TextArea ref={lyrics} className="music-lyrics" label={t('@yovoice.music.lyrics')} isLabelHidden value={draft.lyrics ?? ''} maxLength={4000} rows={draft.instrumental ? 6 : 14} hasSpellCheck={false} placeholder={t(draft.instrumental ? '@yovoice.music.structurePlaceholder' : '@yovoice.music.lyricsPlaceholder')} onChange={value => change({ lyrics: value.slice(0, 4000) })} />}
     </VStack>
     {/* YuE2 的流程是“歌词 → 旋律谱 → 整首歌”，谱放在歌词之后。 */}
-    {yue ? <MelodyScore draft={draft} state={state} change={change} locale={locale} configureAI={configureAI} /> : null}
+    {yue ? <MelodyScore draft={draft} state={state} change={change} play={play} onError={onError} /> : null}
   </VStack>;
 }

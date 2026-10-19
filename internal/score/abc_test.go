@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 	"testing"
+	"yovoice/internal/schema"
 )
 
 const sampleABC = `X:1
@@ -141,5 +142,107 @@ func TestCompareABC(t *testing.T) {
 	c := CompareABC(before, after)
 	if !c.Tempo || !slices.Equal(c.Vocal, []int{3}) || !slices.Equal(c.Chords, []int{3}) || len(c.Ins) != 0 {
 		t.Fatalf("changes = %+v", c)
+	}
+}
+
+// 转纯音乐：人声音符原样移到 Ins，Vocal 只留休止与和弦；重叠时人声优先，速度、调与和弦不变。
+func TestInstrumentalABC(t *testing.T) {
+	out, report, e := InstrumentalABC(sampleABC)
+	if e != nil {
+		t.Fatal(e)
+	}
+	before, _ := ParseABC(sampleABC)
+	after, e := ParseABC(out)
+	if e != nil {
+		t.Fatalf("%v\n%s", e, out)
+	}
+	if len(after.Vocal().Notes) != 0 || !slices.Equal(after.Vocal().Chords, before.Vocal().Chords) {
+		t.Fatalf("Vocal 应只剩和弦：\n%s", out)
+	}
+	want := append(slices.Clone(before.Ins().Notes), before.Vocal().Notes...)
+	if !slices.Equal(after.Ins().Notes, want) || report.Moved != 9 || report.Trimmed != 0 || !report.Changed {
+		t.Fatalf("Ins = %+v report=%+v\n%s", after.Ins().Notes, report, out)
+	}
+	if !strings.Contains(out, "% verse\nV: Vocal\n\"D\"z32|") || after.SectionTags() != "[Intro]\n\n[Verse]\n" {
+		t.Fatalf("段落与和弦行：\n%s", out)
+	}
+	// 已是纯器乐时原样返回。
+	again, report, e := InstrumentalABC(out)
+	if e != nil || again != out || report.Changed {
+		t.Fatalf("再次转换应不变：%v %+v", e, report)
+	}
+
+	// 重叠：Ins 的长音被人声切开，只保留不重叠的部分；调外音、跨小节连音与降号调都能写回。
+	overlap := strings.Replace(strings.Replace(sampleABC, "K:D", "K:Bb", 1), `"D"D8F8A8F8|"G"G8B8d16-|"G"d16"A"c16|"D"d32|
+V: Ins
+Z4|`, `"D"z16=B8^c8|"G"G8z8d16-|"G"d16"A"z16|"D"d32|
+V: Ins
+B32|e32-|e32|Z|`, 1)
+	src, e := ParseABC(overlap)
+	if e != nil {
+		t.Fatal(e)
+	}
+	out, report, e = InstrumentalABC(overlap)
+	if e != nil {
+		t.Fatal(e)
+	}
+	after, e = ParseABC(out)
+	if e != nil {
+		t.Fatalf("%v\n%s", e, out)
+	}
+	if report.Trimmed != 2 || len(after.Vocal().Notes) != 0 {
+		t.Fatalf("report=%+v\n%s", report, out)
+	}
+	for _, n := range src.Vocal().Notes {
+		if !slices.Contains(after.Ins().Notes, n) {
+			t.Fatalf("人声音符 %+v 没有原样保留\n%s", n, out)
+		}
+	}
+}
+
+// 谱中途夹一小节更长的拍子（4/4 里的 9/8）时，转换出的编曲乐谱仍然合规，音按绝对时间排进 4/4 小节网格。
+func TestABCScoreWithLongerMeterBar(t *testing.T) {
+	text := `X:1
+T:
+M:4/4
+L:1/32
+Q:1/4=69
+V: Vocal clef=treble name="Vocal Melody" snm="Vocal"
+V: Ins clef=treble name="Ins Melody" snm="Inst."
+K:G
+% verse
+V: Vocal
+"Em"E32|
+V: Ins
+Z|
+V: Vocal
+M:9/8
+"Am7"z6D2E4G4"D"A4G4F4D4B,4|
+V: Ins
+M:9/8
+Z|
+% outro
+V: Vocal
+M:4/4
+"D"D8z8G8E8|
+V: Ins
+M:4/4
+Z|
+`
+	s, e := ParseABC(text)
+	if e != nil {
+		t.Fatal(e)
+	}
+	score := s.Score()
+	if issue := schema.ScoreIssue(&score); issue != "" {
+		t.Fatal(issue)
+	}
+	// 第三小节的 D 从第 4+4.5=8.5 拍之后开始，落在网格第 3 小节第 1.5 拍。
+	last := score.Tracks[0].Notes[len(score.Tracks[0].Notes)-3]
+	if last.Pitch != 62 || last.Bar != 3 || last.Beat != 1.5 {
+		t.Fatalf("%+v", score.Tracks[0].Notes)
+	}
+	if len(score.Sections) != 2 || score.Sections[1].Start != 3 || score.Sections[1].End != 4 {
+		t.Fatalf("%+v", score.Sections)
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"yovoice/internal/catalog"
 	"yovoice/internal/diag"
 	"yovoice/internal/msg"
+	"yovoice/internal/platform"
 	"yovoice/internal/schema"
 	"yovoice/internal/score"
 	"yovoice/internal/workbench"
@@ -22,7 +23,8 @@ var audited = map[string]bool{
 	"preferences.save": true, "storage.relocate": true, "storage.cleanup": true, "model.directory": true, "model.download": true,
 	"model.forget": true, "runtime.install": true, "ai.provider.save": true, "ai.provider.delete": true, "ai.provider.use": true,
 	"ai.test": true, "ai.connect": true, "ai.codex.login": true, "melody.plan": true, "melody.cover": true, "melody.dismiss": true, "ai.dismiss": true,
-	"operation.cancel": true, "model.cancel": true, "ai.cancel": true, "logs.export": true,
+	"operation.cancel": true, "model.cancel": true, "ai.cancel": true, "logs.export": true, "assets.delete": true,
+	"assistant.proposal": true, "assistant.forget": true,
 }
 
 // Call 解码桌面界面的 RPC 请求并调用应用服务；耗时操作由 Workbench 调度，结果通过状态事件广播。
@@ -70,7 +72,9 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 	}
 	switch method {
 	case "state.get":
-		return map[string]any{"state": w.Store.Read(), "catalog": catalog.Models, "engine": map[string]string{"version": catalog.EngineVersion, "minimum": catalog.EngineMinimum}, "desktop": true}, nil
+		// assistant 报告随包的 AI 助手运行时是否存在：缺失时界面禁用 AI 写作并说明原因。
+		_, ochoErr := platform.OchoExecutable()
+		return map[string]any{"state": w.Store.Read(), "catalog": catalog.Models, "engine": map[string]string{"version": catalog.EngineVersion, "minimum": catalog.EngineMinimum}, "desktop": true, "assistant": map[string]bool{"available": ochoErr == nil}}, nil
 	case "draft.save", "generation.start":
 		d := schema.DefaultDraft()
 		if e := json.Unmarshal(data, &d); e != nil {
@@ -141,6 +145,18 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 		return true, w.RenameMedia(p.Kind, p.ID, p.Name)
 	case "media.delete":
 		return true, w.DeleteMedia(p.Kind, p.ID)
+	case "assets.list":
+		return w.ListAssets()
+	case "assets.delete":
+		var in struct {
+			Items []workbench.AssetRef `json:"items"`
+		}
+		if e := json.Unmarshal(data, &in); e != nil || len(in.Items) == 0 || len(in.Items) > 2000 {
+			return nil, msg.Err(msg.ErrRequestInvalid, nil)
+		}
+		return w.DeleteAssets(in.Items), nil
+	case "assets.image":
+		return w.ImagePreview(p.ID)
 	case "generation.lyricTimes":
 		return true, w.SetLyricTimes(p.ID, p.Times)
 	case "preferences.save":
@@ -184,18 +200,18 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 	case "ai.connect":
 		authURL, e := w.ConnectOrcaRouter()
 		return map[string]string{"url": authURL}, e
-	case "ai.score":
-		var input workbench.ScoreBrief
+	case "assistant.send":
+		var input struct {
+			Text    string                     `json:"text"`
+			Context workbench.AssistantContext `json:"context"`
+		}
 		if e := json.Unmarshal(data, &input); e != nil {
 			return nil, e
 		}
-		return w.StartScore(input)
-	case "ai.lyrics":
-		var input workbench.LyricsBrief
-		if e := json.Unmarshal(data, &input); e != nil {
-			return nil, e
-		}
-		return w.StartLyrics(input)
+		return true, w.SendAssistant(input.Text, input.Context)
+	case "assistant.cancel":
+		w.CancelAssistant()
+		return true, nil
 	case "ai.cast":
 		var input workbench.CastBrief
 		if e := json.Unmarshal(data, &input); e != nil {
@@ -208,12 +224,6 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 			return nil, e
 		}
 		return w.StartImage(input)
-	case "ai.melody":
-		var input workbench.MelodyBrief
-		if e := json.Unmarshal(data, &input); e != nil {
-			return nil, e
-		}
-		return w.StartMelodyEdit(input)
 	case "melody.plan":
 		d := schema.DefaultDraft()
 		if e := json.Unmarshal(data, &d); e != nil {
@@ -233,6 +243,15 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 			return nil, e
 		}
 		return true, w.CoverMelody(input.ProjectID, bytes.NewReader(b))
+	case "melody.listen":
+		var input struct {
+			Abc string `json:"abc"`
+		}
+		if e := json.Unmarshal(data, &input); e != nil {
+			return nil, e
+		}
+		file, e := w.ListenMelody(ctx, input.Abc)
+		return map[string]string{"fileName": file}, e
 	case "melody.dismiss":
 		return true, w.DismissMelody(p.ID)
 	case "melody.inspect", "melody.transform":
@@ -251,6 +270,26 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 	case "ai.cancel":
 		w.CancelAI()
 		return true, nil
+	case "assistant.sessions":
+		return w.SessionsAssistant(), nil
+	case "assistant.open":
+		return true, w.OpenAssistantSession(p.ID)
+	case "assistant.new":
+		return w.NewAssistantSession()
+	case "assistant.delete":
+		return true, w.DeleteAssistantSession(p.ID)
+	case "assistant.proposal":
+		var input struct {
+			ID      string `json:"id"`
+			Confirm bool   `json:"confirm"`
+		}
+		if e := json.Unmarshal(data, &input); e != nil {
+			return nil, e
+		}
+		return true, w.ResolveAssistantProposal(input.ID, input.Confirm)
+	case "assistant.forget":
+		// id 为空时清空全部偏好。
+		return true, w.ForgetAssistant(p.ID)
 	case "diag.client":
 		// 界面侧的异常（桥接超时、未捕获错误）写入同一份服务日志，便于对照排查。
 		var input struct {

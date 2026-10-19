@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strings"
 	"time"
 	"yovoice/internal/audio"
 	"yovoice/internal/diag"
@@ -224,8 +225,8 @@ func (w *Workbench) startGeneration(d schema.Draft, previewID, cueID, clipID str
 		// 与逐句生成一致，快照不携带时间轴，避免历史记录随剪辑反复膨胀。
 		snapshot := d
 		snapshot.Timeline = nil
-		// YuE2 自己规划时附带这次所用的旋律谱，存进这一版，之后可以载入编辑。
-		if snapshot.Abc == "" && generatedScore != "" {
+		// YuE2 自己规划或纯音乐转谱时附带这次实际所用的旋律谱，存进这一版，之后可以载入编辑。
+		if generatedScore != "" {
 			snapshot.Abc = generatedScore
 		}
 		g := schema.Generation{ID: id, Title: d.Title, FileName: file, CreatedAt: time.Now().UTC(), Duration: duration, Settings: snapshot}
@@ -234,6 +235,10 @@ func (w *Workbench) startGeneration(d schema.Draft, previewID, cueID, clipID str
 			return e
 		}
 		keep = true
+		// 作品还没有谱时，把 YuE2 这次自己写的谱交给界面填入旋律谱，和“先写旋律谱”的结果一样处理。
+		if generatedScore != "" && strings.TrimSpace(d.Abc) == "" {
+			_ = w.offerMelody(d.ID, "plan", generatedScore, false)
+		}
 		diag.Log(w.Store.Root, "generation.saved", "project_id", d.ID, "generation_id", id, "model_id", part.model.ID, "duration", duration)
 		if d.Kind == "" || d.Kind == "text" {
 			w.pruneTextVersions(d.ID, textVersionLimit)

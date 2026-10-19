@@ -37,6 +37,7 @@ public partial class MainWindow : Window
         // 先按数据目录中保存的界面语言初始化，原生菜单与对话框与网页保持一致。
         HostL10n.LoadFrom(service.Root);
         InitializeComponent();
+        AnimateGhost();
         StateChanged += (_, _) => { ApplyMaximizeLabel(); SyncWebVisibility(); };
         // 关闭到托盘（Hide）与最小化一样会留下浏览器的输入窗口，显示状态变化时同样同步。
         IsVisibleChanged += (_, _) => SyncWebVisibility();
@@ -150,12 +151,14 @@ public partial class MainWindow : Window
         FileMenu.Header = HostL10n.T("文件", "File");
         ExitMenu.Header = HostL10n.T("退出 yovoice", "Quit yovoice");
         ViewMenu.Header = HostL10n.T("视图", "View");
-        string sidebar = HostL10n.T("切换侧栏", "Toggle Sidebar"), inspector = HostL10n.T("切换右侧面板", "Toggle Inspector");
+        string sidebar = HostL10n.T("切换侧栏", "Toggle Sidebar"), assistant = HostL10n.T("切换 Ocho", "Toggle Ocho"), inspector = HostL10n.T("切换右侧面板", "Toggle Inspector");
         ToggleSidebarMenu.Header = sidebar;
+        ToggleAssistantMenu.Header = assistant;
         ToggleInspectorMenu.Header = inspector;
         HelpMenu.Header = HostL10n.T("帮助", "Help");
         SetLabel(WindowMenuButton, "yovoice", HostL10n.T("yovoice 窗口菜单", "yovoice Window Menu"));
         SetLabel(ToggleSidebarButton, sidebar);
+        SetLabel(ToggleAssistantButton, assistant);
         SetLabel(ToggleInspectorButton, inspector);
         SetLabel(MinimizeButton, HostL10n.T("最小化", "Minimize"));
         SetLabel(CloseButton, HostL10n.T("关闭", "Close"));
@@ -333,6 +336,31 @@ public partial class MainWindow : Window
         try { await web.CoreWebView2.ExecuteScriptAsync("window.dispatchEvent(new Event('workbench-toggle-sidebar'))"); }
         catch (InvalidOperationException) { }
     }
+    // 标题栏里的 Ocho：把帧序列切成单帧，以 10 帧/秒循环播放；系统关闭动画时停在第一帧。
+    private void AnimateGhost()
+    {
+        var strip = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/Resources/ocho-ghost.png"));
+        int side = strip.PixelHeight;
+        var frames = Enumerable.Range(0, strip.PixelWidth / side)
+            .Select(index => (System.Windows.Media.ImageSource)new System.Windows.Media.Imaging.CroppedBitmap(strip, new Int32Rect(index * side, 0, side, side)))
+            .ToArray();
+        if (frames.Length == 0) return;
+        OchoGhost.Source = frames[0];
+        if (frames.Length == 1 || !SystemParameters.ClientAreaAnimation) return;
+        int current = 0;
+        var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        timer.Tick += (_, _) => { current = (current + 1) % frames.Length; OchoGhost.Source = frames[current]; };
+        timer.Start();
+    }
+
+    private async void ToggleAssistant_Click(object sender, RoutedEventArgs e)
+    {
+        if (web?.CoreWebView2 is null || recovering || shuttingDown) return;
+        try { await web.CoreWebView2.ExecuteScriptAsync("window.dispatchEvent(new Event('workbench-toggle-assistant'))"); }
+        catch (InvalidOperationException) { }
+        catch (TaskCanceledException) { }
+    }
+
     private async void ToggleInspector_Click(object sender, RoutedEventArgs e)
     {
         if (web?.CoreWebView2 is null || recovering || shuttingDown) return;
@@ -347,7 +375,7 @@ public partial class MainWindow : Window
         {
             await service.StartAsync();
             web?.Dispose(); Container.Children.Clear();
-            web = new WebView2CompositionControl(); Container.Children.Add(web); SyncWebVisibility();
+            web = new WebView2CompositionControl { DefaultBackgroundColor = System.Drawing.Color.FromArgb(247, 247, 247) }; Container.Children.Add(web); SyncWebVisibility();
             var environment = await CoreWebView2Environment.CreateAsync(null, Path.Combine(service.Root, "web-cache"));
             await web.EnsureCoreWebView2Async(environment);
             var core = web.CoreWebView2;
@@ -416,6 +444,10 @@ public partial class MainWindow : Window
                     bool available = data.GetProperty("available").GetBoolean();
                     ToggleInspectorButton.Visibility = available ? Visibility.Visible : Visibility.Collapsed;
                     ToggleInspectorMenu.IsEnabled = available; result = true; break;
+                case "assistant.entry":
+                    // 网页右下角入口在时不重复显示标题栏入口，移走后才由标题栏接替。
+                    ToggleAssistantButton.Visibility = data.GetProperty("visible").GetBoolean() ? Visibility.Visible : Visibility.Collapsed;
+                    result = true; break;
                 case "sidebar.save":
                     double size = data.GetProperty("size").GetDouble();
                     bool collapsed = data.GetProperty("isCollapsed").GetBoolean();

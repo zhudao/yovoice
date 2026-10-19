@@ -110,12 +110,16 @@ export interface CleanupReport {
   cleanedCount: number;
   freedBytes: number;
 }
-export interface Preferences { downloadSource: string; backend: string; modelDirectory: string | null; uiLocale: UiLocale; proxyURL?: string; proxyEnabled?: boolean; aiTimeout?: number }
+export interface Preferences { downloadSource: string; backend: string; modelDirectory: string | null; uiLocale: UiLocale; proxyURL?: string; proxyEnabled?: boolean; aiTimeout?: number; introSeen?: boolean; tourSeen?: boolean; assistantQuiet?: boolean }
 export interface State {
   characters: Character[]; previews: CharacterPreview[]; drafts: Draft[]; voices: Voice[]; models: InstalledModel[]; history: Generation[];
   preferences: Preferences; runtimePath: string | null; runtimeBackend: string | null; runtimeVersion: string | null; runtimes?: Record<string, { path: string; version: string }>; activity: Activity | null; modelActivity?: Activity | null;
   aiProviders?: AIProvider[]; aiProviderID?: string; aiTask?: AITask;
   melody?: MelodyResult;
+  /** 助手会话的持久化记录与仅广播的实时状态，与 Go 的 schema.AssistantSessions/Live 一致。 */
+  assistantSessions?: AssistantSessions; assistantLive?: AssistantLive; assistantMemory?: AssistantMemo[];
+  /** state.get 附带的随包 AI 助手运行时可用性：缺失时 AI 写作入口禁用。 */
+  assistantMissing?: boolean;
 }
 
 // 引擎写出的旋律谱，与 Go 的 schema.MelodyResult 一致：plan 为按歌词出谱，cover 为从歌曲扒谱；只在本次会话有效。
@@ -123,18 +127,50 @@ export interface MelodyResult { id: string; projectId: string; source: 'plan' | 
 /** 后端解析旋律谱的结果；issue 指出第一处问题所在的小节与声部。 */
 export interface MelodyIssue { code: string; line?: number; bar?: number; voice?: string; detail?: string }
 export interface MelodyInspection { issue?: MelodyIssue; tempo?: number; meter?: [number, number]; key?: string; bars?: number; seconds?: number; chords?: boolean; score?: Score }
-export interface MelodyChanges { tempo?: boolean; key?: boolean; vocal?: number[]; ins?: number[]; chords?: number[]; bars: [number, number] }
 
 // 可选的大模型服务，与 Go 的 schema.AIProvider 一致；密钥不在状态中，只有掩码。
 export interface AITest { ok: boolean; code?: string; params?: Record<string, unknown>; at: string }
 // 后台 AI 写作任务，与 Go 的 schema.AITask 一致；只在本次会话有效。
-export type AITaskKind = 'score' | 'lyrics' | 'cast' | 'melody';
+export type AITaskKind = 'cast' | 'image';
 export interface AITask {
   id: string; kind: AITaskKind; projectId: string; brief: string; status: 'running' | 'completed' | 'failed' | 'cancelled'; stage: 'writing' | 'repairing'; done?: number; total?: number;
   provider: string; model: string; timeout: number; startedAt: string; finishedAt?: string; result?: unknown; errorCode?: string; errorParams?: Record<string, unknown>;
 }
 export const aiTimeoutDefault = 600;
 export interface AIProvider { id: string; preset: string; name: string; format: string; baseURL: string; modelsPath: string; model: string; models?: string[]; keyMask?: string; lastTest?: AITest }
+
+// 助手会话记录与实时状态，与 Go 的 schema.Assistant* 一致。
+export type AssistantMessageRole = 'user' | 'assistant';
+export type AssistantToolCardState = 'running' | 'done' | 'error';
+export interface AssistantToolCard { tool: string; summary?: string; args?: string; state?: AssistantToolCardState; proposal?: AssistantProposal }
+/** 助手提议、等用户在卡片上确认的操作，与 Go 的 schema.AssistantProposal 一致。 */
+export type AssistantProposalState = 'pending' | 'confirmed' | 'dismissed' | 'failed';
+export interface AssistantProposal { id: string; action: string; target?: string; value?: string; label?: string; reason?: string; state: AssistantProposalState; errorCode?: string; errorParams?: Record<string, unknown> }
+/** 助手记住的一条用户偏好。 */
+export interface AssistantMemo { id: string; text: string; createdAt: string }
+/** 助手消息里按出现顺序排列的一块：文本、思考或一次工具调用。 */
+export interface AssistantBlock { kind: 'text' | 'thinking' | 'tool'; text?: string; card?: AssistantToolCard }
+/** 助手消息：blocks 为按顺序的内容块，text 为文本块拼接；tools 只出现在旧版本记录里。 */
+export interface AssistantMessage {
+  id: string; role: AssistantMessageRole; text?: string; blocks?: AssistantBlock[]; tools?: AssistantToolCard[];
+  status?: 'completed' | 'cancelled' | 'failed'; errorCode?: MessageCode; errorParams?: MessageParams; createdAt: string;
+}
+/** 拼接内容块里的文本块，段与段之间空一行，与 Go 的 blocksText 一致。 */
+export const blocksText = (blocks: AssistantBlock[]) => blocks.filter(block => block.kind === 'text' && block.text?.trim()).map(block => block.text!.trim()).join('\n\n');
+/** 一段助手对话：每个会话对应独立的助手时间线。 */
+export interface AssistantSession { id: string; title: string; messages: AssistantMessage[]; updatedAt: string }
+export interface AssistantSessions { currentId: string; sessions: AssistantSession[] }
+export interface AssistantTurn { blocks?: AssistantBlock[]; model?: string; startedAt: string }
+export interface AssistantNav { id: string; workId?: string; page?: string }
+export interface AssistantUpdate { id: string; workId: string }
+export interface AssistantLive { turn?: AssistantTurn | null; queued?: number; nav?: AssistantNav | null; update?: AssistantUpdate | null }
+/** assistant.send 附带的界面上下文，与 Go 的 workbench.AssistantContext 一致。 */
+export interface AssistantContext {
+  page?: string; workId?: string; workTitle?: string; workKind?: string; locale?: UiLocale;
+  /** 发送时刻用户在编辑区选中的文字、故事配音里选中的台词与播放位置（秒）。 */
+  selection?: string; cue?: AssistantCue; playhead?: number;
+}
+export interface AssistantCue { index: number; total: number; speaker?: string; text?: string }
 
 /** 标题为空或仍是任一界面语言的“未命名作品”时视为尚未命名，AI 写作可以顺带起名。 */
 export const isUntitled = (title: string) => !title.trim() || Object.values(draftCopy).some(copy => copy.untitled === title.trim());
@@ -184,17 +220,38 @@ export function formatBytes(bytes: number): string {
   return `${value.toFixed(2)} ${units[i]}`;
 }
 export interface Track { id: string; name: string; fileName: string; kind: 'voices' | 'outputs'; subtitle: string; playRequest?: number }
+/** 资源页的一行，对应 Go 的 workbench.Asset；bytes 为 -1 表示文件已丢失，users 非空表示正在被引用。 */
+export type AssetKind = 'generation' | 'segment' | 'voice' | 'material' | 'image';
+export interface Asset { kind: AssetKind; id: string; name: string; media: 'outputs' | 'voices' | 'images'; fileName: string; projectId?: string; projectTitle?: string; projectKind?: ProjectPage; createdAt: string; duration?: number; bytes: number; users?: string[] }
+export interface AssetResult { kind: AssetKind; id: string; error?: MessageCode; params?: MessageParams }
 
 export const isKokoroModel = (id: string) => id.startsWith('kokoro-');
 // 音乐模型只用于音乐作品，不出现在配音和角色的模型列表里。
 export const isMusicModel = (id: string) => id.startsWith('ace-step-') || id.startsWith('yue2-');
-/** YuE2 由歌词决定长度，没有时长和纯音乐模式。 */
+/** YuE2 由歌词或旋律谱决定长度，没有时长设置。 */
 export const isYuE = (id: string) => id.startsWith('yue2-');
+// 设置里模型按用途分页：语音模型、音乐模型（歌曲生成与扒谱）和编曲音色库。
+const musicFamilies = new Set(['ace_step', 'yue2', 'sheetsage2']);
+export const modelTab = (family: string) => family === 'soundfont' ? 'soundfonts' : musicFamilies.has(family) ? 'music-models' : 'models';
+export const modelTabs = ['models', 'music-models', 'soundfonts'];
 // 音色库只供编曲作品渲染使用。
 export const isSoundFont = (id: string) => id.endsWith('-sf2');
 // 扒谱模型只用于从歌曲提取旋律谱。
 export const isTranscriber = (id: string) => id.startsWith('sheetsage2-');
 export const isVoiceModel = (id: string) => !isMusicModel(id) && !isSoundFont(id) && !isTranscriber(id);
+// 同名模型的不同量化归为一组，保持目录顺序。
+export function groupModels(models: ModelPackage[]) {
+  const groups = new Map<string, ModelPackage[]>();
+  for (const model of models) groups.set(model.name, [...(groups.get(model.name) ?? []), model]);
+  return [...groups.values()];
+}
+// 新作品的默认模型：沿用最近一次同类作品用过且已安装的模型，否则取第一个已安装的同类模型，都没有时用 fallback。
+export function preferredModel(state: Pick<State, 'models' | 'drafts'>, kind: 'text' | 'story' | 'music' | 'score', fallback: string) {
+  const fits = kind === 'music' ? isMusicModel : kind === 'score' ? isSoundFont : isVoiceModel;
+  const installed = new Set(state.models.map(model => model.id));
+  const recent = state.drafts.filter(d => installed.has(d.modelId) && fits(d.modelId)).sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? ''))[0];
+  return recent?.modelId ?? state.models.find(model => fits(model.id))?.id ?? fallback;
+}
 export const isVoxModel = (id: string) => id.startsWith('voxcpm2-');
 export const isReferenceModel = (id: string) => id.startsWith('omnivoice-') || id.startsWith('qwen3-tts-');
 export const isBreezeModel = (id: string) => id.startsWith('breeze-tts-');

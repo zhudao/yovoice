@@ -31,6 +31,7 @@ GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 "$GO_BIN" build -trimpath -ldflags="-s -w
 cp "desktop/macos/.build/$configuration/VoiceWorkbenchMac" "$app/Contents/MacOS/VoiceWorkbenchMac"
 cp desktop/macos/Resources/AppIcon.icns "$app/Contents/Resources/AppIcon.icns"
 cp desktop/macos/Resources/install-update.sh "$app/Contents/Resources/install-update.sh"
+cp desktop/macos/Resources/ocho-ghost.png "$app/Contents/Resources/ocho-ghost.png"
 rm -rf "$app/Contents/Resources/web"
 cp -R web/dist "$app/Contents/Resources/web"
 archive="artifacts/downloads/$engine_archive"
@@ -42,6 +43,7 @@ tar -xzf "$archive" -C "$app/Contents/Resources/engine" ./audiocpp_server ./mode
 chmod +x "$app/Contents/Resources/engine/audiocpp_server"
 python3 scripts/build-ffmpeg.py "$app/Contents/Resources/tools"
 python3 scripts/package-kokoro-runtime.py "$app/Contents/Resources/tools/kokoro"
+python3 scripts/package-ocho.py "$app/Contents/Resources/tools/ocho"
 cp LICENSE THIRD_PARTY_NOTICES.md "$app/Contents/Resources/"
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>

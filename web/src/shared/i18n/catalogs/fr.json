@@ -11,9 +11,6 @@
   "@yovoice.error.proxyURL": {
     "defaultMessage": "Saisissez une URL de proxy HTTP, HTTPS ou SOCKS5 avec un port valide, sans chemin ni identifiants."
   },
-  "@yovoice.action.apply": {
-    "defaultMessage": "Appliquer"
-  },
   "@yovoice.action.cancel": {
     "defaultMessage": "Annuler"
   },
@@ -85,9 +82,6 @@
   },
   "@yovoice.app.charCount": {
     "defaultMessage": "{count} caractères"
-  },
-  "@yovoice.app.collapseAudition": {
-    "defaultMessage": "Masquer l’écoute de {name}"
   },
   "@yovoice.app.collapseSidebar": {
     "defaultMessage": "Réduire la barre latérale"
@@ -170,9 +164,6 @@
   "@yovoice.create.advanced": {
     "defaultMessage": "Paramètres avancés"
   },
-  "@yovoice.create.backToScript": {
-    "defaultMessage": "Retour au texte"
-  },
   "@yovoice.create.cancelGenerate": {
     "defaultMessage": "Annuler la génération"
   },
@@ -238,9 +229,6 @@
   },
   "@yovoice.create.modelInstalled": {
     "defaultMessage": "Installé"
-  },
-  "@yovoice.create.modelMissing": {
-    "defaultMessage": "Non téléchargé"
   },
   "@yovoice.create.moreEmotionPresets": {
     "defaultMessage": "Plus de préréglages d’émotion"
@@ -557,9 +545,6 @@
   "@yovoice.error.nameLength": {
     "defaultMessage": "Le nom doit comporter de 1 à 120 caractères."
   },
-  "@yovoice.error.needRuntime": {
-    "defaultMessage": "Installez un modèle et un moteur d’inférence avant de générer."
-  },
   "@yovoice.error.paramsOutOfRange": {
     "defaultMessage": "Paramètres de génération hors limites."
   },
@@ -656,18 +641,6 @@
   "@yovoice.library.emptyVoicesTitle": {
     "defaultMessage": "Aucun audio de référence pour l’instant"
   },
-  "@yovoice.library.historyCount": {
-    "defaultMessage": "{count} générations"
-  },
-  "@yovoice.library.historyTitle": {
-    "defaultMessage": "Historique des versions"
-  },
-  "@yovoice.library.startCreating": {
-    "defaultMessage": "Commencer à créer"
-  },
-  "@yovoice.library.voiceCount": {
-    "defaultMessage": "{count} voix"
-  },
   "@yovoice.library.voicesTitle": {
     "defaultMessage": "Bibliothèque de sons"
   },
@@ -710,20 +683,11 @@
   "@yovoice.media.saveName": {
     "defaultMessage": "Enregistrer le nom"
   },
-  "@yovoice.nav.create": {
-    "defaultMessage": "Créer"
-  },
   "@yovoice.nav.deleteProject": {
     "defaultMessage": "Supprimer le projet : {title}"
   },
-  "@yovoice.nav.history": {
-    "defaultMessage": "Tous les audios générés"
-  },
   "@yovoice.nav.main": {
     "defaultMessage": "Navigation principale"
-  },
-  "@yovoice.nav.newProject": {
-    "defaultMessage": "Nouveau projet"
   },
   "@yovoice.nav.recent": {
     "defaultMessage": "Récents"
@@ -734,20 +698,11 @@
   "@yovoice.nav.settings": {
     "defaultMessage": "Paramètres"
   },
-  "@yovoice.nav.voices": {
-    "defaultMessage": "Personnages"
-  },
   "@yovoice.player.audition": {
     "defaultMessage": "Écouter {name}"
   },
-  "@yovoice.player.emptyHint": {
-    "defaultMessage": "Générez ou sélectionnez un audio à écouter"
-  },
   "@yovoice.player.mute": {
     "defaultMessage": "Couper le son"
-  },
-  "@yovoice.player.noAudio": {
-    "defaultMessage": "Aucun audio pour l’instant"
   },
   "@yovoice.player.stop": {
     "defaultMessage": "Arrêter"
@@ -839,9 +794,6 @@
   "@yovoice.settings.downloadSource": {
     "defaultMessage": "Source de téléchargement"
   },
-  "@yovoice.settings.importDirectory": {
-    "defaultMessage": "Choisir un dossier"
-  },
   "@yovoice.settings.inUse": {
     "defaultMessage": "En cours d’utilisation"
   },
@@ -927,7 +879,7 @@
     "defaultMessage": "Général"
   },
   "@yovoice.settings.tabModels": {
-    "defaultMessage": "Modèles"
+    "defaultMessage": "Modèles vocaux"
   },
   "@yovoice.settings.title": {
     "defaultMessage": "Paramètres"
@@ -965,9 +917,6 @@
   "@yovoice.voice.defaultName": {
     "defaultMessage": "Ma voix"
   },
-  "@yovoice.voice.hint": {
-    "defaultMessage": "1 à 60 secondes de parole claire ; évitez la musique de fond."
-  },
   "@yovoice.voice.import": {
     "defaultMessage": "Importer un audio de référence"
   },
@@ -980,35 +929,20 @@
   "@yovoice.voice.recordName": {
     "defaultMessage": "Nom de l’enregistrement"
   },
-  "@yovoice.voice.recording": {
-    "defaultMessage": "Enregistrement… 60 secondes maximum"
-  },
   "@yovoice.voice.saveCrop": {
     "defaultMessage": "Enregistrer comme nouvelle voix"
   },
   "@yovoice.voice.startRecord": {
     "defaultMessage": "Démarrer l’enregistrement"
   },
-  "@yovoice.voice.stopSave": {
-    "defaultMessage": "Arrêter et enregistrer"
-  },
   "@yovoice.vox.clone": {
     "defaultMessage": "Clonage de voix"
-  },
-  "@yovoice.vox.cloneHelp": {
-    "defaultMessage": "Cloner la voix de référence ; ajuster le style d’interprétation"
   },
   "@yovoice.vox.continuation": {
     "defaultMessage": "Clonage fin"
   },
-  "@yovoice.vox.continuationHelp": {
-    "defaultMessage": "Audio de référence + transcription pour conserver les détails de l’interprétation"
-  },
   "@yovoice.vox.design": {
     "defaultMessage": "Conception de voix"
-  },
-  "@yovoice.vox.designHelp": {
-    "defaultMessage": "Concevoir une voix à partir d’un texte, sans audio de référence"
   },
   "@yovoice.vox.generationMode": {
     "defaultMessage": "Mode de génération"
@@ -1460,9 +1394,6 @@
   "@yovoice.character.deleteConfirm": {
     "defaultMessage": "Supprimer ce personnage de la bibliothèque de sons. Les projets existants conservent leurs réglages enregistrés."
   },
-  "@yovoice.character.missingModel": {
-    "defaultMessage": "Modèle non installé. Vous pouvez enregistrer les réglages et générer un extrait après l’installation."
-  },
   "@yovoice.character.missingVoice": {
     "defaultMessage": "Voix de référence manquante. Veuillez en choisir une autre."
   },
@@ -1471,9 +1402,6 @@
   },
   "@yovoice.character.listen": {
     "defaultMessage": "Écouter l’extrait"
-  },
-  "@yovoice.character.sourceDesign": {
-    "defaultMessage": "Voix intégrée / description de la voix"
   },
   "@yovoice.voice.save": {
     "defaultMessage": "Enregistrer comme audio de référence"
@@ -1486,12 +1414,6 @@
   },
   "@yovoice.voice.transcript": {
     "defaultMessage": "Transcription de référence"
-  },
-  "@yovoice.voice.transcriptHelp": {
-    "defaultMessage": "Saisissez ce que dit réellement l’audio ; vérifiez les annotations de prononciation et les textes particuliers."
-  },
-  "@yovoice.voice.limit": {
-    "defaultMessage": "L’extrait complet doit durer de 1 à 60 secondes et ne pas dépasser 20 Mo. L’audio n’est pas recadré ici."
   },
   "@yovoice.voice.sourceGeneration": {
     "defaultMessage": "Audio généré"
@@ -1511,35 +1433,14 @@
   "@yovoice.character.clearReferences": {
     "defaultMessage": "Retirer les références de voix"
   },
-  "@yovoice.character.help": {
-    "defaultMessage": "Enregistrez ces réglages de voix pour d’autres projets. Le texte d’écoute ne remplace pas le texte de votre projet."
-  },
-  "@yovoice.character.parameters": {
-    "defaultMessage": "Réglages de la voix"
-  },
-  "@yovoice.character.emptyDemo": {
-    "defaultMessage": "Ajoutez un texte d’écoute pour générer un extrait, ou enregistrez le personnage dès maintenant."
-  },
-  "@yovoice.character.libraryHelp": {
-    "defaultMessage": "Enregistrez des réglages de voix et des extraits à réutiliser lors de la création."
-  },
   "@yovoice.character.search": {
     "defaultMessage": "Rechercher des personnages"
   },
   "@yovoice.character.noResults": {
     "defaultMessage": "Aucun personnage correspondant. Essayez une autre recherche."
   },
-  "@yovoice.character.createFirst": {
-    "defaultMessage": "Enregistrez votre premier personnage"
-  },
   "@yovoice.character.nameLimit": {
     "defaultMessage": "Le nom d’un personnage doit comporter 120 caractères au maximum."
-  },
-  "@yovoice.character.applied": {
-    "defaultMessage": "Réglages du personnage appliqués. Le texte du projet n’est pas modifié."
-  },
-  "@yovoice.character.saved": {
-    "defaultMessage": "Personnage enregistré. Retrouvez-le dans votre bibliothèque de sons."
   },
   "@yovoice.library.nameRequired": {
     "defaultMessage": "Saisissez un nom pour enregistrer."
@@ -1552,9 +1453,6 @@
   },
   "@yovoice.voice.durationLimit": {
     "defaultMessage": "Cet audio doit durer entre 1 et 60 secondes. Choisissez un autre extrait de l’historique."
-  },
-  "@yovoice.voice.saveSuccess": {
-    "defaultMessage": "Voix enregistrée. Retrouvez-la dans votre bibliothèque de sons."
   },
   "@yovoice.library.searchVoices": {
     "defaultMessage": "Rechercher un audio de référence"
@@ -1583,9 +1481,6 @@
   "@yovoice.subtitle.speaker": {
     "defaultMessage": "Locuteur {n}"
   },
-  "@yovoice.subtitle.help": {
-    "defaultMessage": "Génère des extraits séparés dans l’ordre du dialogue avec la voix de chaque locuteur. Recadrez, supprimez ou régénérez les extraits, puis fusionnez-les à l’export. Le minutage d’origine des sous-titres n’est pas reproduit automatiquement."
-  },
   "@yovoice.subtitle.currentSettings": {
     "defaultMessage": "Voix par défaut"
   },
@@ -1613,20 +1508,11 @@
   "@yovoice.subtitle.addCue": {
     "defaultMessage": "Ajouter une réplique"
   },
-  "@yovoice.subtitle.speakerHelp": {
-    "defaultMessage": "Les réglages s’appliquent à toutes les répliques de ce locuteur"
-  },
   "@yovoice.subtitle.customSettings": {
     "defaultMessage": "Voix personnalisée"
   },
   "@yovoice.subtitle.settings": {
     "defaultMessage": "Réglages du locuteur"
-  },
-  "@yovoice.subtitle.speakers": {
-    "defaultMessage": "Locuteurs · {count}"
-  },
-  "@yovoice.subtitle.instructions": {
-    "defaultMessage": "À propos des voix de sous-titres"
   },
   "@yovoice.subtitle.cues": {
     "defaultMessage": "Sous-titres · {count} répliques"
@@ -1636,12 +1522,6 @@
   },
   "@yovoice.subtitle.hideTimes": {
     "defaultMessage": "Masquer le minutage"
-  },
-  "@yovoice.subtitle.defaultVoice": {
-    "defaultMessage": "Voix par défaut"
-  },
-  "@yovoice.subtitle.defaultVoiceHelp": {
-    "defaultMessage": "Utilisée pour les locuteurs sans personnage"
   },
   "@yovoice.timeline.invalid": {
     "defaultMessage": "Timeline non valide. Vérifiez les plages des extraits. 32 pistes, 2000 extraits et 24 heures au maximum."
@@ -1663,12 +1543,6 @@
   },
   "@yovoice.timeline.removeClip": {
     "defaultMessage": "Supprimer l’extrait"
-  },
-  "@yovoice.timeline.position": {
-    "defaultMessage": "Début (secondes)"
-  },
-  "@yovoice.timeline.moveTo": {
-    "defaultMessage": "Déplacer vers la piste"
   },
   "@yovoice.timeline.hint": {
     "defaultMessage": "Sélectionnez un extrait pour le scinder à la tête de lecture. Faites glisser les extraits pour les déplacer dans le temps ou entre les pistes."
@@ -1697,9 +1571,6 @@
   "@yovoice.timeline.fromHistory": {
     "defaultMessage": "Ajouter depuis les versions"
   },
-  "@yovoice.nav.projects": {
-    "defaultMessage": "Projets"
-  },
   "@yovoice.nav.library": {
     "defaultMessage": "Bibliothèque de sons"
   },
@@ -1721,29 +1592,17 @@
   "@yovoice.project.empty": {
     "defaultMessage": "Aucun projet pour l’instant"
   },
-  "@yovoice.project.all": {
-    "defaultMessage": "Tous les types"
-  },
   "@yovoice.project.copy": {
     "defaultMessage": "Dupliquer le projet"
   },
   "@yovoice.project.rename": {
     "defaultMessage": "Renommer le projet"
   },
-  "@yovoice.project.open": {
-    "defaultMessage": "Ouvrir le projet"
-  },
-  "@yovoice.project.unknownDate": {
-    "defaultMessage": "Aucune date de modification"
-  },
   "@yovoice.library.voicesTab": {
     "defaultMessage": "Personnages"
   },
   "@yovoice.library.referencesTab": {
     "defaultMessage": "Audio de référence"
-  },
-  "@yovoice.library.use": {
-    "defaultMessage": "Utiliser le personnage"
   },
   "@yovoice.library.target": {
     "defaultMessage": "Choisir la destination"
@@ -1763,9 +1622,6 @@
   "@yovoice.library.apply": {
     "defaultMessage": "Appliquer le personnage"
   },
-  "@yovoice.library.noTarget": {
-    "defaultMessage": "Choisissez un projet et un personnage. Les autres personnages restent inchangés."
-  },
   "@yovoice.library.newVoice": {
     "defaultMessage": "Personnage sans titre"
   },
@@ -1778,26 +1634,11 @@
   "@yovoice.library.unsaved": {
     "defaultMessage": "Enregistrer les modifications du personnage ?"
   },
-  "@yovoice.library.unsavedBody": {
-    "defaultMessage": "Enregistrez le personnage avant de quitter, ou abandonnez vos modifications."
-  },
   "@yovoice.library.discard": {
     "defaultMessage": "Abandonner les modifications"
   },
   "@yovoice.library.continue": {
     "defaultMessage": "Continuer l’édition"
-  },
-  "@yovoice.library.clearSearch": {
-    "defaultMessage": "Effacer les filtres"
-  },
-  "@yovoice.history.source": {
-    "defaultMessage": "Ouvrir le projet source"
-  },
-  "@yovoice.history.sourceMissing": {
-    "defaultMessage": "Projet source supprimé"
-  },
-  "@yovoice.history.stale": {
-    "defaultMessage": "Texte ou réglages modifiés ; l’audio n’est pas à jour"
   },
   "@yovoice.app.saveFailed": {
     "defaultMessage": "Échec de l’enregistrement. Réessayer"
@@ -1873,9 +1714,6 @@
   },
   "@yovoice.timeline.importDuration": {
     "defaultMessage": "L’audio doit durer entre 0,01 seconde et 1 heure."
-  },
-  "@yovoice.timeline.exportFormat": {
-    "defaultMessage": "WAV · 24 kHz · mono · 1 heure max."
   },
   "@yovoice.character.new": {
     "defaultMessage": "Nouveau personnage"
@@ -2090,15 +1928,6 @@
   "@yovoice.music.collapseElements": {
     "defaultMessage": "Réduire les éléments"
   },
-  "@yovoice.music.selectedTags": {
-    "defaultMessage": "{count} sélectionné(s)"
-  },
-  "@yovoice.music.clearTags": {
-    "defaultMessage": "Effacer"
-  },
-  "@yovoice.music.elements": {
-    "defaultMessage": "Éléments"
-  },
   "@yovoice.music.addTag": {
     "defaultMessage": "Ajouter une balise de style"
   },
@@ -2129,17 +1958,11 @@
   "@yovoice.music.instrumental": {
     "defaultMessage": "Instrumental"
   },
-  "@yovoice.music.instrumentalHint": {
-    "defaultMessage": "Les morceaux instrumentaux ignorent les paroles et suivent uniquement le style. Vos paroles sont conservées ; désactivez cette option pour continuer à les modifier."
-  },
   "@yovoice.music.lyricsPlaceholder": {
     "defaultMessage": "Écrivez les paroles et marquez les sections avec [verse], [chorus], etc. Laissez vide pour laisser le modèle fredonner."
   },
   "@yovoice.music.generate": {
     "defaultMessage": "Générer la chanson"
-  },
-  "@yovoice.music.modelSize": {
-    "defaultMessage": "Non installé · {size}"
   },
   "@yovoice.music.duration": {
     "defaultMessage": "Durée"
@@ -2192,9 +2015,6 @@
   "@yovoice.music.timesignature": {
     "defaultMessage": "Signature rythmique"
   },
-  "@yovoice.music.steps": {
-    "defaultMessage": "Étapes d’échantillonnage"
-  },
   "@yovoice.error.engineUpgradeRequired": {
     "defaultMessage": "Ce modèle nécessite le moteur d’inférence {version} ou ultérieur. Mettez à jour le moteur dans les Paramètres."
   },
@@ -2217,7 +2037,7 @@
     "defaultMessage": "Rendu des pistes ({done}/{total})"
   },
   "@yovoice.project.score": {
-    "defaultMessage": "Partition"
+    "defaultMessage": "Génération de partitions"
   },
   "@yovoice.project.new.score": {
     "defaultMessage": "Nouvelle partition"
@@ -2230,9 +2050,6 @@
   },
   "@yovoice.score.bars": {
     "defaultMessage": "Mesures {start}–{end}"
-  },
-  "@yovoice.score.copyPromptHint": {
-    "defaultMessage": "Demandez à un agent IA d’écrire le JSON de la partition, puis importez-le ici ou faites-en le rendu avec la CLI."
   },
   "@yovoice.score.downloadSoundFont": {
     "defaultMessage": "Télécharger"
@@ -2275,9 +2092,6 @@
   },
   "@yovoice.score.meter": {
     "defaultMessage": "Mesure"
-  },
-  "@yovoice.score.noteCount": {
-    "defaultMessage": "{count} notes"
   },
   "@yovoice.score.playTrack": {
     "defaultMessage": "Lire {name}"
@@ -2343,10 +2157,7 @@
     "defaultMessage": "Services d’IA"
   },
   "@yovoice.ai.intro": {
-    "defaultMessage": "Connectez un grand modèle de langage pour que l’IA écrive des arrangements dans Partition et des paroles dans Musique. Les requêtes partent directement de cet ordinateur vers le service choisi."
-  },
-  "@yovoice.ai.addProvider": {
-    "defaultMessage": "Ajouter un service"
+    "defaultMessage": "Connectez un grand modèle de langage : l’assistant IA intégré écrit des arrangements dans Partition et des paroles dans Musique, et vous pouvez continuer à modifier le résultat."
   },
   "@yovoice.ai.customProvider": {
     "defaultMessage": "Service personnalisé"
@@ -2399,9 +2210,6 @@
   "@yovoice.ai.inUse": {
     "defaultMessage": "En cours d’utilisation"
   },
-  "@yovoice.ai.deleteNamed": {
-    "defaultMessage": "Supprimer {name}"
-  },
   "@yovoice.ai.deleteTitle": {
     "defaultMessage": "Supprimer ce service d’IA ?"
   },
@@ -2410,24 +2218,6 @@
   },
   "@yovoice.ai.configure": {
     "defaultMessage": "Configurer l’IA"
-  },
-  "@yovoice.ai.notConfigured": {
-    "defaultMessage": "Cette fonction nécessite un modèle de langage. Ajoutez d’abord un service et choisissez un modèle dans Paramètres › Services d’IA."
-  },
-  "@yovoice.ai.scorePlaceholder": {
-    "defaultMessage": "Décrivez la musique en une phrase et l’IA écrit tout l’arrangement, p. ex. un morceau de piano lent et chaleureux pour l’intro d’un vlog de voyage, rejoint plus tard par des cordes douces"
-  },
-  "@yovoice.ai.scoreSeconds": {
-    "defaultMessage": "Durée"
-  },
-  "@yovoice.ai.scoreSubmit": {
-    "defaultMessage": "Composer"
-  },
-  "@yovoice.ai.lyricsPlaceholder": {
-    "defaultMessage": "Décrivez la chanson en une phrase et l’IA écrit le style, les paroles et le titre, p. ex. une chanson city pop sur une virée nocturne d’été au bord de la mer"
-  },
-  "@yovoice.ai.lyricsSubmit": {
-    "defaultMessage": "Écrire"
   },
   "@yovoice.error.aiProviderInvalid": {
     "defaultMessage": "Les réglages du service d’IA ne sont pas valides. Vérifiez l’adresse, le nom et le modèle."
@@ -2452,12 +2242,6 @@
   },
   "@yovoice.error.aiResultInvalid": {
     "defaultMessage": "Le résultat de l’IA est inutilisable : {detail}. Réessayez ou reformulez."
-  },
-  "@yovoice.music.allTags": {
-    "defaultMessage": "Toutes les balises"
-  },
-  "@yovoice.music.fewerTags": {
-    "defaultMessage": "Moins de balises"
   },
   "@yovoice.settings.tabSoundfonts": {
     "defaultMessage": "Banques de sons pour partitions"
@@ -2528,80 +2312,14 @@
   "@yovoice.library.duration": {
     "defaultMessage": "durée"
   },
-  "@yovoice.ai.apply": {
-    "defaultMessage": "Appliquer"
-  },
   "@yovoice.ai.discard": {
     "defaultMessage": "Abandonner"
-  },
-  "@yovoice.ai.retry": {
-    "defaultMessage": "Réessayer"
-  },
-  "@yovoice.ai.openLogs": {
-    "defaultMessage": "Voir les journaux"
   },
   "@yovoice.ai.openProject": {
     "defaultMessage": "Ouvrir le projet"
   },
-  "@yovoice.ai.backgroundHint": {
-    "defaultMessage": "Écriture en arrière-plan. Continuez à modifier ou passez à autre chose ; vous serez averti une fois terminé."
-  },
-  "@yovoice.ai.busyElsewhere": {
-    "defaultMessage": "Une autre tâche d’IA est en cours. Lancez celle-ci une fois qu’elle sera terminée."
-  },
-  "@yovoice.ai.failedMeta": {
-    "defaultMessage": "Après {time} · {model}"
-  },
-  "@yovoice.ai.lyricsPlaceholderInstrumental": {
-    "defaultMessage": "Décrivez le morceau instrumental en une phrase et l’IA écrit le style et les sections, p. ex. du lo-fi pour une lente balade nocturne en ville"
-  },
-  "@yovoice.ai.scoreLength": {
-    "defaultMessage": "Environ {time}"
-  },
-  "@yovoice.ai.brief.score": {
-    "defaultMessage": "Décrivez la musique souhaitée"
-  },
-  "@yovoice.ai.brief.lyrics": {
-    "defaultMessage": "Décrivez la chanson souhaitée"
-  },
-  "@yovoice.ai.setup.score": {
-    "defaultMessage": "Connectez un modèle de langage pour que l’IA écrive tout un arrangement à partir d’une seule phrase."
-  },
-  "@yovoice.ai.setup.lyrics": {
-    "defaultMessage": "Connectez un modèle de langage pour que l’IA écrive le style et les paroles à partir d’une seule phrase."
-  },
-  "@yovoice.ai.stage.writing": {
-    "defaultMessage": "{model} écrit"
-  },
-  "@yovoice.ai.stage.repairing": {
-    "defaultMessage": "{model} corrige le format"
-  },
-  "@yovoice.ai.task.running.score": {
-    "defaultMessage": "L’IA compose"
-  },
-  "@yovoice.ai.task.running.lyrics": {
-    "defaultMessage": "L’IA écrit les paroles"
-  },
-  "@yovoice.ai.task.done.score": {
-    "defaultMessage": "L’IA a terminé un nouvel arrangement"
-  },
-  "@yovoice.ai.task.done.lyrics": {
-    "defaultMessage": "L’IA a terminé le style et les paroles"
-  },
-  "@yovoice.ai.task.failed.score": {
-    "defaultMessage": "L’IA n’a pas pu composer ce morceau"
-  },
-  "@yovoice.ai.task.failed.lyrics": {
-    "defaultMessage": "L’IA n’a pas pu écrire les paroles"
-  },
-  "@yovoice.ai.task.replace.score": {
-    "defaultMessage": "Appliquer remplace l’arrangement actuel."
-  },
-  "@yovoice.ai.task.replace.lyrics": {
-    "defaultMessage": "Appliquer remplace le style et les paroles actuels."
-  },
   "@yovoice.error.aiTimeout": {
-    "defaultMessage": "Le service d’IA n’a pas terminé en {seconds} secondes. Augmentez le délai d’expiration des requêtes d’IA dans Paramètres › Général, ou choisissez un modèle plus rapide."
+    "defaultMessage": "Le service d’IA n’a pas terminé en {seconds} secondes. Augmentez le délai d’expiration des requêtes d’IA dans Paramètres › Services d’IA, ou choisissez un modèle plus rapide."
   },
   "@yovoice.music.lyricsMode": {
     "defaultMessage": "Mode des paroles"
@@ -2614,18 +2332,6 @@
   },
   "@yovoice.score.roleOf": {
     "defaultMessage": "Rôle de {name}"
-  },
-  "@yovoice.settings.aiTimeout": {
-    "defaultMessage": "Délai d’expiration des requêtes"
-  },
-  "@yovoice.settings.aiTimeoutHint": {
-    "defaultMessage": "Un arrangement complet peut prendre plusieurs minutes. Une requête encore en cours au-delà de ce délai est considérée comme échouée et journalisée."
-  },
-  "@yovoice.settings.minutes": {
-    "defaultMessage": "{n} min"
-  },
-  "@yovoice.settings.minutesDefault": {
-    "defaultMessage": "{n} min (par défaut)"
   },
   "@yovoice.settings.diagnosticsGroup": {
     "defaultMessage": "Diagnostic"
@@ -2655,16 +2361,10 @@
     "defaultMessage": "Local et personnalisé"
   },
   "@yovoice.error.musicLyricsRequired": {
-    "defaultMessage": "YuE2 nécessite des paroles ; les morceaux instrumentaux ne sont pas pris en charge."
+    "defaultMessage": "YuE2 a besoin de paroles pour une chanson chantée ; passez en instrumental pour s’en passer."
   },
   "@yovoice.settings.modelDesc.yue2": {
-    "defaultMessage": "Génère une chanson complète avec chant à partir de paroles et d’un style ; la durée dépend des paroles. Sous licence CC BY-NC 4.0, usage non commercial uniquement."
-  },
-  "@yovoice.music.yueLength": {
-    "defaultMessage": "YuE2 chante section par section : ce sont donc les paroles qui déterminent la durée de la chanson."
-  },
-  "@yovoice.music.yueVocalOnly": {
-    "defaultMessage": "YuE2 ne crée que des chansons chantées"
+    "defaultMessage": "Génère une chanson complète ou un instrumental à partir de paroles et d’un style, et peut d’abord écrire une partition modifiable ; la durée dépend des paroles ou de la partition. Sous licence CC BY-NC 4.0, usage non commercial uniquement."
   },
   "@yovoice.music.reuseTake": {
     "defaultMessage": "Réutiliser le style et les paroles de cette prise"
@@ -3008,60 +2708,6 @@
   "@yovoice.music.lyricsEstimated": {
     "defaultMessage": "Le minutage des paroles est estimé d’après la durée de la chanson"
   },
-  "@yovoice.setup.label": {
-    "defaultMessage": "Configuration avant la génération"
-  },
-  "@yovoice.setup.title": {
-    "defaultMessage": "Encore {count} étape(s) avant de pouvoir générer"
-  },
-  "@yovoice.setup.hint": {
-    "defaultMessage": "Terminez chaque étape ici même. Cette carte disparaît une fois que tout est prêt."
-  },
-  "@yovoice.setup.model": {
-    "defaultMessage": "Télécharger un modèle"
-  },
-  "@yovoice.setup.soundfont": {
-    "defaultMessage": "Télécharger une banque de sons"
-  },
-  "@yovoice.setup.engine": {
-    "defaultMessage": "Installer le moteur"
-  },
-  "@yovoice.setup.engineDetail": {
-    "defaultMessage": "audio.cpp exécute les modèles sur cet ordinateur"
-  },
-  "@yovoice.setup.engineUpdate": {
-    "defaultMessage": "Ce modèle nécessite un moteur plus récent"
-  },
-  "@yovoice.setup.voice": {
-    "defaultMessage": "Choisir une voix"
-  },
-  "@yovoice.setup.voiceDetail": {
-    "defaultMessage": "Ce modèle clone la voix à partir d’un audio de référence"
-  },
-  "@yovoice.setup.download": {
-    "defaultMessage": "Télécharger"
-  },
-  "@yovoice.setup.otherModel": {
-    "defaultMessage": "Choisir un autre"
-  },
-  "@yovoice.setup.install": {
-    "defaultMessage": "Installer"
-  },
-  "@yovoice.setup.update": {
-    "defaultMessage": "Mettre à jour"
-  },
-  "@yovoice.setup.chooseVoice": {
-    "defaultMessage": "Choisir un audio de référence"
-  },
-  "@yovoice.setup.done": {
-    "defaultMessage": "Terminé"
-  },
-  "@yovoice.setup.downloading": {
-    "defaultMessage": "{received} sur {total}"
-  },
-  "@yovoice.setup.installing": {
-    "defaultMessage": "Installation…"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "Reculer de {n} secondes"
   },
@@ -3300,7 +2946,10 @@
     "defaultMessage": "Le modèle n’a renvoyé aucune partition. Réessayez ou modifiez les paroles."
   },
   "@yovoice.error.coverModelRequired": {
-    "defaultMessage": "L’extraction d’une mélodie nécessite le modèle SheetSage2. Téléchargez-le dans Réglages › Modèles."
+    "defaultMessage": "L’extraction d’une mélodie nécessite le modèle SheetSage2. Téléchargez-le dans Réglages › Modèles musicaux."
+  },
+  "@yovoice.error.melodySoundFontRequired": {
+    "defaultMessage": "L’écoute de la mélodie nécessite une banque de sons. Téléchargez-en une dans « Paramètres › Banques de sons pour partitions »."
   },
   "@yovoice.settings.modelDesc.sheetsage2": {
     "defaultMessage": "Transcrit la mélodie et les accords d’un morceau en partition, pour les reprises avec YuE2."
@@ -3308,38 +2957,8 @@
   "@yovoice.music.generateFromMelody": {
     "defaultMessage": "Générer depuis la partition"
   },
-  "@yovoice.ai.brief.melody": {
-    "defaultMessage": "Décrivez comment modifier la partition"
-  },
-  "@yovoice.ai.setup.melody": {
-    "defaultMessage": "Connectez un modèle de langage pour que l’IA réécrive la mélodie, les accords et le style en une phrase."
-  },
-  "@yovoice.ai.task.running.melody": {
-    "defaultMessage": "L’IA modifie la partition"
-  },
-  "@yovoice.ai.task.done.melody": {
-    "defaultMessage": "L’IA a fini de modifier la partition"
-  },
-  "@yovoice.ai.task.failed.melody": {
-    "defaultMessage": "L’IA n’a pas pu modifier la partition"
-  },
-  "@yovoice.ai.task.replace.melody": {
-    "defaultMessage": "Appliquer remplace la partition actuelle, et le style si l’IA l’a changé."
-  },
-  "@yovoice.ai.melodyPlaceholder": {
-    "defaultMessage": "Dites comment modifier la partition, p. ex. monter le refrain d’un ton, rendre les mesures 9–12 plus sautillantes, passer à des accords jazz"
-  },
-  "@yovoice.ai.melodySubmit": {
-    "defaultMessage": "Modifier la partition"
-  },
   "@yovoice.melody.title": {
     "defaultMessage": "Partition mélodique"
-  },
-  "@yovoice.melody.subtitle": {
-    "defaultMessage": "Écrivez d’abord la mélodie, ajustez-la, puis générez la chanson entière."
-  },
-  "@yovoice.melody.empty": {
-    "defaultMessage": "YuE2 peut d’abord écrire la mélodie vocale et les accords de vos paroles. Relisez et modifiez la partition, puis générez la chanson. Vous pouvez aussi reprendre la mélodie d’un morceau existant pour une reprise."
   },
   "@yovoice.melody.plan": {
     "defaultMessage": "Écrire la partition"
@@ -3380,11 +2999,23 @@
   "@yovoice.melody.tempo": {
     "defaultMessage": "Tempo"
   },
+  "@yovoice.melody.listen": {
+    "defaultMessage": "Écouter"
+  },
+  "@yovoice.melody.listening": {
+    "defaultMessage": "Préparation de l’écoute…"
+  },
+  "@yovoice.melody.listenName": {
+    "defaultMessage": "Écoute de la mélodie"
+  },
   "@yovoice.melody.view": {
     "defaultMessage": "Vue de la partition"
   },
   "@yovoice.melody.viewTracks": {
     "defaultMessage": "Pistes"
+  },
+  "@yovoice.melody.viewStaff": {
+    "defaultMessage": "Partition"
   },
   "@yovoice.melody.viewSource": {
     "defaultMessage": "ABC"
@@ -3413,38 +3044,11 @@
   "@yovoice.melody.replace": {
     "defaultMessage": "Remplacer"
   },
-  "@yovoice.melody.edited": {
-    "defaultMessage": "L’IA a modifié la partition"
-  },
   "@yovoice.melody.notice.truncated": {
     "defaultMessage": "La partition dépassait ce que YuE2 peut chanter et a été coupée à la limite. Raccourcissez les paroles ou retirez des sections pour garder la fin."
   },
   "@yovoice.melody.notice.cover": {
     "defaultMessage": "Mélodie extraite. Les accords d’origine ont été retirés pour que YuE2 réarrange le morceau dans votre style."
-  },
-  "@yovoice.melody.changed": {
-    "defaultMessage": "Modifié : {changes}"
-  },
-  "@yovoice.melody.changedVocal": {
-    "defaultMessage": "mélodie aux mesures {bars}"
-  },
-  "@yovoice.melody.changedChords": {
-    "defaultMessage": "accords aux mesures {bars}"
-  },
-  "@yovoice.melody.changedIns": {
-    "defaultMessage": "accompagnement aux mesures {bars}"
-  },
-  "@yovoice.melody.changedTempo": {
-    "defaultMessage": "tempo"
-  },
-  "@yovoice.melody.changedKey": {
-    "defaultMessage": "tonalité"
-  },
-  "@yovoice.melody.changedBars": {
-    "defaultMessage": "durée {before} → {after} mesures"
-  },
-  "@yovoice.melody.listSeparator": {
-    "defaultMessage": ", "
   },
   "@yovoice.melody.invalid": {
     "defaultMessage": "YuE2 ne peut pas encore chanter cette partition"
@@ -3596,9 +3200,6 @@
   "@yovoice.logs.export": {
     "defaultMessage": "Exporter le diagnostic"
   },
-  "@yovoice.logs.hint": {
-    "defaultMessage": "Les journaux enregistrent les actions, ID, durées et erreurs, jamais les textes, paroles ou clés. Le diagnostic n’inclut pas la sortie brute du moteur d’inférence."
-  },
   "@yovoice.logs.empty": {
     "defaultMessage": "Aucun journal correspondant."
   },
@@ -3655,5 +3256,530 @@
   },
   "@yovoice.error.codexNoImage": {
     "defaultMessage": "Codex n’a pas généré d’image : {detail}"
+  },
+  "@yovoice.ai.assistantMissing": {
+    "defaultMessage": "Cette version n’inclut pas l’environnement de l’assistant IA"
+  },
+  "@yovoice.error.assistantMissing": {
+    "defaultMessage": "Cette version n’inclut pas l’environnement de l’assistant IA : la composition et l’écriture de paroles par IA sont indisponibles."
+  },
+  "@yovoice.error.assistantProvider": {
+    "defaultMessage": "Le service d’IA actuel (abonnement ChatGPT) ne peut pas être utilisé par l’assistant. Choisissez un service par API dans les réglages."
+  },
+  "@yovoice.assistant.title": {
+    "defaultMessage": "Ocho"
+  },
+  "@yovoice.assistant.newChat": {
+    "defaultMessage": "Nouvelle discussion"
+  },
+  "@yovoice.assistant.expand": {
+    "defaultMessage": "Agrandir en hauteur"
+  },
+  "@yovoice.assistant.collapse": {
+    "defaultMessage": "Rétablir la hauteur"
+  },
+  "@yovoice.assistant.close": {
+    "defaultMessage": "Réduire"
+  },
+  "@yovoice.assistant.placeholder": {
+    "defaultMessage": "Dites à Ocho quoi créer…"
+  },
+  "@yovoice.assistant.empty": {
+    "defaultMessage": "Votre partenaire créatif, prêt quand vous l’êtes"
+  },
+  "@yovoice.assistant.queued": {
+    "defaultMessage": "{count} en attente"
+  },
+  "@yovoice.assistant.cancelled": {
+    "defaultMessage": "Arrêté"
+  },
+  "@yovoice.assistant.setup": {
+    "defaultMessage": "Aucun service d’IA pour l’instant. Ajoutez-en un dans les réglages et choisissez un modèle."
+  },
+  "@yovoice.assistant.openWork": {
+    "defaultMessage": "Ouvrir l’œuvre"
+  },
+  "@yovoice.assistant.play": {
+    "defaultMessage": "Lire"
+  },
+  "@yovoice.assistant.pause": {
+    "defaultMessage": "Pause"
+  },
+  "@yovoice.assistant.chip.piano": {
+    "defaultMessage": "Écrire un morceau de piano"
+  },
+  "@yovoice.assistant.chip.pianoPrompt": {
+    "defaultMessage": "Crée une œuvre de partition et écris une mélodie de piano de quatre mesures"
+  },
+  "@yovoice.assistant.chip.minor": {
+    "defaultMessage": "Passer en mineur"
+  },
+  "@yovoice.assistant.chip.minorPrompt": {
+    "defaultMessage": "Passe la partition actuelle en mineur"
+  },
+  "@yovoice.assistant.chip.song": {
+    "defaultMessage": "Écrire une chanson"
+  },
+  "@yovoice.assistant.chip.songPrompt": {
+    "defaultMessage": "Crée une œuvre musicale et écris une chanson complète"
+  },
+  "@yovoice.assistant.chip.style": {
+    "defaultMessage": "Changer de style"
+  },
+  "@yovoice.assistant.chip.stylePrompt": {
+    "defaultMessage": "Réécris l’œuvre actuelle dans un autre style"
+  },
+  "@yovoice.assistant.chip.voice": {
+    "defaultMessage": "Choisir une voix"
+  },
+  "@yovoice.assistant.chip.voicePrompt": {
+    "defaultMessage": "Parcours mes voix de référence et recommande-en une pour cette œuvre"
+  },
+  "@yovoice.assistant.chip.polish": {
+    "defaultMessage": "Plus chaleureux"
+  },
+  "@yovoice.assistant.chip.polishPrompt": {
+    "defaultMessage": "Réécris la narration actuelle pour qu’elle sonne plus chaleureuse"
+  },
+  "@yovoice.assistant.chip.assign": {
+    "defaultMessage": "Attribuer les voix"
+  },
+  "@yovoice.assistant.chip.assignPrompt": {
+    "defaultMessage": "Parcours mes voix de référence et attribue-en une à chaque personnage de cette histoire"
+  },
+  "@yovoice.assistant.chip.dub": {
+    "defaultMessage": "Générer le doublage"
+  },
+  "@yovoice.assistant.chip.dubPrompt": {
+    "defaultMessage": "Lance la génération vocale de cette histoire"
+  },
+  "@yovoice.assistant.history": {
+    "defaultMessage": "Historique"
+  },
+  "@yovoice.assistant.historyEmpty": {
+    "defaultMessage": "Aucune discussion pour l’instant."
+  },
+  "@yovoice.assistant.deleteChat": {
+    "defaultMessage": "Supprimer la discussion : {title}"
+  },
+  "@yovoice.assistant.deleteConfirm": {
+    "defaultMessage": "Supprimer"
+  },
+  "@yovoice.assistant.justNow": {
+    "defaultMessage": "à l’instant"
+  },
+  "@yovoice.assistant.minutesAgo": {
+    "defaultMessage": "il y a {count} min"
+  },
+  "@yovoice.assistant.hoursAgo": {
+    "defaultMessage": "il y a {count} h"
+  },
+  "@yovoice.assistant.working": {
+    "defaultMessage": "En cours…"
+  },
+  "@yovoice.assistant.toolFailed": {
+    "defaultMessage": "L’action n’a pas abouti"
+  },
+  "@yovoice.assistant.copy": {
+    "defaultMessage": "Copier"
+  },
+  "@yovoice.assistant.copied": {
+    "defaultMessage": "Copié"
+  },
+  "@yovoice.intro.tagline": {
+    "defaultMessage": "Donnez une voix à vos mots. Faites de vos idées des chansons."
+  },
+  "@yovoice.intro.start": {
+    "defaultMessage": "Commencer l’exploration"
+  },
+  "@yovoice.guide.count": {
+    "defaultMessage": "{current} / {total}"
+  },
+  "@yovoice.guide.skip": {
+    "defaultMessage": "Passer"
+  },
+  "@yovoice.guide.back": {
+    "defaultMessage": "Précédent"
+  },
+  "@yovoice.guide.next": {
+    "defaultMessage": "Suivant"
+  },
+  "@yovoice.guide.done": {
+    "defaultMessage": "Commencer"
+  },
+  "@yovoice.guide.assistantTitle": {
+    "defaultMessage": "Demandez à l’assistant à tout moment"
+  },
+  "@yovoice.guide.new": {
+    "defaultMessage": "Créez ici un projet de voix, de narration, de musique ou de partition, ou importez du texte, des sous-titres ou un projet .yovoice."
+  },
+  "@yovoice.guide.text": {
+    "defaultMessage": "Écrivez un texte, choisissez un modèle et une voix, puis générez. Chaque génération est gardée comme version pour comparer et choisir."
+  },
+  "@yovoice.guide.story": {
+    "defaultMessage": "Importez des sous-titres ou un roman entier, faites dire chaque réplique par différents personnages, puis montez sur la timeline, ajoutez une musique de fond et exportez."
+  },
+  "@yovoice.guide.music": {
+    "defaultMessage": "Décrivez un style et écrivez des paroles pour générer une chanson. L’onglet « Génération de partitions » permet d’importer du MIDI ou de laisser l’IA écrire une partition, rendue avec une banque de sons."
+  },
+  "@yovoice.guide.voices": {
+    "defaultMessage": "Conservez les audios de référence et vos réglages de voix favoris pour garder la même voix d’un projet à l’autre."
+  },
+  "@yovoice.guide.settings": {
+    "defaultMessage": "Téléchargez et gérez les modèles, configurez les services d’IA, faites le tri dans les ressources, changez la langue et déplacez le dossier de données. La première fois, téléchargez un modèle ici."
+  },
+  "@yovoice.guide.assistant": {
+    "defaultMessage": "Appuyez sur ⌘J (Ctrl+J sous Windows) ou sur le bouton de l’assistant dans la barre de titre et dites ce que vous voulez, par exemple : « Crée une narration et donne une voix à chaque personnage ». Configurez d’abord un service d’IA dans les Paramètres."
+  },
+  "@yovoice.settings.intro": {
+    "defaultMessage": "Animation d’accueil"
+  },
+  "@yovoice.settings.introReplay": {
+    "defaultMessage": "Rejouer"
+  },
+  "@yovoice.settings.guide": {
+    "defaultMessage": "Visite guidée"
+  },
+  "@yovoice.settings.guideReplay": {
+    "defaultMessage": "Revoir"
+  },
+  "@yovoice.nav.assets": {
+    "defaultMessage": "Ressources"
+  },
+  "@yovoice.assets.total": {
+    "defaultMessage": "{count} éléments · {size}"
+  },
+  "@yovoice.assets.kind.generation": {
+    "defaultMessage": "Audio généré"
+  },
+  "@yovoice.assets.kind.segment": {
+    "defaultMessage": "Extrait de narration"
+  },
+  "@yovoice.assets.kind.voice": {
+    "defaultMessage": "Audio de référence"
+  },
+  "@yovoice.assets.kind.material": {
+    "defaultMessage": "Média de la timeline"
+  },
+  "@yovoice.assets.kind.image": {
+    "defaultMessage": "Image"
+  },
+  "@yovoice.assets.col.name": {
+    "defaultMessage": "Nom"
+  },
+  "@yovoice.assets.col.kind": {
+    "defaultMessage": "Type"
+  },
+  "@yovoice.assets.col.project": {
+    "defaultMessage": "Projet"
+  },
+  "@yovoice.assets.col.duration": {
+    "defaultMessage": "Durée"
+  },
+  "@yovoice.assets.col.size": {
+    "defaultMessage": "Taille"
+  },
+  "@yovoice.assets.col.created": {
+    "defaultMessage": "Créé"
+  },
+  "@yovoice.assets.col.status": {
+    "defaultMessage": "État"
+  },
+  "@yovoice.assets.allKinds": {
+    "defaultMessage": "Tous les types"
+  },
+  "@yovoice.assets.allProjects": {
+    "defaultMessage": "Tous les projets"
+  },
+  "@yovoice.assets.usage": {
+    "defaultMessage": "Utilisation"
+  },
+  "@yovoice.assets.usage.all": {
+    "defaultMessage": "Tous"
+  },
+  "@yovoice.assets.status.unused": {
+    "defaultMessage": "Inutilisé"
+  },
+  "@yovoice.assets.status.used": {
+    "defaultMessage": "Utilisé"
+  },
+  "@yovoice.assets.status.usedBy": {
+    "defaultMessage": "Utilisé par {names}"
+  },
+  "@yovoice.assets.status.missing": {
+    "defaultMessage": "Fichier introuvable"
+  },
+  "@yovoice.assets.search": {
+    "defaultMessage": "Rechercher"
+  },
+  "@yovoice.assets.searchPlaceholder": {
+    "defaultMessage": "Nom, projet ou personnage"
+  },
+  "@yovoice.assets.hint": {
+    "defaultMessage": "Les ressources utilisées et les médias de la timeline ne peuvent pas être supprimés ici : remplacez-les d’abord dans le personnage ou le projet, et retirez les médias depuis la timeline du projet."
+  },
+  "@yovoice.assets.deleteSelected": {
+    "defaultMessage": "Supprimer la sélection"
+  },
+  "@yovoice.assets.clearSelection": {
+    "defaultMessage": "Désélectionner"
+  },
+  "@yovoice.assets.deleteOne": {
+    "defaultMessage": "Supprimer {name}"
+  },
+  "@yovoice.assets.deleteTitle": {
+    "defaultMessage": "Supprimer {count} ressources ?"
+  },
+  "@yovoice.assets.deleteBody": {
+    "defaultMessage": "Les fichiers sélectionnés seront définitivement supprimés, libérant environ {size}. Action irréversible."
+  },
+  "@yovoice.assets.deleteConfirm": {
+    "defaultMessage": "Supprimer"
+  },
+  "@yovoice.assets.deleted": {
+    "defaultMessage": "{count} éléments supprimés, {size} libérés."
+  },
+  "@yovoice.assets.skipped": {
+    "defaultMessage": "{count} non supprimés."
+  },
+  "@yovoice.assets.showSkipped": {
+    "defaultMessage": "Voir pourquoi"
+  },
+  "@yovoice.assets.skippedTitle": {
+    "defaultMessage": "Certaines ressources n’ont pas été supprimées"
+  },
+  "@yovoice.assets.noMatch": {
+    "defaultMessage": "Aucune ressource ne correspond à ces filtres."
+  },
+  "@yovoice.assets.empty": {
+    "defaultMessage": "Aucune ressource pour l’instant. L’audio généré, l’audio de référence importé et les médias apparaîtront ici."
+  },
+  "@yovoice.assets.pages": {
+    "defaultMessage": "Pages de ressources"
+  },
+  "@yovoice.assets.play": {
+    "defaultMessage": "Écouter {name}"
+  },
+  "@yovoice.assets.preview": {
+    "defaultMessage": "Aperçu de {name}"
+  },
+  "@yovoice.assets.sourceMissing": {
+    "defaultMessage": "Projet source supprimé"
+  },
+  "@yovoice.assistant.launch": {
+    "defaultMessage": "Ocho"
+  },
+  "@yovoice.assistant.thought": {
+    "defaultMessage": "Raisonnement"
+  },
+  "@yovoice.assistant.steps": {
+    "defaultMessage": "{count} étapes"
+  },
+  "@yovoice.assistant.toolDone": {
+    "defaultMessage": "Terminé"
+  },
+  "@yovoice.assistant.move": {
+    "defaultMessage": "Faites glisser pour déplacer, double-cliquez pour agrandir"
+  },
+  "@yovoice.assistant.emptyHint": {
+    "defaultMessage": "Écrire des répliques ou des paroles, retoucher une mélodie, composer ou générer. Dites-le, je travaille sur l’œuvre ouverte."
+  },
+  "@yovoice.assistant.back": {
+    "defaultMessage": "Retour à la conversation"
+  },
+  "@yovoice.assistant.messageCount": {
+    "defaultMessage": "{count} msg"
+  },
+  "@yovoice.assistant.hideLauncher": {
+    "defaultMessage": "Masquer le lanceur"
+  },
+  "@yovoice.assistant.hideLauncherHint": {
+    "defaultMessage": "Toujours accessible en haut à droite ou avec ⌘J"
+  },
+  "@yovoice.assistant.toggleHint": {
+    "defaultMessage": "Ouvrir ou fermer Ocho (⌘J)"
+  },
+  "@yovoice.assistant.phase.thinking": {
+    "defaultMessage": "Réflexion"
+  },
+  "@yovoice.assistant.phase.writing": {
+    "defaultMessage": "Réponse en cours"
+  },
+  "@yovoice.assistant.phase.searching": {
+    "defaultMessage": "Recherche"
+  },
+  "@yovoice.assistant.phase.editing": {
+    "defaultMessage": "Modification de l’œuvre"
+  },
+  "@yovoice.assistant.phase.generating": {
+    "defaultMessage": "Génération audio"
+  },
+  "@yovoice.assistant.phase.opening": {
+    "defaultMessage": "Changement"
+  },
+  "@yovoice.assistant.phase.working": {
+    "defaultMessage": "Traitement"
+  },
+  "@yovoice.assistant.proposal.confirm": {
+    "defaultMessage": "Confirmer"
+  },
+  "@yovoice.assistant.proposal.confirmDelete": {
+    "defaultMessage": "Supprimer"
+  },
+  "@yovoice.assistant.proposal.dismiss": {
+    "defaultMessage": "Pas maintenant"
+  },
+  "@yovoice.assistant.proposal.confirmed": {
+    "defaultMessage": "Effectué"
+  },
+  "@yovoice.assistant.proposal.dismissed": {
+    "defaultMessage": "Ignoré"
+  },
+  "@yovoice.assistant.proposal.failed": {
+    "defaultMessage": "Échec"
+  },
+  "@yovoice.assistant.nudge.failed": {
+    "defaultMessage": "La génération a échoué. Je regarde pourquoi ?"
+  },
+  "@yovoice.assistant.nudge.diagnose": {
+    "defaultMessage": "Voir pourquoi"
+  },
+  "@yovoice.assistant.nudge.failedPrompt": {
+    "defaultMessage": "La dernière génération a échoué. Trouve pourquoi et dis-moi comment corriger."
+  },
+  "@yovoice.assistant.nudge.improve": {
+    "defaultMessage": "Aide-moi à l'améliorer"
+  },
+  "@yovoice.assistant.nudge.done.text": {
+    "defaultMessage": "La voix est prête. Une autre voix ou un autre ton ?"
+  },
+  "@yovoice.assistant.nudge.done.story": {
+    "defaultMessage": "Le chapitre est doublé. Je vérifie quelles répliques refaire ?"
+  },
+  "@yovoice.assistant.nudge.done.music": {
+    "defaultMessage": "La chanson est prête. Un autre style ou des paroles retouchées ?"
+  },
+  "@yovoice.assistant.nudge.done.score": {
+    "defaultMessage": "L'arrangement est rendu. J'ajoute des couches ?"
+  },
+  "@yovoice.assistant.nudge.donePrompt.text": {
+    "defaultMessage": "La voix est prête. Propose comment améliorer le ton, les pauses et la voix."
+  },
+  "@yovoice.assistant.nudge.donePrompt.story": {
+    "defaultMessage": "Le chapitre est doublé. Vérifie les personnages sans voix, les répliques trop longues et les mots mal prononcés."
+  },
+  "@yovoice.assistant.nudge.donePrompt.music": {
+    "defaultMessage": "La chanson est prête. Propose comment améliorer le style et les paroles."
+  },
+  "@yovoice.assistant.nudge.donePrompt.score": {
+    "defaultMessage": "L'arrangement est rendu. Propose des parties ou variations à ajouter."
+  },
+  "@yovoice.assistant.nudge.downloadFailed": {
+    "defaultMessage": "Le téléchargement a échoué. Je regarde pourquoi ?"
+  },
+  "@yovoice.assistant.nudge.downloadFailedPrompt": {
+    "defaultMessage": "Le dernier téléchargement a échoué. Trouve pourquoi et dis-moi comment corriger."
+  },
+  "@yovoice.assistant.nudge.modelReady": {
+    "defaultMessage": "{name} est installé."
+  },
+  "@yovoice.assistant.nudge.tryIt": {
+    "defaultMessage": "L'essayer"
+  },
+  "@yovoice.assistant.nudge.modelReadyPrompt": {
+    "defaultMessage": "{name} est installé. Génère un court extrait avec."
+  },
+  "@yovoice.assistant.nudge.close": {
+    "defaultMessage": "Fermer"
+  },
+  "@yovoice.settings.assistantIntro": {
+    "defaultMessage": "Ocho est l'assistant intégré de yovoice. Il voit l'œuvre en cours et votre sélection, et demande confirmation avant de supprimer, télécharger ou modifier un réglage."
+  },
+  "@yovoice.settings.assistantBehavior": {
+    "defaultMessage": "Comportement"
+  },
+  "@yovoice.settings.assistantNudges": {
+    "defaultMessage": "Suggestions proactives"
+  },
+  "@yovoice.settings.assistantNudgesHint": {
+    "defaultMessage": "Quand une génération se termine ou échoue, ou qu'un téléchargement s'achève, Ocho propose une suggestion dans le coin."
+  },
+  "@yovoice.settings.assistantMemory": {
+    "defaultMessage": "Préférences mémorisées"
+  },
+  "@yovoice.settings.assistantMemoryHint": {
+    "defaultMessage": "Indiquez vos habitudes à Ocho dans la conversation, comme une voix ou un style préféré. Il s'en souviendra par la suite."
+  },
+  "@yovoice.settings.assistantMemoryClear": {
+    "defaultMessage": "Tout effacer"
+  },
+  "@yovoice.settings.assistantMemoryClearConfirm": {
+    "defaultMessage": "Tout effacer"
+  },
+  "@yovoice.settings.assistantMemoryDelete": {
+    "defaultMessage": "Oublier : {text}"
+  },
+  "@yovoice.settings.assistantMemoryEmpty": {
+    "defaultMessage": "Aucune préférence pour l'instant"
+  },
+  "@yovoice.settings.assistantMemoryEmptyHint": {
+    "defaultMessage": "Par exemple, dites à Ocho « utilise par défaut la voix féminine douce pour la narration »."
+  },
+  "@yovoice.assistant.selectionHint": {
+    "defaultMessage": "Votre sélection est envoyée à Ocho avec le prochain message"
+  },
+  "@yovoice.music.structurePlaceholder": {
+    "defaultMessage": "Facultatif : repères de section comme [Intro], [Verse], [Chorus], [Outro]"
+  },
+  "@yovoice.music.mode": {
+    "defaultMessage": "Génération"
+  },
+  "@yovoice.music.modeScore": {
+    "defaultMessage": "Avec partition"
+  },
+  "@yovoice.music.modeFree": {
+    "defaultMessage": "Libre"
+  },
+  "@yovoice.melody.toInstrumental": {
+    "defaultMessage": "Confier la mélodie aux instruments"
+  },
+  "@yovoice.options.abc_temperature": {
+    "defaultMessage": "Température de partition"
+  },
+  "@yovoice.options.semantic_temperature": {
+    "defaultMessage": "Température audio"
+  },
+  "@yovoice.options.semantic_top_p": {
+    "defaultMessage": "Top P audio"
+  },
+  "@yovoice.options.semantic_top_k": {
+    "defaultMessage": "Top K audio"
+  },
+  "@yovoice.options.semantic_repetition_penalty": {
+    "defaultMessage": "Pénalité de répétition audio"
+  },
+  "@yovoice.music.compareVersions": {
+    "defaultMessage": "Changer de version pour comparer"
+  },
+  "@yovoice.music.switchBack": {
+    "defaultMessage": "Revenir à la version {n}"
+  },
+  "@yovoice.music.switchBackHint": {
+    "defaultMessage": "Conserve la position de lecture ; appuyez sur B pour basculer"
+  },
+  "@yovoice.settings.tabMusicModels": {
+    "defaultMessage": "Modèles musicaux"
+  },
+  "@yovoice.settings.precisionOf": {
+    "defaultMessage": "Précision de {name}"
+  },
+  "@yovoice.settings.precisionsInstalled": {
+    "defaultMessage": "Téléchargé : {list}"
+  },
+  "@yovoice.settings.precisionHint": {
+    "defaultMessage": "Q4/Q8 sont plus légers et rapides ; BF16, F16 et ORIG restent au plus près de la qualité d’origine."
+  },
+  "@yovoice.create.precision": {
+    "defaultMessage": "Précision"
   }
 }

@@ -11,9 +11,6 @@
   "@yovoice.error.proxyURL": {
     "defaultMessage": "경로나 인증 정보 없이 유효한 포트가 포함된 HTTP, HTTPS 또는 SOCKS5 프록시 URL을 입력하세요."
   },
-  "@yovoice.action.apply": {
-    "defaultMessage": "적용"
-  },
   "@yovoice.action.cancel": {
     "defaultMessage": "취소"
   },
@@ -85,9 +82,6 @@
   },
   "@yovoice.app.charCount": {
     "defaultMessage": "{count}자"
-  },
-  "@yovoice.app.collapseAudition": {
-    "defaultMessage": "{name} 미리 듣기 숨기기"
   },
   "@yovoice.app.collapseSidebar": {
     "defaultMessage": "사이드바 접기"
@@ -170,9 +164,6 @@
   "@yovoice.create.advanced": {
     "defaultMessage": "고급 설정"
   },
-  "@yovoice.create.backToScript": {
-    "defaultMessage": "대본으로 돌아가기"
-  },
   "@yovoice.create.cancelGenerate": {
     "defaultMessage": "생성 취소"
   },
@@ -238,9 +229,6 @@
   },
   "@yovoice.create.modelInstalled": {
     "defaultMessage": "설치됨"
-  },
-  "@yovoice.create.modelMissing": {
-    "defaultMessage": "다운로드 안 됨"
   },
   "@yovoice.create.moreEmotionPresets": {
     "defaultMessage": "감정 프리셋 더 보기"
@@ -557,9 +545,6 @@
   "@yovoice.error.nameLength": {
     "defaultMessage": "이름은 1~120자여야 합니다."
   },
-  "@yovoice.error.needRuntime": {
-    "defaultMessage": "생성하기 전에 모델과 런타임을 설치하세요."
-  },
   "@yovoice.error.paramsOutOfRange": {
     "defaultMessage": "생성 매개변수가 범위를 벗어났습니다."
   },
@@ -656,18 +641,6 @@
   "@yovoice.library.emptyVoicesTitle": {
     "defaultMessage": "아직 참조 오디오가 없습니다"
   },
-  "@yovoice.library.historyCount": {
-    "defaultMessage": "{count}개 생성됨"
-  },
-  "@yovoice.library.historyTitle": {
-    "defaultMessage": "버전 기록"
-  },
-  "@yovoice.library.startCreating": {
-    "defaultMessage": "만들기 시작"
-  },
-  "@yovoice.library.voiceCount": {
-    "defaultMessage": "음성 {count}개"
-  },
   "@yovoice.library.voicesTitle": {
     "defaultMessage": "사운드 라이브러리"
   },
@@ -710,20 +683,11 @@
   "@yovoice.media.saveName": {
     "defaultMessage": "이름 저장"
   },
-  "@yovoice.nav.create": {
-    "defaultMessage": "만들기"
-  },
   "@yovoice.nav.deleteProject": {
     "defaultMessage": "프로젝트 삭제: {title}"
   },
-  "@yovoice.nav.history": {
-    "defaultMessage": "생성된 모든 오디오"
-  },
   "@yovoice.nav.main": {
     "defaultMessage": "주 탐색"
-  },
-  "@yovoice.nav.newProject": {
-    "defaultMessage": "새 프로젝트"
   },
   "@yovoice.nav.recent": {
     "defaultMessage": "최근 항목"
@@ -734,20 +698,11 @@
   "@yovoice.nav.settings": {
     "defaultMessage": "설정"
   },
-  "@yovoice.nav.voices": {
-    "defaultMessage": "사운드 라이브러리"
-  },
   "@yovoice.player.audition": {
     "defaultMessage": "{name} 미리 듣기"
   },
-  "@yovoice.player.emptyHint": {
-    "defaultMessage": "미리 들을 오디오를 생성하거나 선택하세요"
-  },
   "@yovoice.player.mute": {
     "defaultMessage": "음소거"
-  },
-  "@yovoice.player.noAudio": {
-    "defaultMessage": "아직 오디오가 없습니다"
   },
   "@yovoice.player.stop": {
     "defaultMessage": "정지"
@@ -839,9 +794,6 @@
   "@yovoice.settings.downloadSource": {
     "defaultMessage": "다운로드 소스"
   },
-  "@yovoice.settings.importDirectory": {
-    "defaultMessage": "폴더 선택"
-  },
   "@yovoice.settings.inUse": {
     "defaultMessage": "사용 중"
   },
@@ -927,7 +879,7 @@
     "defaultMessage": "일반"
   },
   "@yovoice.settings.tabModels": {
-    "defaultMessage": "모델"
+    "defaultMessage": "음성 모델"
   },
   "@yovoice.settings.title": {
     "defaultMessage": "설정"
@@ -965,9 +917,6 @@
   "@yovoice.voice.defaultName": {
     "defaultMessage": "내 음성"
   },
-  "@yovoice.voice.hint": {
-    "defaultMessage": "배경 음악 없이 깨끗한 음성 1~60초."
-  },
   "@yovoice.voice.import": {
     "defaultMessage": "참조 오디오 가져오기"
   },
@@ -980,35 +929,20 @@
   "@yovoice.voice.recordName": {
     "defaultMessage": "녹음 이름"
   },
-  "@yovoice.voice.recording": {
-    "defaultMessage": "녹음 중… 최대 60초"
-  },
   "@yovoice.voice.saveCrop": {
     "defaultMessage": "새 음성으로 저장"
   },
   "@yovoice.voice.startRecord": {
     "defaultMessage": "녹음 시작"
   },
-  "@yovoice.voice.stopSave": {
-    "defaultMessage": "정지 후 저장"
-  },
   "@yovoice.vox.clone": {
     "defaultMessage": "음성 클론"
-  },
-  "@yovoice.vox.cloneHelp": {
-    "defaultMessage": "참조 음성을 복제하고 연기 스타일을 조정합니다"
   },
   "@yovoice.vox.continuation": {
     "defaultMessage": "정밀 클론"
   },
-  "@yovoice.vox.continuationHelp": {
-    "defaultMessage": "참조 오디오 + 대본으로 연기의 디테일을 유지합니다"
-  },
   "@yovoice.vox.design": {
     "defaultMessage": "음성 디자인"
-  },
-  "@yovoice.vox.designHelp": {
-    "defaultMessage": "참조 오디오 없이 텍스트로 음성을 디자인합니다"
   },
   "@yovoice.vox.generationMode": {
     "defaultMessage": "생성 모드"
@@ -1460,9 +1394,6 @@
   "@yovoice.character.deleteConfirm": {
     "defaultMessage": "라이브러리에서 이 캐릭터를 삭제합니다. 기존 프로젝트에 저장된 설정은 유지됩니다."
   },
-  "@yovoice.character.missingModel": {
-    "defaultMessage": "모델이 설치되지 않았습니다. 설정은 저장할 수 있으며, 설치 후 데모를 생성할 수 있습니다."
-  },
   "@yovoice.character.missingVoice": {
     "defaultMessage": "참조 음성이 없습니다. 다른 음성을 선택하세요."
   },
@@ -1471,9 +1402,6 @@
   },
   "@yovoice.character.listen": {
     "defaultMessage": "데모 재생"
-  },
-  "@yovoice.character.sourceDesign": {
-    "defaultMessage": "기본 제공 화자 / 음성 설명"
   },
   "@yovoice.voice.save": {
     "defaultMessage": "참조 오디오로 저장"
@@ -1486,12 +1414,6 @@
   },
   "@yovoice.voice.transcript": {
     "defaultMessage": "참조 대본"
-  },
-  "@yovoice.voice.transcriptHelp": {
-    "defaultMessage": "오디오에서 실제로 말하는 내용을 입력하세요. 발음 표기와 특수 텍스트도 확인하세요."
-  },
-  "@yovoice.voice.limit": {
-    "defaultMessage": "전체 클립은 1~60초, 20MB 이하여야 합니다. 여기서는 오디오를 자르지 않습니다."
   },
   "@yovoice.voice.sourceGeneration": {
     "defaultMessage": "생성된 오디오"
@@ -1511,35 +1433,14 @@
   "@yovoice.character.clearReferences": {
     "defaultMessage": "음성 참조 제거"
   },
-  "@yovoice.character.help": {
-    "defaultMessage": "이 음성 설정을 다른 프로젝트에서 쓸 수 있도록 저장합니다. 미리 듣기 대본은 프로젝트 텍스트를 바꾸지 않습니다."
-  },
-  "@yovoice.character.parameters": {
-    "defaultMessage": "음성 설정"
-  },
-  "@yovoice.character.emptyDemo": {
-    "defaultMessage": "미리 듣기 대본을 추가해 미리 듣기를 생성하거나, 지금 캐릭터를 저장하세요."
-  },
-  "@yovoice.character.libraryHelp": {
-    "defaultMessage": "음성 설정과 미리 듣기를 저장해 작업할 때 다시 사용하세요."
-  },
   "@yovoice.character.search": {
     "defaultMessage": "캐릭터 검색"
   },
   "@yovoice.character.noResults": {
     "defaultMessage": "일치하는 캐릭터가 없습니다. 다른 검색어를 입력해 보세요."
   },
-  "@yovoice.character.createFirst": {
-    "defaultMessage": "첫 캐릭터 저장하기"
-  },
   "@yovoice.character.nameLimit": {
     "defaultMessage": "캐릭터 이름은 120자 이하여야 합니다."
-  },
-  "@yovoice.character.applied": {
-    "defaultMessage": "캐릭터 설정을 적용했습니다. 프로젝트 텍스트는 변경되지 않았습니다."
-  },
-  "@yovoice.character.saved": {
-    "defaultMessage": "캐릭터를 저장했습니다. 캐릭터 라이브러리에서 찾을 수 있습니다."
   },
   "@yovoice.library.nameRequired": {
     "defaultMessage": "저장하려면 이름을 입력하세요."
@@ -1552,9 +1453,6 @@
   },
   "@yovoice.voice.durationLimit": {
     "defaultMessage": "이 오디오는 1~60초여야 합니다. 다른 기록 클립을 선택하세요."
-  },
-  "@yovoice.voice.saveSuccess": {
-    "defaultMessage": "음성을 저장했습니다. 음성 라이브러리에서 찾을 수 있습니다."
   },
   "@yovoice.library.searchVoices": {
     "defaultMessage": "참조 오디오 검색"
@@ -1583,9 +1481,6 @@
   "@yovoice.subtitle.speaker": {
     "defaultMessage": "화자 {n}"
   },
-  "@yovoice.subtitle.help": {
-    "defaultMessage": "대화 순서대로 각 화자의 음성으로 클립을 따로 생성합니다. 클립을 다듬거나 제거하거나 다시 생성한 후 내보낼 때 병합합니다. 원본 자막 타이밍에 자동으로 맞추지는 않습니다."
-  },
   "@yovoice.subtitle.currentSettings": {
     "defaultMessage": "기본 음성"
   },
@@ -1613,20 +1508,11 @@
   "@yovoice.subtitle.addCue": {
     "defaultMessage": "줄 추가"
   },
-  "@yovoice.subtitle.speakerHelp": {
-    "defaultMessage": "이 화자의 모든 줄에 설정이 적용됩니다"
-  },
   "@yovoice.subtitle.customSettings": {
     "defaultMessage": "사용자 지정 음성"
   },
   "@yovoice.subtitle.settings": {
     "defaultMessage": "화자 설정"
-  },
-  "@yovoice.subtitle.speakers": {
-    "defaultMessage": "화자 · {count}"
-  },
-  "@yovoice.subtitle.instructions": {
-    "defaultMessage": "자막 음성 안내"
   },
   "@yovoice.subtitle.cues": {
     "defaultMessage": "자막 · 큐 {count}개"
@@ -1636,12 +1522,6 @@
   },
   "@yovoice.subtitle.hideTimes": {
     "defaultMessage": "타이밍 숨기기"
-  },
-  "@yovoice.subtitle.defaultVoice": {
-    "defaultMessage": "기본 음성"
-  },
-  "@yovoice.subtitle.defaultVoiceHelp": {
-    "defaultMessage": "캐릭터가 지정되지 않은 화자에 사용됩니다"
   },
   "@yovoice.timeline.invalid": {
     "defaultMessage": "잘못된 타임라인입니다. 클립 범위를 확인하세요. 최대 트랙 32개, 클립 2000개, 24시간까지 지원합니다."
@@ -1663,12 +1543,6 @@
   },
   "@yovoice.timeline.removeClip": {
     "defaultMessage": "클립 삭제"
-  },
-  "@yovoice.timeline.position": {
-    "defaultMessage": "시작 (초)"
-  },
-  "@yovoice.timeline.moveTo": {
-    "defaultMessage": "트랙으로 이동"
   },
   "@yovoice.timeline.hint": {
     "defaultMessage": "클립을 선택하면 재생 헤드 위치에서 분할할 수 있습니다. 클립을 드래그해 시간을 옮기거나 다른 트랙으로 이동하세요."
@@ -1697,9 +1571,6 @@
   "@yovoice.timeline.fromHistory": {
     "defaultMessage": "버전에서 추가"
   },
-  "@yovoice.nav.projects": {
-    "defaultMessage": "프로젝트"
-  },
   "@yovoice.nav.library": {
     "defaultMessage": "사운드 라이브러리"
   },
@@ -1721,29 +1592,17 @@
   "@yovoice.project.empty": {
     "defaultMessage": "아직 프로젝트가 없습니다"
   },
-  "@yovoice.project.all": {
-    "defaultMessage": "모든 유형"
-  },
   "@yovoice.project.copy": {
     "defaultMessage": "프로젝트 복제"
   },
   "@yovoice.project.rename": {
     "defaultMessage": "프로젝트 이름 변경"
   },
-  "@yovoice.project.open": {
-    "defaultMessage": "프로젝트 열기"
-  },
-  "@yovoice.project.unknownDate": {
-    "defaultMessage": "수정 날짜 없음"
-  },
   "@yovoice.library.voicesTab": {
     "defaultMessage": "캐릭터"
   },
   "@yovoice.library.referencesTab": {
     "defaultMessage": "참조 오디오"
-  },
-  "@yovoice.library.use": {
-    "defaultMessage": "캐릭터 사용"
   },
   "@yovoice.library.target": {
     "defaultMessage": "대상 선택"
@@ -1763,9 +1622,6 @@
   "@yovoice.library.apply": {
     "defaultMessage": "캐릭터 적용"
   },
-  "@yovoice.library.noTarget": {
-    "defaultMessage": "프로젝트와 캐릭터를 선택하세요. 다른 캐릭터는 변경되지 않습니다."
-  },
   "@yovoice.library.newVoice": {
     "defaultMessage": "제목 없는 캐릭터"
   },
@@ -1778,26 +1634,11 @@
   "@yovoice.library.unsaved": {
     "defaultMessage": "캐릭터 변경 사항을 저장할까요?"
   },
-  "@yovoice.library.unsavedBody": {
-    "defaultMessage": "나가기 전에 캐릭터를 저장하거나 변경 사항을 취소하세요."
-  },
   "@yovoice.library.discard": {
     "defaultMessage": "변경 사항 취소"
   },
   "@yovoice.library.continue": {
     "defaultMessage": "계속 편집"
-  },
-  "@yovoice.library.clearSearch": {
-    "defaultMessage": "필터 지우기"
-  },
-  "@yovoice.history.source": {
-    "defaultMessage": "원본 프로젝트 열기"
-  },
-  "@yovoice.history.sourceMissing": {
-    "defaultMessage": "원본 프로젝트가 삭제됨"
-  },
-  "@yovoice.history.stale": {
-    "defaultMessage": "텍스트 또는 설정이 변경되었지만 오디오는 업데이트되지 않았습니다"
   },
   "@yovoice.app.saveFailed": {
     "defaultMessage": "저장 실패. 다시 시도"
@@ -1873,9 +1714,6 @@
   },
   "@yovoice.timeline.importDuration": {
     "defaultMessage": "오디오 길이는 0.01초에서 1시간 사이여야 합니다."
-  },
-  "@yovoice.timeline.exportFormat": {
-    "defaultMessage": "WAV · 24 kHz · 모노 · 최대 1시간"
   },
   "@yovoice.character.new": {
     "defaultMessage": "새 캐릭터"
@@ -2090,15 +1928,6 @@
   "@yovoice.music.collapseElements": {
     "defaultMessage": "요소 접기"
   },
-  "@yovoice.music.selectedTags": {
-    "defaultMessage": "{count}개 선택됨"
-  },
-  "@yovoice.music.clearTags": {
-    "defaultMessage": "지우기"
-  },
-  "@yovoice.music.elements": {
-    "defaultMessage": "요소"
-  },
   "@yovoice.music.addTag": {
     "defaultMessage": "스타일 태그 추가"
   },
@@ -2129,17 +1958,11 @@
   "@yovoice.music.instrumental": {
     "defaultMessage": "연주곡"
   },
-  "@yovoice.music.instrumentalHint": {
-    "defaultMessage": "연주곡은 가사를 무시하고 스타일만 따릅니다. 가사는 그대로 유지되며, 이 옵션을 끄면 계속 편집할 수 있습니다."
-  },
   "@yovoice.music.lyricsPlaceholder": {
     "defaultMessage": "가사를 쓰고 [verse], [chorus] 등으로 섹션을 표시하세요. 비워 두면 모델이 허밍으로 부릅니다."
   },
   "@yovoice.music.generate": {
     "defaultMessage": "노래 생성"
-  },
-  "@yovoice.music.modelSize": {
-    "defaultMessage": "설치 안 됨 · {size}"
   },
   "@yovoice.music.duration": {
     "defaultMessage": "길이"
@@ -2192,9 +2015,6 @@
   "@yovoice.music.timesignature": {
     "defaultMessage": "박자"
   },
-  "@yovoice.music.steps": {
-    "defaultMessage": "샘플링 단계"
-  },
   "@yovoice.error.engineUpgradeRequired": {
     "defaultMessage": "이 모델에는 추론 엔진 {version} 이상이 필요합니다. 설정에서 엔진을 업데이트하세요."
   },
@@ -2217,7 +2037,7 @@
     "defaultMessage": "트랙 렌더링 중 ({done}/{total})"
   },
   "@yovoice.project.score": {
-    "defaultMessage": "악보"
+    "defaultMessage": "악보 생성"
   },
   "@yovoice.project.new.score": {
     "defaultMessage": "새 악보"
@@ -2230,9 +2050,6 @@
   },
   "@yovoice.score.bars": {
     "defaultMessage": "{start}–{end}마디"
-  },
-  "@yovoice.score.copyPromptHint": {
-    "defaultMessage": "AI 에이전트에게 악보 JSON 작성을 요청한 다음 여기로 가져오거나 CLI로 렌더링하세요."
   },
   "@yovoice.score.downloadSoundFont": {
     "defaultMessage": "다운로드"
@@ -2275,9 +2092,6 @@
   },
   "@yovoice.score.meter": {
     "defaultMessage": "박자"
-  },
-  "@yovoice.score.noteCount": {
-    "defaultMessage": "음표 {count}개"
   },
   "@yovoice.score.playTrack": {
     "defaultMessage": "{name} 재생"
@@ -2343,10 +2157,7 @@
     "defaultMessage": "AI 서비스"
   },
   "@yovoice.ai.intro": {
-    "defaultMessage": "대규모 언어 모델을 연결하면 AI가 악보의 편곡과 음악의 가사를 작성합니다. 요청은 이 컴퓨터에서 선택한 서비스로 직접 전송됩니다."
-  },
-  "@yovoice.ai.addProvider": {
-    "defaultMessage": "서비스 추가"
+    "defaultMessage": "대규모 언어 모델을 연결하면 내장 AI 어시스턴트가 편곡에서 악보를, 음악에서 가사를 쓰고 결과를 이어서 고칠 수 있습니다."
   },
   "@yovoice.ai.customProvider": {
     "defaultMessage": "사용자 지정 서비스"
@@ -2399,9 +2210,6 @@
   "@yovoice.ai.inUse": {
     "defaultMessage": "사용 중"
   },
-  "@yovoice.ai.deleteNamed": {
-    "defaultMessage": "{name} 삭제"
-  },
   "@yovoice.ai.deleteTitle": {
     "defaultMessage": "이 AI 서비스를 삭제할까요?"
   },
@@ -2410,24 +2218,6 @@
   },
   "@yovoice.ai.configure": {
     "defaultMessage": "AI 설정"
-  },
-  "@yovoice.ai.notConfigured": {
-    "defaultMessage": "이 기능에는 언어 모델이 필요합니다. 먼저 설정 › AI 서비스에서 서비스를 추가하고 모델을 선택하세요."
-  },
-  "@yovoice.ai.scorePlaceholder": {
-    "defaultMessage": "원하는 음악을 한 문장으로 설명하면 AI가 전체 편곡을 작성합니다. 예: 여행 브이로그 인트로용 따뜻하고 느린 피아노곡, 나중에 부드러운 현악기가 합류"
-  },
-  "@yovoice.ai.scoreSeconds": {
-    "defaultMessage": "길이"
-  },
-  "@yovoice.ai.scoreSubmit": {
-    "defaultMessage": "작곡"
-  },
-  "@yovoice.ai.lyricsPlaceholder": {
-    "defaultMessage": "노래를 한 문장으로 설명하면 AI가 스타일, 가사, 제목을 작성합니다. 예: 바닷가를 달리는 여름밤 드라이브에 관한 시티팝"
-  },
-  "@yovoice.ai.lyricsSubmit": {
-    "defaultMessage": "작사"
   },
   "@yovoice.error.aiProviderInvalid": {
     "defaultMessage": "AI 서비스 설정이 잘못되었습니다. 주소, 이름, 모델을 확인하세요."
@@ -2452,12 +2242,6 @@
   },
   "@yovoice.error.aiResultInvalid": {
     "defaultMessage": "AI 결과를 사용할 수 없습니다: {detail}. 다시 시도하거나 표현을 바꿔 보세요."
-  },
-  "@yovoice.music.allTags": {
-    "defaultMessage": "모든 태그"
-  },
-  "@yovoice.music.fewerTags": {
-    "defaultMessage": "태그 줄이기"
   },
   "@yovoice.settings.tabSoundfonts": {
     "defaultMessage": "악보 사운드 폰트"
@@ -2528,80 +2312,14 @@
   "@yovoice.library.duration": {
     "defaultMessage": "길이"
   },
-  "@yovoice.ai.apply": {
-    "defaultMessage": "적용"
-  },
   "@yovoice.ai.discard": {
     "defaultMessage": "취소"
-  },
-  "@yovoice.ai.retry": {
-    "defaultMessage": "다시 시도"
-  },
-  "@yovoice.ai.openLogs": {
-    "defaultMessage": "로그 보기"
   },
   "@yovoice.ai.openProject": {
     "defaultMessage": "프로젝트 열기"
   },
-  "@yovoice.ai.backgroundHint": {
-    "defaultMessage": "백그라운드에서 작성 중입니다. 계속 편집하거나 다른 작업을 해도 됩니다. 완료되면 알려 드립니다."
-  },
-  "@yovoice.ai.busyElsewhere": {
-    "defaultMessage": "다른 AI 작업이 실행 중입니다. 완료된 후 시작하세요."
-  },
-  "@yovoice.ai.failedMeta": {
-    "defaultMessage": "{time} 후 · {model}"
-  },
-  "@yovoice.ai.lyricsPlaceholderInstrumental": {
-    "defaultMessage": "연주곡을 한 문장으로 설명하면 AI가 스타일과 섹션을 작성합니다. 예: 늦은 밤 도시를 천천히 달리는 드라이브용 로파이"
-  },
-  "@yovoice.ai.scoreLength": {
-    "defaultMessage": "약 {time}"
-  },
-  "@yovoice.ai.brief.score": {
-    "defaultMessage": "원하는 음악을 설명하세요"
-  },
-  "@yovoice.ai.brief.lyrics": {
-    "defaultMessage": "원하는 노래를 설명하세요"
-  },
-  "@yovoice.ai.setup.score": {
-    "defaultMessage": "언어 모델을 연결하면 AI가 한 문장으로 전체 편곡을 작성합니다."
-  },
-  "@yovoice.ai.setup.lyrics": {
-    "defaultMessage": "언어 모델을 연결하면 AI가 한 문장으로 스타일과 가사를 작성합니다."
-  },
-  "@yovoice.ai.stage.writing": {
-    "defaultMessage": "{model} 작성 중"
-  },
-  "@yovoice.ai.stage.repairing": {
-    "defaultMessage": "{model} 형식 수정 중"
-  },
-  "@yovoice.ai.task.running.score": {
-    "defaultMessage": "AI가 작곡하는 중"
-  },
-  "@yovoice.ai.task.running.lyrics": {
-    "defaultMessage": "AI가 작사하는 중"
-  },
-  "@yovoice.ai.task.done.score": {
-    "defaultMessage": "AI가 새 편곡을 완성했습니다"
-  },
-  "@yovoice.ai.task.done.lyrics": {
-    "defaultMessage": "AI가 스타일과 가사를 완성했습니다"
-  },
-  "@yovoice.ai.task.failed.score": {
-    "defaultMessage": "AI가 작곡하지 못했습니다"
-  },
-  "@yovoice.ai.task.failed.lyrics": {
-    "defaultMessage": "AI가 가사를 작성하지 못했습니다"
-  },
-  "@yovoice.ai.task.replace.score": {
-    "defaultMessage": "적용하면 현재 편곡이 대체됩니다."
-  },
-  "@yovoice.ai.task.replace.lyrics": {
-    "defaultMessage": "적용하면 현재 스타일과 가사가 대체됩니다."
-  },
   "@yovoice.error.aiTimeout": {
-    "defaultMessage": "AI 서비스가 {seconds}초 안에 완료하지 못했습니다. 설정 › 일반에서 AI 요청 시간 제한을 늘리거나 더 빠른 모델을 선택하세요."
+    "defaultMessage": "AI 서비스가 {seconds}초 안에 완료하지 못했습니다. 설정 › AI 서비스에서 AI 요청 시간 제한을 늘리거나 더 빠른 모델을 선택하세요."
   },
   "@yovoice.music.lyricsMode": {
     "defaultMessage": "가사 모드"
@@ -2614,18 +2332,6 @@
   },
   "@yovoice.score.roleOf": {
     "defaultMessage": "{name} 역할"
-  },
-  "@yovoice.settings.aiTimeout": {
-    "defaultMessage": "요청 시간 제한"
-  },
-  "@yovoice.settings.aiTimeoutHint": {
-    "defaultMessage": "전체 편곡에는 몇 분이 걸릴 수 있습니다. 이 시간이 지나도 실행 중인 요청은 실패로 처리되고 로그에 기록됩니다."
-  },
-  "@yovoice.settings.minutes": {
-    "defaultMessage": "{n}분"
-  },
-  "@yovoice.settings.minutesDefault": {
-    "defaultMessage": "{n}분 (기본값)"
   },
   "@yovoice.settings.diagnosticsGroup": {
     "defaultMessage": "진단"
@@ -2655,16 +2361,10 @@
     "defaultMessage": "로컬 및 사용자 지정"
   },
   "@yovoice.error.musicLyricsRequired": {
-    "defaultMessage": "YuE2에는 가사가 필요하며, 연주곡은 지원하지 않습니다."
+    "defaultMessage": "YuE2로 보컬 곡을 만들려면 가사가 필요합니다. 가사 없이 하려면 연주곡으로 바꾸세요."
   },
   "@yovoice.settings.modelDesc.yue2": {
-    "defaultMessage": "가사와 스타일로 보컬이 있는 완전한 노래를 생성하며, 길이는 가사에 따라 정해집니다. CC BY-NC 4.0 라이선스로 비상업적 용도로만 사용할 수 있습니다."
-  },
-  "@yovoice.music.yueLength": {
-    "defaultMessage": "YuE2는 섹션별로 노래하므로 가사가 곡 길이를 결정합니다."
-  },
-  "@yovoice.music.yueVocalOnly": {
-    "defaultMessage": "YuE2는 보컬곡만 만듭니다"
+    "defaultMessage": "가사와 스타일로 완전한 노래나 연주곡을 생성하며, 먼저 편집 가능한 멜로디 악보를 쓸 수도 있습니다. 길이는 가사나 악보에 따라 정해집니다. CC BY-NC 4.0 라이선스로 비상업적 용도로만 사용할 수 있습니다."
   },
   "@yovoice.music.reuseTake": {
     "defaultMessage": "이 버전의 스타일과 가사 재사용"
@@ -3008,60 +2708,6 @@
   "@yovoice.music.lyricsEstimated": {
     "defaultMessage": "가사 타이밍은 곡 길이를 기준으로 추정했습니다"
   },
-  "@yovoice.setup.label": {
-    "defaultMessage": "생성 전 준비"
-  },
-  "@yovoice.setup.title": {
-    "defaultMessage": "생성까지 {count}단계 남음"
-  },
-  "@yovoice.setup.hint": {
-    "defaultMessage": "여기에서 각 단계를 완료하세요. 모든 준비가 끝나면 이 카드는 사라집니다."
-  },
-  "@yovoice.setup.model": {
-    "defaultMessage": "모델 다운로드"
-  },
-  "@yovoice.setup.soundfont": {
-    "defaultMessage": "사운드 폰트 다운로드"
-  },
-  "@yovoice.setup.engine": {
-    "defaultMessage": "엔진 설치"
-  },
-  "@yovoice.setup.engineDetail": {
-    "defaultMessage": "audio.cpp가 이 컴퓨터에서 모델을 실행합니다"
-  },
-  "@yovoice.setup.engineUpdate": {
-    "defaultMessage": "이 모델에는 더 새로운 엔진이 필요합니다"
-  },
-  "@yovoice.setup.voice": {
-    "defaultMessage": "음성 선택"
-  },
-  "@yovoice.setup.voiceDetail": {
-    "defaultMessage": "이 모델은 참조 오디오에서 음성을 복제합니다"
-  },
-  "@yovoice.setup.download": {
-    "defaultMessage": "다운로드"
-  },
-  "@yovoice.setup.otherModel": {
-    "defaultMessage": "다른 항목 선택"
-  },
-  "@yovoice.setup.install": {
-    "defaultMessage": "설치"
-  },
-  "@yovoice.setup.update": {
-    "defaultMessage": "업데이트"
-  },
-  "@yovoice.setup.chooseVoice": {
-    "defaultMessage": "참조 오디오 선택"
-  },
-  "@yovoice.setup.done": {
-    "defaultMessage": "완료"
-  },
-  "@yovoice.setup.downloading": {
-    "defaultMessage": "{received} / {total}"
-  },
-  "@yovoice.setup.installing": {
-    "defaultMessage": "설치 중…"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "{n}초 뒤로"
   },
@@ -3300,7 +2946,10 @@
     "defaultMessage": "모델이 멜로디 악보를 만들지 못했습니다. 다시 시도하거나 가사를 조정하세요."
   },
   "@yovoice.error.coverModelRequired": {
-    "defaultMessage": "곡에서 멜로디를 추출하려면 SheetSage2 모델이 필요합니다. 설정 › 모델에서 다운로드하세요."
+    "defaultMessage": "곡에서 멜로디를 추출하려면 SheetSage2 모델이 필요합니다. 설정 › 음악 모델에서 다운로드하세요."
+  },
+  "@yovoice.error.melodySoundFontRequired": {
+    "defaultMessage": "멜로디 악보를 미리 들으려면 사운드폰트가 필요합니다. \"설정 › 악보 사운드 폰트\"에서 다운로드하세요."
   },
   "@yovoice.settings.modelDesc.sheetsage2": {
     "defaultMessage": "곡의 멜로디와 코드를 악보로 채보해 YuE2 커버에 사용합니다."
@@ -3308,38 +2957,8 @@
   "@yovoice.music.generateFromMelody": {
     "defaultMessage": "멜로디 악보로 생성"
   },
-  "@yovoice.ai.brief.melody": {
-    "defaultMessage": "악보를 어떻게 바꿀지 설명"
-  },
-  "@yovoice.ai.setup.melody": {
-    "defaultMessage": "언어 모델을 연결하면 한 문장으로 AI가 멜로디, 코드, 스타일을 고치게 할 수 있습니다."
-  },
-  "@yovoice.ai.task.running.melody": {
-    "defaultMessage": "AI가 악보를 수정하는 중"
-  },
-  "@yovoice.ai.task.done.melody": {
-    "defaultMessage": "AI가 악보 수정을 마쳤습니다"
-  },
-  "@yovoice.ai.task.failed.melody": {
-    "defaultMessage": "AI가 악보를 수정하지 못했습니다"
-  },
-  "@yovoice.ai.task.replace.melody": {
-    "defaultMessage": "적용하면 현재 악보가 바뀌고, AI가 스타일을 바꿨다면 스타일도 바뀝니다."
-  },
-  "@yovoice.ai.melodyPlaceholder": {
-    "defaultMessage": "악보를 어떻게 바꿀지 적어 주세요. 예: 후렴을 온음 올리기, 9–12마디를 더 경쾌하게, 코드를 재즈풍으로"
-  },
-  "@yovoice.ai.melodySubmit": {
-    "defaultMessage": "악보 수정"
-  },
   "@yovoice.melody.title": {
     "defaultMessage": "멜로디 악보"
-  },
-  "@yovoice.melody.subtitle": {
-    "defaultMessage": "먼저 멜로디를 쓰고 다듬은 뒤 곡 전체를 생성합니다."
-  },
-  "@yovoice.melody.empty": {
-    "defaultMessage": "YuE2는 가사에 맞춰 보컬 멜로디와 코드를 먼저 쓸 수 있습니다. 악보를 확인하고 고친 다음 곡을 생성하세요. 기존 곡의 멜로디를 가져와 커버할 수도 있습니다."
   },
   "@yovoice.melody.plan": {
     "defaultMessage": "멜로디 악보 쓰기"
@@ -3380,11 +2999,23 @@
   "@yovoice.melody.tempo": {
     "defaultMessage": "템포"
   },
+  "@yovoice.melody.listen": {
+    "defaultMessage": "미리 듣기"
+  },
+  "@yovoice.melody.listening": {
+    "defaultMessage": "미리 듣기 만드는 중…"
+  },
+  "@yovoice.melody.listenName": {
+    "defaultMessage": "멜로디 악보 미리 듣기"
+  },
   "@yovoice.melody.view": {
     "defaultMessage": "악보 보기"
   },
   "@yovoice.melody.viewTracks": {
     "defaultMessage": "트랙"
+  },
+  "@yovoice.melody.viewStaff": {
+    "defaultMessage": "오선보"
   },
   "@yovoice.melody.viewSource": {
     "defaultMessage": "ABC"
@@ -3413,38 +3044,11 @@
   "@yovoice.melody.replace": {
     "defaultMessage": "바꾸기"
   },
-  "@yovoice.melody.edited": {
-    "defaultMessage": "AI가 악보를 수정했습니다"
-  },
   "@yovoice.melody.notice.truncated": {
     "defaultMessage": "악보가 YuE2가 부를 수 있는 길이를 넘어 한도에서 잘랐습니다. 끝부분을 살리려면 가사를 줄이거나 구간을 덜어 내세요."
   },
   "@yovoice.melody.notice.cover": {
     "defaultMessage": "멜로디를 추출했습니다. 원곡 코드를 뺐으므로 YuE2가 내 스타일로 다시 편곡합니다."
-  },
-  "@yovoice.melody.changed": {
-    "defaultMessage": "변경: {changes}"
-  },
-  "@yovoice.melody.changedVocal": {
-    "defaultMessage": "멜로디 {bars}마디"
-  },
-  "@yovoice.melody.changedChords": {
-    "defaultMessage": "코드 {bars}마디"
-  },
-  "@yovoice.melody.changedIns": {
-    "defaultMessage": "반주 {bars}마디"
-  },
-  "@yovoice.melody.changedTempo": {
-    "defaultMessage": "템포"
-  },
-  "@yovoice.melody.changedKey": {
-    "defaultMessage": "조성"
-  },
-  "@yovoice.melody.changedBars": {
-    "defaultMessage": "길이 {before} → {after}마디"
-  },
-  "@yovoice.melody.listSeparator": {
-    "defaultMessage": ", "
   },
   "@yovoice.melody.invalid": {
     "defaultMessage": "YuE2가 아직 이 악보를 부를 수 없습니다"
@@ -3596,9 +3200,6 @@
   "@yovoice.logs.export": {
     "defaultMessage": "진단 패키지 내보내기"
   },
-  "@yovoice.logs.hint": {
-    "defaultMessage": "로그에는 작업, ID, 소요 시간, 오류만 기록되며 본문, 가사, 키는 포함되지 않습니다. 진단 패키지에는 추론 엔진의 원시 출력이 포함되지 않습니다."
-  },
   "@yovoice.logs.empty": {
     "defaultMessage": "조건에 맞는 로그가 없습니다."
   },
@@ -3655,5 +3256,530 @@
   },
   "@yovoice.error.codexNoImage": {
     "defaultMessage": "Codex가 이미지를 생성하지 않았습니다: {detail}"
+  },
+  "@yovoice.ai.assistantMissing": {
+    "defaultMessage": "이 빌드에는 AI 어시스턴트 런타임이 포함되어 있지 않습니다"
+  },
+  "@yovoice.error.assistantMissing": {
+    "defaultMessage": "이 빌드에는 AI 어시스턴트 런타임이 없어 AI 작곡과 작사를 사용할 수 없습니다."
+  },
+  "@yovoice.error.assistantProvider": {
+    "defaultMessage": "현재 AI 서비스(ChatGPT 구독)는 어시스턴트에서 사용할 수 없습니다. 설정에서 API 방식 서비스로 바꾸세요."
+  },
+  "@yovoice.assistant.title": {
+    "defaultMessage": "Ocho"
+  },
+  "@yovoice.assistant.newChat": {
+    "defaultMessage": "새 대화"
+  },
+  "@yovoice.assistant.expand": {
+    "defaultMessage": "세로로 늘리기"
+  },
+  "@yovoice.assistant.collapse": {
+    "defaultMessage": "높이 복원"
+  },
+  "@yovoice.assistant.close": {
+    "defaultMessage": "최소화"
+  },
+  "@yovoice.assistant.placeholder": {
+    "defaultMessage": "Ocho에게 하고 싶은 걸…"
+  },
+  "@yovoice.assistant.empty": {
+    "defaultMessage": "당신의 창작 파트너, 언제든 시작할 수 있어요"
+  },
+  "@yovoice.assistant.queued": {
+    "defaultMessage": "대기 {count}개"
+  },
+  "@yovoice.assistant.cancelled": {
+    "defaultMessage": "중지됨"
+  },
+  "@yovoice.assistant.setup": {
+    "defaultMessage": "사용할 수 있는 AI 서비스가 없습니다. 설정에서 추가하고 모델을 선택하세요."
+  },
+  "@yovoice.assistant.openWork": {
+    "defaultMessage": "작품 열기"
+  },
+  "@yovoice.assistant.play": {
+    "defaultMessage": "재생"
+  },
+  "@yovoice.assistant.pause": {
+    "defaultMessage": "일시정지"
+  },
+  "@yovoice.assistant.chip.piano": {
+    "defaultMessage": "피아노곡 쓰기"
+  },
+  "@yovoice.assistant.chip.pianoPrompt": {
+    "defaultMessage": "편곡 작품을 만들고 4마디 피아노 선율을 써 줘"
+  },
+  "@yovoice.assistant.chip.minor": {
+    "defaultMessage": "단조로 바꾸기"
+  },
+  "@yovoice.assistant.chip.minorPrompt": {
+    "defaultMessage": "현재 작품의 악보를 단조로 바꿔 줘"
+  },
+  "@yovoice.assistant.chip.song": {
+    "defaultMessage": "노래 쓰기"
+  },
+  "@yovoice.assistant.chip.songPrompt": {
+    "defaultMessage": "음악 작품을 만들고 노래 한 곡을 완성해 줘"
+  },
+  "@yovoice.assistant.chip.style": {
+    "defaultMessage": "스타일 바꾸기"
+  },
+  "@yovoice.assistant.chip.stylePrompt": {
+    "defaultMessage": "현재 작품을 다른 스타일로 바꿔 줘"
+  },
+  "@yovoice.assistant.chip.voice": {
+    "defaultMessage": "목소리 골라 줘"
+  },
+  "@yovoice.assistant.chip.voicePrompt": {
+    "defaultMessage": "내 참조 음성을 보고 이 작품에 맞는 것을 추천해 줘"
+  },
+  "@yovoice.assistant.chip.polish": {
+    "defaultMessage": "더 친근하게"
+  },
+  "@yovoice.assistant.chip.polishPrompt": {
+    "defaultMessage": "현재 작품의 대본을 더 친근하고 자연스럽게 고쳐 줘"
+  },
+  "@yovoice.assistant.chip.assign": {
+    "defaultMessage": "역할별 목소리 배정"
+  },
+  "@yovoice.assistant.chip.assignPrompt": {
+    "defaultMessage": "내 참조 음성을 보고 이 이야기의 등장인물마다 어울리는 목소리를 배정해 줘"
+  },
+  "@yovoice.assistant.chip.dub": {
+    "defaultMessage": "더빙 생성"
+  },
+  "@yovoice.assistant.chip.dubPrompt": {
+    "defaultMessage": "현재 이야기 작품의 음성 생성을 시작해 줘"
+  },
+  "@yovoice.assistant.history": {
+    "defaultMessage": "대화 기록"
+  },
+  "@yovoice.assistant.historyEmpty": {
+    "defaultMessage": "아직 대화 기록이 없습니다."
+  },
+  "@yovoice.assistant.deleteChat": {
+    "defaultMessage": "대화 삭제: {title}"
+  },
+  "@yovoice.assistant.deleteConfirm": {
+    "defaultMessage": "삭제"
+  },
+  "@yovoice.assistant.justNow": {
+    "defaultMessage": "방금"
+  },
+  "@yovoice.assistant.minutesAgo": {
+    "defaultMessage": "{count}분 전"
+  },
+  "@yovoice.assistant.hoursAgo": {
+    "defaultMessage": "{count}시간 전"
+  },
+  "@yovoice.assistant.working": {
+    "defaultMessage": "처리 중…"
+  },
+  "@yovoice.assistant.toolFailed": {
+    "defaultMessage": "작업을 완료하지 못했습니다"
+  },
+  "@yovoice.assistant.copy": {
+    "defaultMessage": "복사"
+  },
+  "@yovoice.assistant.copied": {
+    "defaultMessage": "복사됨"
+  },
+  "@yovoice.intro.tagline": {
+    "defaultMessage": "글에 목소리를, 영감을 노래로."
+  },
+  "@yovoice.intro.start": {
+    "defaultMessage": "둘러보기 시작"
+  },
+  "@yovoice.guide.count": {
+    "defaultMessage": "{current} / {total}"
+  },
+  "@yovoice.guide.skip": {
+    "defaultMessage": "건너뛰기"
+  },
+  "@yovoice.guide.back": {
+    "defaultMessage": "이전"
+  },
+  "@yovoice.guide.next": {
+    "defaultMessage": "다음"
+  },
+  "@yovoice.guide.done": {
+    "defaultMessage": "시작하기"
+  },
+  "@yovoice.guide.assistantTitle": {
+    "defaultMessage": "언제든 어시스턴트에게"
+  },
+  "@yovoice.guide.new": {
+    "defaultMessage": "여기서 음성 생성, 스토리 내레이션, 음악 생성, 악보 생성 프로젝트를 만들 수 있습니다. 텍스트, 자막, .yovoice 프로젝트도 가져올 수 있습니다."
+  },
+  "@yovoice.guide.text": {
+    "defaultMessage": "텍스트를 쓰고 모델과 목소리를 고르면 음성이 생성됩니다. 생성할 때마다 버전으로 저장되어 비교하며 고를 수 있습니다."
+  },
+  "@yovoice.guide.story": {
+    "defaultMessage": "자막이나 소설 한 권을 가져와 여러 캐릭터로 한 줄씩 더빙하고, 타임라인에서 편집하고 배경 음악을 넣어 내보냅니다."
+  },
+  "@yovoice.guide.music": {
+    "defaultMessage": "스타일과 가사로 노래를 생성합니다. ‘악보 생성’ 탭에서는 MIDI를 가져오거나 AI에게 악보를 맡겨 사운드폰트로 반주를 렌더링합니다."
+  },
+  "@yovoice.guide.voices": {
+    "defaultMessage": "참조 오디오와 자주 쓰는 목소리 설정을 저장해 여러 프로젝트에서 같은 목소리를 유지합니다."
+  },
+  "@yovoice.guide.settings": {
+    "defaultMessage": "모델 다운로드와 관리, AI 서비스 설정, 리소스 정리, 인터페이스 언어 변경, 데이터 폴더 이동을 합니다. 처음이라면 여기서 모델을 하나 내려받으세요."
+  },
+  "@yovoice.guide.assistant": {
+    "defaultMessage": "⌘J(Windows에서는 Ctrl+J)를 누르거나 제목 표시줄의 어시스턴트 버튼을 눌러 원하는 작업을 말해 보세요. 예: “스토리 내레이션을 만들고 캐릭터마다 목소리를 정해 줘”. 먼저 설정에서 AI 서비스를 추가해야 합니다."
+  },
+  "@yovoice.settings.intro": {
+    "defaultMessage": "시작 애니메이션"
+  },
+  "@yovoice.settings.introReplay": {
+    "defaultMessage": "다시 재생"
+  },
+  "@yovoice.settings.guide": {
+    "defaultMessage": "기능 안내"
+  },
+  "@yovoice.settings.guideReplay": {
+    "defaultMessage": "다시 보기"
+  },
+  "@yovoice.nav.assets": {
+    "defaultMessage": "자산"
+  },
+  "@yovoice.assets.total": {
+    "defaultMessage": "{count}개 · {size}"
+  },
+  "@yovoice.assets.kind.generation": {
+    "defaultMessage": "생성된 오디오"
+  },
+  "@yovoice.assets.kind.segment": {
+    "defaultMessage": "내레이션 클립"
+  },
+  "@yovoice.assets.kind.voice": {
+    "defaultMessage": "참조 오디오"
+  },
+  "@yovoice.assets.kind.material": {
+    "defaultMessage": "타임라인 소재"
+  },
+  "@yovoice.assets.kind.image": {
+    "defaultMessage": "이미지"
+  },
+  "@yovoice.assets.col.name": {
+    "defaultMessage": "이름"
+  },
+  "@yovoice.assets.col.kind": {
+    "defaultMessage": "유형"
+  },
+  "@yovoice.assets.col.project": {
+    "defaultMessage": "작품"
+  },
+  "@yovoice.assets.col.duration": {
+    "defaultMessage": "길이"
+  },
+  "@yovoice.assets.col.size": {
+    "defaultMessage": "크기"
+  },
+  "@yovoice.assets.col.created": {
+    "defaultMessage": "생성 시간"
+  },
+  "@yovoice.assets.col.status": {
+    "defaultMessage": "상태"
+  },
+  "@yovoice.assets.allKinds": {
+    "defaultMessage": "모든 유형"
+  },
+  "@yovoice.assets.allProjects": {
+    "defaultMessage": "모든 작품"
+  },
+  "@yovoice.assets.usage": {
+    "defaultMessage": "사용 여부"
+  },
+  "@yovoice.assets.usage.all": {
+    "defaultMessage": "전체"
+  },
+  "@yovoice.assets.status.unused": {
+    "defaultMessage": "사용 안 함"
+  },
+  "@yovoice.assets.status.used": {
+    "defaultMessage": "사용 중"
+  },
+  "@yovoice.assets.status.usedBy": {
+    "defaultMessage": "사용 중: {names}"
+  },
+  "@yovoice.assets.status.missing": {
+    "defaultMessage": "파일 없음"
+  },
+  "@yovoice.assets.search": {
+    "defaultMessage": "검색"
+  },
+  "@yovoice.assets.searchPlaceholder": {
+    "defaultMessage": "이름, 작품 또는 캐릭터"
+  },
+  "@yovoice.assets.hint": {
+    "defaultMessage": "사용 중인 자산과 타임라인 소재는 여기서 삭제할 수 없습니다. 먼저 캐릭터나 작품에서 교체하고, 타임라인 소재는 해당 작품의 타임라인에서 제거하세요."
+  },
+  "@yovoice.assets.deleteSelected": {
+    "defaultMessage": "선택 항목 삭제"
+  },
+  "@yovoice.assets.clearSelection": {
+    "defaultMessage": "선택 해제"
+  },
+  "@yovoice.assets.deleteOne": {
+    "defaultMessage": "{name} 삭제"
+  },
+  "@yovoice.assets.deleteTitle": {
+    "defaultMessage": "자산 {count}개를 삭제할까요?"
+  },
+  "@yovoice.assets.deleteBody": {
+    "defaultMessage": "선택한 파일을 영구 삭제하고 약 {size}를 확보합니다. 되돌릴 수 없습니다."
+  },
+  "@yovoice.assets.deleteConfirm": {
+    "defaultMessage": "삭제"
+  },
+  "@yovoice.assets.deleted": {
+    "defaultMessage": "{count}개를 삭제하고 {size}를 확보했습니다."
+  },
+  "@yovoice.assets.skipped": {
+    "defaultMessage": "{count}개는 삭제되지 않았습니다."
+  },
+  "@yovoice.assets.showSkipped": {
+    "defaultMessage": "이유 보기"
+  },
+  "@yovoice.assets.skippedTitle": {
+    "defaultMessage": "일부 자산을 삭제하지 못했습니다"
+  },
+  "@yovoice.assets.noMatch": {
+    "defaultMessage": "조건에 맞는 자산이 없습니다."
+  },
+  "@yovoice.assets.empty": {
+    "defaultMessage": "아직 자산이 없습니다. 생성한 오디오, 가져온 참조 오디오와 소재가 여기에 표시됩니다."
+  },
+  "@yovoice.assets.pages": {
+    "defaultMessage": "자산 페이지"
+  },
+  "@yovoice.assets.play": {
+    "defaultMessage": "{name} 미리 듣기"
+  },
+  "@yovoice.assets.preview": {
+    "defaultMessage": "{name} 미리 보기"
+  },
+  "@yovoice.assets.sourceMissing": {
+    "defaultMessage": "원본 프로젝트가 삭제됨"
+  },
+  "@yovoice.assistant.launch": {
+    "defaultMessage": "Ocho"
+  },
+  "@yovoice.assistant.thought": {
+    "defaultMessage": "생각 과정"
+  },
+  "@yovoice.assistant.steps": {
+    "defaultMessage": "{count}단계 실행"
+  },
+  "@yovoice.assistant.toolDone": {
+    "defaultMessage": "완료"
+  },
+  "@yovoice.assistant.move": {
+    "defaultMessage": "드래그하여 이동, 두 번 클릭하면 세로로 늘리기"
+  },
+  "@yovoice.assistant.emptyHint": {
+    "defaultMessage": "대사나 가사 쓰기, 멜로디 수정, 음악 입히기, 바로 생성까지. 한마디면 열려 있는 작품에서 작업합니다."
+  },
+  "@yovoice.assistant.back": {
+    "defaultMessage": "대화로 돌아가기"
+  },
+  "@yovoice.assistant.messageCount": {
+    "defaultMessage": "{count}개"
+  },
+  "@yovoice.assistant.hideLauncher": {
+    "defaultMessage": "실행 버튼 숨기기"
+  },
+  "@yovoice.assistant.hideLauncherHint": {
+    "defaultMessage": "오른쪽 위 또는 ⌘J로 열 수 있어요"
+  },
+  "@yovoice.assistant.toggleHint": {
+    "defaultMessage": "Ocho 열기/닫기 (⌘J)"
+  },
+  "@yovoice.assistant.phase.thinking": {
+    "defaultMessage": "생각하는 중"
+  },
+  "@yovoice.assistant.phase.writing": {
+    "defaultMessage": "답변하는 중"
+  },
+  "@yovoice.assistant.phase.searching": {
+    "defaultMessage": "찾는 중"
+  },
+  "@yovoice.assistant.phase.editing": {
+    "defaultMessage": "작품 수정 중"
+  },
+  "@yovoice.assistant.phase.generating": {
+    "defaultMessage": "오디오 생성 중"
+  },
+  "@yovoice.assistant.phase.opening": {
+    "defaultMessage": "전환하는 중"
+  },
+  "@yovoice.assistant.phase.working": {
+    "defaultMessage": "처리하는 중"
+  },
+  "@yovoice.assistant.proposal.confirm": {
+    "defaultMessage": "확인"
+  },
+  "@yovoice.assistant.proposal.confirmDelete": {
+    "defaultMessage": "삭제"
+  },
+  "@yovoice.assistant.proposal.dismiss": {
+    "defaultMessage": "괜찮아요"
+  },
+  "@yovoice.assistant.proposal.confirmed": {
+    "defaultMessage": "실행됨"
+  },
+  "@yovoice.assistant.proposal.dismissed": {
+    "defaultMessage": "건너뜀"
+  },
+  "@yovoice.assistant.proposal.failed": {
+    "defaultMessage": "실패"
+  },
+  "@yovoice.assistant.nudge.failed": {
+    "defaultMessage": "생성에 실패했어요. 원인을 찾아볼까요?"
+  },
+  "@yovoice.assistant.nudge.diagnose": {
+    "defaultMessage": "원인 보기"
+  },
+  "@yovoice.assistant.nudge.failedPrompt": {
+    "defaultMessage": "방금 생성이 실패했어. 원인을 찾아보고 해결 방법을 알려줘."
+  },
+  "@yovoice.assistant.nudge.improve": {
+    "defaultMessage": "다듬어 줘"
+  },
+  "@yovoice.assistant.nudge.done.text": {
+    "defaultMessage": "음성이 완성됐어요. 목소리나 말투를 바꿔 볼까요?"
+  },
+  "@yovoice.assistant.nudge.done.story": {
+    "defaultMessage": "이 장의 더빙이 끝났어요. 다시 녹음할 대사를 확인해 볼까요?"
+  },
+  "@yovoice.assistant.nudge.done.music": {
+    "defaultMessage": "노래가 완성됐어요. 스타일이나 가사를 바꿔 볼까요?"
+  },
+  "@yovoice.assistant.nudge.done.score": {
+    "defaultMessage": "편곡 렌더링이 끝났어요. 층을 더 쌓아 볼까요?"
+  },
+  "@yovoice.assistant.nudge.donePrompt.text": {
+    "defaultMessage": "음성이 완성됐어. 말투, 쉼, 목소리를 어떻게 다듬으면 좋을지 알려줘."
+  },
+  "@yovoice.assistant.nudge.donePrompt.story": {
+    "defaultMessage": "이 장 더빙이 끝났어. 목소리가 없는 화자, 너무 긴 대사, 잘못 읽을 만한 단어가 있는지 확인해 줘."
+  },
+  "@yovoice.assistant.nudge.donePrompt.music": {
+    "defaultMessage": "노래가 완성됐어. 스타일과 가사를 어떻게 더 좋게 할지 제안해 줘."
+  },
+  "@yovoice.assistant.nudge.donePrompt.score": {
+    "defaultMessage": "편곡이 끝났어. 더할 만한 파트나 변화를 제안해 줘."
+  },
+  "@yovoice.assistant.nudge.downloadFailed": {
+    "defaultMessage": "다운로드에 실패했어요. 원인을 찾아볼까요?"
+  },
+  "@yovoice.assistant.nudge.downloadFailedPrompt": {
+    "defaultMessage": "방금 다운로드가 실패했어. 원인을 찾아보고 해결 방법을 알려줘."
+  },
+  "@yovoice.assistant.nudge.modelReady": {
+    "defaultMessage": "{name} 설치가 끝났어요."
+  },
+  "@yovoice.assistant.nudge.tryIt": {
+    "defaultMessage": "써 보기"
+  },
+  "@yovoice.assistant.nudge.modelReadyPrompt": {
+    "defaultMessage": "{name} 설치가 끝났어. 이걸로 짧은 샘플을 만들어 줘."
+  },
+  "@yovoice.assistant.nudge.close": {
+    "defaultMessage": "닫기"
+  },
+  "@yovoice.settings.assistantIntro": {
+    "defaultMessage": "Ocho는 yovoice의 내장 어시스턴트입니다. 편집 중인 작품과 선택한 내용을 보고, 삭제·다운로드·설정 변경 전에는 꼭 확인을 받습니다."
+  },
+  "@yovoice.settings.assistantBehavior": {
+    "defaultMessage": "동작"
+  },
+  "@yovoice.settings.assistantNudges": {
+    "defaultMessage": "먼저 제안하기"
+  },
+  "@yovoice.settings.assistantNudgesHint": {
+    "defaultMessage": "생성이 끝나거나 실패했을 때, 모델 다운로드가 끝났을 때 Ocho가 오른쪽 아래에서 제안합니다."
+  },
+  "@yovoice.settings.assistantMemory": {
+    "defaultMessage": "기억한 취향"
+  },
+  "@yovoice.settings.assistantMemoryHint": {
+    "defaultMessage": "자주 쓰는 목소리나 스타일 같은 습관을 대화에서 알려 주면 Ocho가 기억하고 이후 대화에 반영합니다."
+  },
+  "@yovoice.settings.assistantMemoryClear": {
+    "defaultMessage": "모두 지우기"
+  },
+  "@yovoice.settings.assistantMemoryClearConfirm": {
+    "defaultMessage": "모두 지우기 확인"
+  },
+  "@yovoice.settings.assistantMemoryDelete": {
+    "defaultMessage": "취향 삭제: {text}"
+  },
+  "@yovoice.settings.assistantMemoryEmpty": {
+    "defaultMessage": "아직 기억한 취향이 없어요"
+  },
+  "@yovoice.settings.assistantMemoryEmptyHint": {
+    "defaultMessage": "예: Ocho에게 \"내레이션은 기본으로 부드러운 여성 목소리로\"라고 말해 보세요."
+  },
+  "@yovoice.assistant.selectionHint": {
+    "defaultMessage": "선택한 내용은 다음 메시지와 함께 Ocho에게 전달됩니다"
+  },
+  "@yovoice.music.structurePlaceholder": {
+    "defaultMessage": "선택: [Intro], [Verse], [Chorus], [Outro] 같은 구간 표시"
+  },
+  "@yovoice.music.mode": {
+    "defaultMessage": "생성 방식"
+  },
+  "@yovoice.music.modeScore": {
+    "defaultMessage": "악보 기반"
+  },
+  "@yovoice.music.modeFree": {
+    "defaultMessage": "자유 생성"
+  },
+  "@yovoice.melody.toInstrumental": {
+    "defaultMessage": "멜로디를 악기로 옮기기"
+  },
+  "@yovoice.options.abc_temperature": {
+    "defaultMessage": "악보 온도"
+  },
+  "@yovoice.options.semantic_temperature": {
+    "defaultMessage": "오디오 온도"
+  },
+  "@yovoice.options.semantic_top_p": {
+    "defaultMessage": "오디오 Top P"
+  },
+  "@yovoice.options.semantic_top_k": {
+    "defaultMessage": "오디오 Top K"
+  },
+  "@yovoice.options.semantic_repetition_penalty": {
+    "defaultMessage": "오디오 반복 페널티"
+  },
+  "@yovoice.music.compareVersions": {
+    "defaultMessage": "버전을 바꿔 비교 감상"
+  },
+  "@yovoice.music.switchBack": {
+    "defaultMessage": "버전 {n}(으)로"
+  },
+  "@yovoice.music.switchBackHint": {
+    "defaultMessage": "재생 위치를 유지한 채 전환 (B 키로도 가능)"
+  },
+  "@yovoice.settings.tabMusicModels": {
+    "defaultMessage": "음악 모델"
+  },
+  "@yovoice.settings.precisionOf": {
+    "defaultMessage": "{name} 정밀도"
+  },
+  "@yovoice.settings.precisionsInstalled": {
+    "defaultMessage": "다운로드됨: {list}"
+  },
+  "@yovoice.settings.precisionHint": {
+    "defaultMessage": "Q4/Q8은 작고 빠르며, BF16·F16·ORIG는 원래 품질에 가장 가깝습니다."
+  },
+  "@yovoice.create.precision": {
+    "defaultMessage": "정밀도"
   }
 }
