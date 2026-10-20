@@ -126,7 +126,7 @@ test('YuE2 旋律谱：导入 ABC，看轨道与谱面，调速度、只留旋�
   await expect(page.getByRole('button', { name: '先写旋律谱' })).toBeEnabled();
   await expect(page.getByRole('button', { name: '生成歌曲', exact: true })).toBeVisible();
   await page.getByLabel('ABC 谱文件').setInputFiles({ name: 'song.abc', mimeType: 'text/plain', buffer: Buffer.from(melodyABC) });
-  await expect(page.getByText(/C · 120 BPM · 4\/4 · 2 小节 · 00:04 · 带和弦/)).toBeVisible();
+  await expect(page.getByText(/C · 4\/4 · 2 小节 · 00:04 · 带和弦/)).toBeVisible();
   // 默认用五线谱显示，可以切到轨道或 ABC 谱面。
   await expect(page.getByRole('img', { name: '五线谱' }).locator('svg')).toBeVisible();
   // 试听要用编曲音色库渲染；没装音色库时提示去下载。
@@ -140,10 +140,27 @@ test('YuE2 旋律谱：导入 ABC，看轨道与谱面，调速度、只留旋�
 
   const tempo = page.getByRole('spinbutton', { name: '速度' });
   await tempo.fill('90'); await tempo.press('Enter');
-  await expect(page.getByText(/90 BPM/)).toBeVisible();
+  await expect(page.getByText(/2 小节 · 00:05/)).toBeVisible();
+  await expect(tempo).toHaveValue('90');
   await page.getByRole('button', { name: '谱面操作' }).click();
   await page.getByRole('menuitem', { name: '只保留旋律' }).click();
   await expect(page.getByText(/仅旋律/)).toBeVisible();
+  // 谱面改动可以逐步撤回：先撤回只保留旋律，再撤回改速度，然后重新做一遍。
+  await page.getByRole('button', { name: '撤回：只保留旋律' }).click();
+  await expect(page.getByText(/带和弦/)).toBeVisible();
+  await page.getByRole('button', { name: '撤回：速度' }).click();
+  await expect(tempo).toHaveValue('120');
+  await expect(page.getByRole('button', { name: /^撤回/ })).toHaveAccessibleName('撤回：导入 .abc');
+  await tempo.fill('90'); await tempo.press('Enter');
+  await expect(tempo).toHaveValue('90');
+  await page.getByRole('button', { name: '谱面操作' }).click();
+  await page.getByRole('menuitem', { name: '只保留旋律' }).click();
+  await expect(page.getByText(/仅旋律/)).toBeVisible();
+  // 导出为 .abc 文件。
+  await page.getByRole('button', { name: '谱面操作' }).click();
+  const exported = page.waitForEvent('download');
+  await page.getByRole('menuitem', { name: '导出 .abc' }).click();
+  expect((await exported).suggestedFilename()).toMatch(/\.abc$/);
   await page.getByRole('radio', { name: 'ABC 谱面' }).click();
   const source = page.getByLabel('ABC 谱面', { exact: true });
   await expect(source).toHaveValue(/Q:1\/4=90/);
@@ -154,6 +171,11 @@ test('YuE2 旋律谱：导入 ABC，看轨道与谱面，调速度、只留旋�
   await page.screenshot({ path: testInfo.outputPath('melody-source.png') });
 
   // 浏览器预览不做推理：提取旋律给出明确提示。
+  await page.getByRole('button', { name: '谱面操作' }).click();
+  await page.getByRole('menuitem', { name: '清空谱' }).click();
+  // 清空也能撤回。
+  await page.getByRole('button', { name: '撤回：清空谱' }).click();
+  await expect(page.getByText(/仅旋律/)).toBeVisible();
   await page.getByRole('button', { name: '谱面操作' }).click();
   await page.getByRole('menuitem', { name: '清空谱' }).click();
   await page.getByLabel('要提取旋律的歌曲').setInputFiles({ name: 'song.wav', mimeType: 'audio/wav', buffer: Buffer.from(wavBytes(new Float32Array(800), new Float32Array(800), 8000)) });
@@ -286,6 +308,44 @@ test('播放页逐行校准歌词：按键标记、撤销，校准结果随版�
   await expect(playing).toHaveCount(0);
 });
 
+test('播放页智能对齐歌词：没装对齐模型时去设置下载，装好后逐字对齐并随版本保存，清除校准一并清除', async ({ page }) => {
+  const song = syntheticSong(songLyrics, .3);
+  const draft = { ...createMusicDraft('zh-CN'), id: 'd'.repeat(32) };
+  const state = emptyState();
+  state.drafts = [draft];
+  state.history = [{ id: 'song', title: draft.title, fileName: 'song.wav', createdAt: '2026-09-15T12:00:00Z', duration: song.duration, settings: { ...draft, lyrics: songLyrics } }];
+  await page.goto('/');
+  await page.evaluate(async (data: string) => {
+    const bytes = Uint8Array.from(atob(data), char => char.charCodeAt(0));
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('voice-workbench-audio', 1);
+      request.onupgradeneeded = () => request.result.createObjectStore('audio');
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => { const db = request.result; const tx = db.transaction('audio', 'readwrite'); tx.objectStore('audio').put(new Blob([bytes], { type: 'audio/wav' }), 'song.wav'); tx.oncomplete = () => { db.close(); resolve(); }; };
+    });
+  }, Buffer.from(wavBytes(song.left, song.right, song.rate)).toString('base64'));
+  await seedState(page, state); await page.reload();
+  const open = async () => {
+    await page.locator('.player .transport').getByRole('button', { name: '播放页', exact: true }).click();
+    return page.getByRole('dialog', { name: `${draft.title} · 播放页` });
+  };
+  let playing = await open();
+  // 对齐模型是可选下载：没装时按钮带去设置里的音乐模型页。
+  await playing.getByRole('button', { name: '智能对齐', exact: true }).click();
+  await expect(playing).toHaveCount(0);
+  await expect(page.getByRole('tabpanel', { name: '音乐模型' })).toContainText('Lyric Aligner');
+  await seedState(page, { ...state, models: [{ id: 'lyric-align-q8', path: 'Lyric-Align-GGUF', managed: true }] }); await page.reload();
+  playing = await open();
+  await playing.getByRole('button', { name: '智能对齐', exact: true }).click();
+  await expect(playing.getByText('歌词已按演唱逐字对齐，可再手动校准')).toBeVisible();
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('voice-workbench-v1')!).history[0].lyricWords as { word: string }[]);
+  expect(saved.map(word => word.word).join('')).toBe(songLyrics.split('\n').filter(line => !/^\[.*\]$/.test(line.trim())).join('').replace(/\s/g, ''));
+  // 清除后回到按人声自动定位。
+  await playing.getByRole('button', { name: '清除校准', exact: true }).click();
+  await expect(playing.getByText('歌词时间按人声自动定位，可再校准')).toBeVisible();
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('voice-workbench-v1')!).history[0].lyricWords)).toBeUndefined();
+});
+
 test('播放页按音频里的人声自动定位歌词，点歌词跳到这一句实际开始唱的位置', async ({ page }) => {
   const song = syntheticSong(songLyrics, .3);
   const draft = { ...createMusicDraft('zh-CN'), id: 'e'.repeat(32) };
@@ -312,6 +372,48 @@ test('播放页按音频里的人声自动定位歌词，点歌词跳到这一�
   await playing.getByRole('list', { name: '歌词' }).getByText('就这样一起走到天亮', { exact: true }).click();
   await expect.poll(() => playing.locator('audio').evaluate((audio: HTMLAudioElement) => Number(audio.dataset.seekedTo ?? -1))).toBeGreaterThan(song.starts[index] - .6);
   expect(Number(await playing.locator('audio').getAttribute('data-seeked-to'))).toBeLessThan(song.starts[index] + .6);
+});
+
+test('播放页当前句逐字点亮，可切换到一句一屏的浮光样式，选择记在本机', async ({ page }) => {
+  const song = syntheticSong(songLyrics, .3);
+  const draft = { ...createMusicDraft('zh-CN'), id: 'e'.repeat(32) };
+  const state = emptyState();
+  state.drafts = [draft];
+  state.history = [{ id: 'song', title: draft.title, fileName: 'song.wav', createdAt: '2026-09-15T12:00:00Z', duration: song.duration, settings: { ...draft, lyrics: songLyrics } }];
+  await page.goto('/');
+  await page.evaluate(async (data: string) => {
+    const bytes = Uint8Array.from(atob(data), char => char.charCodeAt(0));
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('voice-workbench-audio', 1);
+      request.onupgradeneeded = () => request.result.createObjectStore('audio');
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => { const db = request.result; const tx = db.transaction('audio', 'readwrite'); tx.objectStore('audio').put(new Blob([bytes], { type: 'audio/wav' }), 'song.wav'); tx.oncomplete = () => { db.close(); resolve(); }; };
+    });
+  }, Buffer.from(wavBytes(song.left, song.right, song.rate)).toString('base64'));
+  await seedState(page, state); await page.reload();
+  await page.locator('.player .transport').getByRole('button', { name: '播放页', exact: true }).click();
+  const playing = page.getByRole('dialog', { name: `${draft.title} · 播放页` });
+  await expect(playing.getByText('歌词时间按人声自动定位，可再校准')).toBeVisible();
+  // 停在副歌第一句唱到一半：前面的字已唱过，后面的字还没唱。
+  const index = song.rows.findIndex(row => row.text === '就这样一起走到天亮');
+  await playing.locator('audio').evaluate((audio: HTMLAudioElement, time: number) => { audio.pause(); audio.currentTime = time; }, song.words[index][5] - .1);
+  const words = playing.locator('.now-playing-line[data-state="current"] .now-playing-word');
+  await expect(words).toHaveText([...'就这样一起走到天亮']);
+  await expect(words.first()).toHaveAttribute('data-sung', 'done');
+  await expect(words.last()).toHaveAttribute('data-sung', 'waiting');
+  // 换成浮光：只显示当前句和下一句预告，校准时仍回到滚动歌词。
+  await playing.getByRole('button', { name: '歌词样式', exact: true }).click();
+  await page.getByRole('menuitem', { name: /浮光/ }).click();
+  await expect(playing.getByRole('list', { name: '歌词' })).toHaveCount(0);
+  const current = playing.locator('.now-playing-phrase[data-slot="current"]');
+  await expect(current).toHaveText('就这样一起走到天亮');
+  await expect(current.locator('.now-playing-glyph').first()).toHaveAttribute('data-sung', 'done');
+  await expect(playing.locator('.now-playing-phrase[data-slot="next"]')).toHaveText('夏天不会太长');
+  await playing.getByRole('button', { name: '校准歌词', exact: true }).click();
+  await expect(playing.getByRole('list', { name: '歌词' })).toBeVisible();
+  await playing.getByRole('button', { name: '取消校准', exact: true }).click();
+  await expect(current).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem('yovoice-lyric-style'))).toBe('stage');
 });
 
 test('新建作品默认用已下载的模型，并沿用上一次同类作品的选择', async ({ page }) => {

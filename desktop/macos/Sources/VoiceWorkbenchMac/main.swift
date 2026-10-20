@@ -51,7 +51,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         sidebarButton.isBordered = false
         sidebarButton.toolTip = HostL10n.t("sidebar.tooltip")
         sidebarButton.frame = NSRect(x: 0, y: 0, width: 32, height: 28)
-        accessory.view = sidebarButton
+        // 按钮不能直接当附件视图：macOS 26 上按钮的固有尺寸会与标题栏布局互相拉扯，布局无法收敛而抛异常崩溃。
+        // 与右侧一样放进固定大小的普通容器里，由容器 frame 决定附件尺寸。
+        let sidebarContainer = NSView(frame: NSRect(x: 0, y: 0, width: 32, height: 28))
+        sidebarContainer.addSubview(sidebarButton)
+        accessory.view = sidebarContainer
         window.addTitlebarAccessoryViewController(accessory)
         let rightAccessory = NSTitlebarAccessoryViewController()
         rightAccessory.layoutAttribute = .right
@@ -490,9 +494,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             return ["id": message["id"]!, "result": true]
         }
         if method == "text.export" {
-            // 字幕（SRT/VTT）与歌词（LRC）是界面生成的 UTF-8 文本，宿主只负责选位置并写文件。
+            // 字幕（SRT/VTT）、歌词（LRC）与旋律谱（ABC）是界面生成的 UTF-8 文本，宿主只负责选位置并写文件。
             let format = data["format"] as? String ?? ""
-            guard ["srt", "vtt", "lrc"].contains(format), let text = data["text"] as? String, text.utf8.count <= 20_000_000 else { throw failure(HostL10n.t("err.textExportInvalid")) }
+            guard ["srt", "vtt", "lrc", "abc"].contains(format), let text = data["text"] as? String, text.utf8.count <= 20_000_000 else { throw failure(HostL10n.t("err.textExportInvalid")) }
             let panel = NSSavePanel()
             panel.allowedContentTypes = [UTType(filenameExtension: format) ?? .plainText]
             panel.nameFieldStringValue = (data["name"] as? String ?? "yovoice." + format)

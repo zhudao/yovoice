@@ -38,6 +38,8 @@
   /* 隐藏滚动条外观，保留滚轮、触控板和键盘滚动。 */
   * { scrollbar-width: none; }
   *::-webkit-scrollbar { display: none; }
+  /* 主要的纵向滚动区保留一条细的浅色滚动条，提示内容还能往下滚、也方便拖动；标准属性生效时 Chromium 不再采用上面的 ::-webkit-scrollbar。 */
+  :is(.inspector-scroll, .recent-projects, .assistant-body, .assistant-history-list, .library-page > .library-content, .settings-page > [role="tabpanel"], .music-editor, .score-editor, .subtitle-editor, .ai-detail) { scrollbar-width: thin; scrollbar-color: var(--color-border-emphasized) transparent; }
   body, input, textarea, button { font-family: var(--app-font); }
   body { -webkit-font-smoothing: antialiased; color: var(--app-ink); background: var(--app-paper); font-size: var(--app-ui-font); }
   h1,h2,h3,h4,p { margin: 0; }
@@ -105,7 +107,7 @@
   .astryx-app-shell-sidenav { width: var(--app-nav); min-width: 0; padding: 0; overflow: hidden; background: var(--app-paper); }
   .astryx-app-shell-content,.astryx-layout-content { min-width: 0; min-height: 0; }
   /* 内容区像一张放在纸色桌面上的白纸。 */
-  .app-sheet { flex: 1; height: 100%; min-height: 0; min-width: 0; margin: 0 var(--spacing-2) var(--spacing-2) 0; border-radius: calc(var(--radius-container) * 1.25); background: var(--app-white); box-shadow: var(--shadow-low); overflow: hidden; }
+  .app-sheet { flex: 1; height: calc(100% - var(--spacing-2)); min-height: 0; min-width: 0; margin: 0 var(--spacing-2) var(--spacing-2) 0; border-radius: calc(var(--radius-container) * 1.25); background: var(--app-white); box-shadow: var(--shadow-low); overflow: hidden; }
   .workbench .astryx-layout-content { background: transparent; }
   .sidebar { position: relative; width: 100%; min-width: 0; padding: var(--spacing-5) var(--spacing-4) var(--spacing-3); height: 100%; box-sizing: border-box; }
   .new-project.astryx-button { border-radius: var(--radius-element); background: var(--app-ink); color: var(--app-white); min-height: var(--spacing-10); border: 0; font-weight: var(--font-weight-medium); }
@@ -433,7 +435,6 @@
   .score-editor h2 { font-size: var(--app-ui-font); }
   .score-summary { color: var(--app-muted); font-family: var(--font-family-code); font-variant-numeric: tabular-nums; }
   /* 旋律谱标题下的概要只占一行，放不下时省略，完整内容在悬停提示里（不换行写在后面的排版层里）。 */
-  .melody-heading { flex: 1 1 0; min-width: calc(var(--spacing-10) * 3); }
   .melody-score .score-summary { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .score-empty { padding: var(--spacing-8) var(--spacing-4); border-radius: var(--radius-container); background: var(--app-surface); color: var(--app-muted); text-align: center; line-height: 1.8; }
   .score-sections { border-radius: var(--radius-container); background: var(--app-surface); }
@@ -642,6 +643,9 @@
   .music-tag.astryx-button { transition: background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard); }
   .music-block .astryx-segmented-control { flex: none; width: max-content; }
   .music-style-box { position: relative; min-height: calc(var(--spacing-10) * 1.5); padding: var(--spacing-2) var(--spacing-3); border: var(--border-width) solid var(--app-line); border-radius: var(--radius-element); background: var(--app-paper); cursor: text; transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); }
+  /* 风格标签最多显示两行，多出来的在框内滚动。 */
+  .music-style-box { row-gap: var(--spacing-2); max-height: calc(var(--spacing-6) * 2 + var(--spacing-2) * 3 + var(--border-width) * 2); overflow-y: auto; align-content: flex-start; }
+  .music-lyrics-expanded textarea { height: 55vh; resize: none; }
   .music-style-box:focus-within { border-color: var(--app-ink); box-shadow: 0 0 0 1px var(--app-ink); }
   .music-style-field { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); }
   .music-inline-input { border: none; background: transparent; outline: none; font-size: calc(var(--app-ui-font) + var(--spacing-0-5)); color: var(--app-ink); min-width: 140px; padding: var(--spacing-0-5) var(--spacing-1); font-family: inherit; }
@@ -653,15 +657,31 @@
   .music-tag-group-title { color: var(--app-muted); font-size: var(--app-small-font); font-weight: var(--font-weight-medium); }
 
   /* 旋律谱：放在歌词之后，轨道视图只读、轨头收窄；谱面源码用等宽字体，提示条按语气着色。 */
-  .melody-score .number-field.compact { gap: var(--spacing-1); color: var(--app-muted); }
-  .melody-score .number-field.compact input { width: calc(var(--spacing-10) * 1.5); min-height: var(--spacing-8); padding: 0 var(--spacing-1); }
-  .melody-score .score-arrangement { margin: 0; max-height: 40vh; }
-  .score-arrangement[data-readonly] { --score-head: calc(var(--spacing-10) * 4); }
+  /* 信息行：试听按钮、单行概要、速度输入同高对齐；速度框平时无边框，悬停或聚焦时才显出输入框。 */
+  .melody-meta { min-width: 0; }
+  .melody-view-bar { flex: none; padding-inline-end: calc(var(--spacing-1) / 2); border: var(--border-width) solid var(--app-line); border-radius: var(--radius-element); background: var(--app-surface); }
+  .melody-view-bar > .astryx-segmented-control { border: none; background: transparent; }
+  /* 比默认分段控件小一号：高 28px、字号再小一档。 */
+  .melody-view-bar .astryx-segmented-control-item { min-height: calc(var(--spacing-1) * 7); padding-inline: calc(var(--spacing-1) * 1.5); font-size: calc(var(--app-small-font) - var(--spacing-0-5) / 2); }
+  .melody-view-bar .astryx-button { min-height: calc(var(--spacing-1) * 7); min-width: calc(var(--spacing-1) * 7); width: calc(var(--spacing-1) * 7); height: calc(var(--spacing-1) * 7); border-left: var(--border-width) solid var(--app-line); border-radius: 0 var(--radius-inner) var(--radius-inner) 0; background: transparent; }
+  .melody-view-bar .astryx-button:hover { background: var(--app-white); }
+  .melody-score .melody-tempo { flex: none; gap: var(--spacing-1); color: var(--app-muted); }
+  .melody-score .melody-tempo input { width: calc(var(--spacing-10) * 1.2); min-height: var(--spacing-8); padding: 0 var(--spacing-1); background: transparent; border-color: transparent; color: var(--app-ink); appearance: textfield; transition: background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard); }
+  .melody-score .melody-tempo input::-webkit-inner-spin-button, .melody-score .melody-tempo input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+  .melody-score .melody-tempo:hover input, .melody-score .melody-tempo input:focus { background: var(--app-surface); border-color: var(--app-line); }
+  /* 五线谱、轨道、ABC 三种视图同一高度，切换时页面不变短，不会跳回歌词。 */
+  .melody-score { --melody-view-height: max(calc(var(--spacing-10) * 8), 55vh); }
+  .melody-score .score-arrangement { margin: 0; height: var(--melody-view-height); max-height: none; }
   .score-arrangement[data-readonly] .score-track-head > .score-role-dot { flex: none; margin-inline: var(--spacing-1); }
   /* 五线谱：白底细框，按宽度自适应排版，谱面颜色跟随正文。 */
-  .melody-staff { max-height: 60vh; padding: var(--spacing-4) var(--spacing-5); border: var(--border-width) solid var(--app-line); border-radius: var(--radius-container); background: var(--app-white); color: var(--app-ink); overflow-y: auto; }
-  .melody-staff svg { display: block; }
-  .melody-source textarea { font-family: var(--app-mono); font-size: var(--app-small-font); line-height: 1.6; white-space: pre; overflow-x: auto; }
+  .melody-staff { height: var(--melody-view-height); padding: var(--spacing-4) var(--spacing-5); border: var(--border-width) solid var(--app-line); border-radius: var(--radius-container); background: var(--app-white); color: var(--app-ink); overflow-y: auto; }
+  /* 行尾音符可能超出谱线终点，svg 不裁剪，溢出部分落在框内边距里。 */
+  .melody-staff svg { display: block; overflow: visible; }
+  /* 试听进度：正在响的音符换成强调色，点音符可跳到该处。 */
+  .melody-staff .abcjs-note, .melody-staff .abcjs-rest { cursor: pointer; }
+  .melody-staff .melody-note-playing, .melody-staff .melody-note-playing * { fill: var(--app-accent); color: var(--app-accent); }
+  .melody-score .melody-listen { flex: none; }
+  .melody-source textarea { height: var(--melody-view-height); resize: none; font-family: var(--app-mono); font-size: var(--app-small-font); line-height: 1.6; white-space: pre; overflow-x: auto; }
   .melody-progress { padding: var(--spacing-2) var(--spacing-3); border-radius: var(--radius-element); background: var(--app-surface); color: var(--app-muted); }
   .melody-notice { padding: var(--spacing-2) var(--spacing-3); border: var(--border-width) solid var(--app-line); border-radius: var(--radius-element); background: var(--app-surface); line-height: 1.6; }
   .melody-notice > svg { flex: none; margin-top: var(--spacing-0-5); }
@@ -799,6 +819,62 @@
   /* 校准：待标记的一行带下划线提示，标过的行保持明亮。 */
   .now-playing[data-syncing] .now-playing-line { cursor: default; }
   .now-playing-line[data-target] { opacity: .9; filter: none; transform: none; text-decoration: underline; text-decoration-thickness: var(--spacing-0-5); text-underline-offset: var(--spacing-2); text-decoration-color: color-mix(in srgb, var(--now-playing-ink) 45%, transparent); }
+  /* 逐字点亮：当前句每个字从暗到亮扫过一道柔边（--word-fill 由播放进度逐帧写入），正在唱的字微微上浮并发光。 */
+  .now-playing-word { --word-fill: 0; display: inline-block; white-space: pre-wrap; color: transparent; -webkit-background-clip: text; background-clip: text;
+    background-image: linear-gradient(90deg, var(--now-playing-ink) 45%, color-mix(in srgb, var(--now-playing-ink) 38%, transparent) 55%); background-size: 225% 100%; background-position: calc(100% - var(--word-fill) * 100%) 0;
+    transition: transform var(--duration-slow) var(--ease-standard), filter var(--duration-slow) var(--ease-standard); }
+  .now-playing-word[data-sung="active"] { transform: translateY(-.05em); filter: drop-shadow(0 0 .3em color-mix(in srgb, var(--now-playing-ink) 55%, transparent)); }
+  .now-playing-line[data-state="current"]:has(.now-playing-word) { text-shadow: none; }
+  /* 浮光：一句一屏的大字。上一句缩小、模糊着向上飘走，下一句在下方小字预告；字未唱时淡而模糊地悬着，唱到时带着各自的倾斜弹出并用强调色发光，唱过后留在原位。 */
+  .now-playing[data-style="stage"] .now-playing-stage { padding: 0; }
+  .now-playing-kinetic { position: relative; flex: 1; align-self: stretch; min-width: 0; justify-content: center; align-items: center; overflow: hidden; }
+  .now-playing-phrase { --phrase-y: 0%; --phrase-scale: 1; position: absolute; inset-inline: clamp(var(--spacing-6), 8vw, calc(var(--spacing-12) * 3)); top: 42%; margin: 0; color: var(--now-playing-ink); text-align: center; text-wrap: balance;
+    font-size: clamp(var(--font-size-3xl), 5.4vw, calc(var(--font-size-4xl) * 2)); font-weight: var(--font-weight-bold); line-height: 1.3; letter-spacing: .02em;
+    transform: translateY(calc(-50% + var(--phrase-y))) scale(var(--phrase-scale)); transition: transform calc(var(--duration-slow) * 2) var(--ease-standard), opacity calc(var(--duration-slow) * 2) var(--ease-standard), filter calc(var(--duration-slow) * 2) var(--ease-standard);
+    animation: now-playing-phrase-in calc(var(--duration-slow) * 2) var(--ease-standard) both; }
+  .now-playing-phrase[data-slot="current"] { --phrase-scale: calc(1 + var(--now-playing-level) * .035); }
+  .now-playing-phrase[data-slot="past"] { --phrase-y: -150%; --phrase-scale: .7; opacity: 0; filter: blur(var(--spacing-3)); }
+  .now-playing-phrase[data-slot="next"] { --phrase-y: 190%; --phrase-scale: .4; opacity: .5; filter: blur(var(--spacing-0-5)); }
+  @keyframes now-playing-phrase-in { from { opacity: 0; filter: blur(var(--spacing-4)); } }
+  .now-playing-glyph { --word-fill: 0; display: inline-block; white-space: pre-wrap; font-size: calc(1em * var(--glyph-size)); opacity: .22; filter: blur(.06em);
+    transform: translateY(calc(var(--glyph-drift) * .3em + .3em)) rotate(calc(var(--glyph-tilt) * 2)) scale(1.3);
+    transition: opacity var(--duration-slow) var(--ease-standard), filter var(--duration-slow) var(--ease-standard), color calc(var(--duration-slow) * 2) var(--ease-standard),
+      text-shadow calc(var(--duration-slow) * 2) var(--ease-standard), transform var(--duration-slow) cubic-bezier(.2, 1.6, .35, 1); }
+  .now-playing-glyph[data-sung="active"] { opacity: 1; filter: none; color: hsl(var(--now-playing-accent) 92% 72%);
+    transform: translateY(calc(var(--glyph-drift) * .14em - .08em)) rotate(var(--glyph-tilt)) scale(1.16);
+    text-shadow: 0 0 .25em hsl(var(--now-playing-accent) 95% 62% / 85%), 0 0 1em hsl(var(--now-playing-accent) 95% 55% / 50%); }
+  .now-playing-glyph[data-sung="done"] { opacity: 1; filter: none; transform: translateY(calc(var(--glyph-drift) * .14em)) rotate(var(--glyph-tilt)); text-shadow: 0 .04em .3em hsl(var(--now-playing-hue) 40% 4% / 50%); }
+  /* 下一句预告整句平铺显示，不做逐字动画。 */
+  .now-playing-phrase[data-slot="next"] .now-playing-glyph { opacity: 1; filter: none; transform: none; color: var(--now-playing-muted); text-shadow: none; }
+  .now-playing-rest { display: inline-block; letter-spacing: .3em; animation: now-playing-breathe 2.4s ease-in-out infinite; }
+  /* 背景里慢慢漂浮的几何图形，随响度略微放大。 */
+  .now-playing-shapes { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .now-playing-shape { --shape-size: calc(var(--spacing-12) * var(--shape-scale)); position: absolute; width: var(--shape-size); height: var(--shape-size); left: var(--shape-x); top: var(--shape-y); opacity: calc(.18 + var(--now-playing-level) * .25);
+    color: hsl(calc(var(--now-playing-hue) + var(--shape-index) * 40) 55% 62%); scale: calc(1 + var(--now-playing-level) * .15);
+    animation: now-playing-float calc(18s + var(--shape-index) * 3s) ease-in-out calc(var(--shape-index) * -4s) infinite alternate; }
+  .now-playing-shape[data-shape="ring"] { border: var(--spacing-0-5) solid currentColor; border-radius: var(--radius-full); }
+  .now-playing-shape[data-shape="disc"] { background: currentColor; border-radius: var(--radius-full); opacity: calc(.08 + var(--now-playing-level) * .12); }
+  .now-playing-shape[data-shape="triangle"] { background: currentColor; clip-path: polygon(50% 0, 100% 100%, 0 100%); opacity: calc(.1 + var(--now-playing-level) * .15); }
+  .now-playing-shape[data-shape="star"] { background: currentColor; clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }
+  .now-playing-shape[data-shape="dash"] { height: var(--spacing-1); border-radius: var(--radius-full); background: currentColor; }
+  @keyframes now-playing-float { from { transform: translate(0, 0) rotate(0); } to { transform: translate(6vmax, -5vmax) rotate(140deg); } }
+  /* 浮光样式下封面与控制收成底部居中的一条，静置时和其他控件一起隐去，画面只剩歌词。 */
+  .now-playing[data-style="stage"] .now-playing-side { position: absolute; z-index: 1; left: 50%; bottom: var(--spacing-6); width: min(calc(var(--spacing-12) * 15), calc(100% - var(--spacing-12)));
+    flex-direction: row; align-items: center; column-gap: var(--spacing-4); padding: var(--spacing-2) var(--spacing-5) var(--spacing-2) var(--spacing-2); border-radius: var(--radius-container);
+    background: var(--now-playing-glass); backdrop-filter: blur(var(--spacing-6)); transform: translateX(-50%);
+    transition: opacity var(--duration-slow) var(--ease-standard), transform var(--duration-slow) var(--ease-standard); }
+  .now-playing[data-style="stage"][data-idle="true"] .now-playing-side { opacity: 0; transform: translate(-50%, 40%); pointer-events: none; }
+  .now-playing[data-style="stage"] .now-playing-art { flex: none; width: calc(var(--spacing-12) * 1.5); }
+  .now-playing[data-style="stage"] .now-playing-art .song-cover { border-radius: var(--radius-element); box-shadow: none; }
+  .now-playing[data-style="stage"] .now-playing-meta { flex: 1; min-width: 0; }
+  .now-playing[data-style="stage"] .now-playing-title { font-size: var(--font-size-base); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .now-playing[data-style="stage"] .now-playing-tags { font-size: var(--font-size-xs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .now-playing[data-style="stage"] .now-playing-controls { flex: 1.4; min-width: 0; row-gap: 0; }
+  .now-playing[data-style="stage"] .now-playing-transport { padding-block-start: 0; column-gap: var(--spacing-3); }
+  .now-playing[data-style="stage"] .now-playing-skip.astryx-button { width: var(--spacing-10); height: var(--spacing-10); }
+  .now-playing[data-style="stage"] .now-playing-toggle.astryx-button { width: var(--spacing-12); height: var(--spacing-12); }
+  .now-playing[data-style="stage"] .now-playing-toggle.astryx-button svg { width: var(--spacing-6); height: var(--spacing-6); }
+  .now-playing[data-style="stage"] .now-playing-note { bottom: auto; top: calc(var(--spacing-5) + var(--spacing-12)); }
   .now-playing-note { position: absolute; left: var(--spacing-6); bottom: var(--spacing-4); }
   .now-playing-sync { position: absolute; left: 50%; bottom: var(--spacing-6); transform: translateX(-50%); max-width: calc(100% - var(--spacing-12)); padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-5); border-radius: var(--radius-full); background: var(--now-playing-glass); backdrop-filter: blur(var(--spacing-6)); animation: now-playing-rise var(--duration-medium) var(--ease-standard) both; }
   @keyframes now-playing-rise { from { opacity: 0; transform: translate(-50%, 50%); } }
@@ -881,7 +957,7 @@
     .intro-word { transform: rotateX(8deg) rotateY(-10deg); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .now-playing, .now-playing[data-leaving], .now-playing-sync, .now-playing::before, .now-playing::after, .now-playing-line[data-instrumental][data-state="current"] { animation: none; }
+    .now-playing, .now-playing[data-leaving], .now-playing-sync, .now-playing::before, .now-playing::after, .now-playing-line[data-instrumental][data-state="current"], .now-playing-phrase, .now-playing-rest, .now-playing-shape { animation: none; }
     .now-playing-line { transition-delay: 0s; }
   }
   /* 功能引导：整窗压暗，高亮框用超大外阴影挖出目标；卡片按目标位置由脚本定位。宽度与 guide-tour.tsx 的 cardWidth 一致。 */
@@ -1038,9 +1114,10 @@
   @keyframes app-block-in { from { opacity: 0; filter: blur(3px); transform: translateY(var(--spacing-1)); } }
   /* 滚动边缘渐隐：内容滚出可视区时在上下沿平滑淡出，替代生硬的截断。
      用 7 档非线性透明度避免高分屏上的色阶断层；渐隐尺寸随滚动位置从 0 渐变到满，所以在顶部和底部不会盖住内容。
-     浏览器不支持滚动驱动动画时保持原样（无渐隐）。 */
+     浏览器不支持滚动驱动动画时保持原样（无渐隐）。
+     Windows 上 WebView2/Chrome 合成这层蒙版时会把整块可视区画成黑色，只剩渐隐处透出内容，因此在 Windows 上不加渐隐。 */
   @supports (animation-timeline: scroll()) {
-    .inspector-scroll, .recent-projects, .assistant-body, .assistant-history-list, .library-page > .library-content, .settings-page > [role="tabpanel"], .music-editor, .score-editor, .subtitle-editor, .ai-detail {
+    :root:not([data-os="windows"]) :is(.inspector-scroll, .recent-projects, .assistant-body, .assistant-history-list, .library-page > .library-content, .settings-page > [role="tabpanel"], .music-editor, .score-editor, .subtitle-editor, .ai-detail) {
       animation: app-fade-top linear both, app-fade-bottom linear both;
       animation-timeline: scroll(self block), scroll(self block);
       animation-range: 0 var(--app-fade-size), calc(100% - var(--app-fade-size)) 100%;

@@ -1955,6 +1955,9 @@
   "@yovoice.music.insertSection": {
     "defaultMessage": "セクションを挿入"
   },
+  "@yovoice.music.expandLyrics": {
+    "defaultMessage": "歌詞を拡大して編集"
+  },
   "@yovoice.music.instrumental": {
     "defaultMessage": "インスト"
   },
@@ -2381,6 +2384,15 @@
   "@yovoice.update.group": {
     "defaultMessage": "バージョンとアップデート"
   },
+  "@yovoice.update.starTitle": {
+    "defaultMessage": "yovoice は気に入りましたか？"
+  },
+  "@yovoice.update.starHint": {
+    "defaultMessage": "GitHub で Star をひとつ。一日中ごきげんになって、もっと多くの人に見つけてもらえます。"
+  },
+  "@yovoice.update.star": {
+    "defaultMessage": "Star する"
+  },
   "@yovoice.update.title": {
     "defaultMessage": "ソフトウェアアップデート"
   },
@@ -2726,6 +2738,42 @@
   "@yovoice.music.exportLrc": {
     "defaultMessage": "歌詞を書き出し（LRC）"
   },
+  "@yovoice.music.lyricStyle": {
+    "defaultMessage": "歌詞スタイル"
+  },
+  "@yovoice.music.lyricStyleScroll": {
+    "defaultMessage": "スクロール"
+  },
+  "@yovoice.music.lyricStyleScrollHint": {
+    "defaultMessage": "曲全体がスクロールし、今の行が一文字ずつ光る"
+  },
+  "@yovoice.music.lyricStyleStage": {
+    "defaultMessage": "スポットライト"
+  },
+  "@yovoice.music.lyricStyleStageHint": {
+    "defaultMessage": "一行ずつ表示し、文字が歌に合わせて飛び出して光る。画面録画向け"
+  },
+  "@yovoice.music.exportWordLrc": {
+    "defaultMessage": "単語単位の歌詞を書き出す"
+  },
+  "@yovoice.music.exportWordLrcHint": {
+    "defaultMessage": "すべての文字に時刻が付いた拡張 LRC。カラオケ歌詞対応のプレーヤー向け"
+  },
+  "@yovoice.music.alignLyrics": {
+    "defaultMessage": "自動アライン"
+  },
+  "@yovoice.music.aligningLyrics": {
+    "defaultMessage": "アライン中"
+  },
+  "@yovoice.music.alignLyricsHint": {
+    "defaultMessage": "ボーカルを分離して歌詞を一語ずつ歌に合わせます。結果はこのバージョンに保存されます"
+  },
+  "@yovoice.music.alignLyricsDownload": {
+    "defaultMessage": "先にオプションの歌詞アライナーをダウンロードしてください（約 1.3 GB）"
+  },
+  "@yovoice.music.lyricsAligned": {
+    "defaultMessage": "歌詞を歌に合わせて一語ずつ配置しました。手動で調整もできます"
+  },
   "@yovoice.music.lyricsAnalyzed": {
     "defaultMessage": "歌詞のタイミングはボーカルから配置しました。同期で微調整できます"
   },
@@ -2939,6 +2987,21 @@
   "@yovoice.activity.transcribe": {
     "defaultMessage": "曲からメロディを抽出中"
   },
+  "@yovoice.activity.separateVocals": {
+    "defaultMessage": "ボーカルを分離しています"
+  },
+  "@yovoice.activity.alignLyrics": {
+    "defaultMessage": "歌詞をアライン中（{done}/{total}）"
+  },
+  "@yovoice.error.alignModelRequired": {
+    "defaultMessage": "先に設定の音楽モデルで歌詞アライナーをダウンロードしてください"
+  },
+  "@yovoice.error.alignLyrics": {
+    "defaultMessage": "このバージョンにはアラインする歌詞がありません"
+  },
+  "@yovoice.error.alignEmpty": {
+    "defaultMessage": "ボーカルと歌詞を合わせられませんでした。手動で調整してください"
+  },
   "@yovoice.error.melodyInvalid": {
     "defaultMessage": "メロディ譜に問題があります：{issue}"
   },
@@ -2953,6 +3016,9 @@
   },
   "@yovoice.settings.modelDesc.sheetsage2": {
     "defaultMessage": "曲のメロディとコードを譜面に書き起こし、YuE2 でのカバーに使います。"
+  },
+  "@yovoice.settings.modelDesc.lyricAlign": {
+    "defaultMessage": "オプション：ボーカルを分離し、歌詞を一語ずつ歌に合わせます。逐語歌詞アニメーションと逐語 LRC の書き出しに使います。中国語・英語・日本語・韓国語など 11 言語に対応。"
   },
   "@yovoice.music.generateFromMelody": {
     "defaultMessage": "メロディ譜から生成"
@@ -2984,8 +3050,11 @@
   "@yovoice.melody.import": {
     "defaultMessage": ".abc を読み込む"
   },
-  "@yovoice.melody.copy": {
-    "defaultMessage": "譜面をコピー"
+  "@yovoice.melody.export": {
+    "defaultMessage": ".abc を書き出す"
+  },
+  "@yovoice.melody.undo": {
+    "defaultMessage": "元に戻す：{action}"
   },
   "@yovoice.melody.clear": {
     "defaultMessage": "譜面をクリア"
@@ -3005,8 +3074,8 @@
   "@yovoice.melody.listening": {
     "defaultMessage": "試聴を作成中…"
   },
-  "@yovoice.melody.listenName": {
-    "defaultMessage": "メロディ譜の試聴"
+  "@yovoice.melody.pause": {
+    "defaultMessage": "試聴を一時停止"
   },
   "@yovoice.melody.view": {
     "defaultMessage": "譜面の表示"

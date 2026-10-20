@@ -48,8 +48,8 @@ test('四种表达方式、草稿持久化与模型协议', async ({ page }) => 
   await page.getByRole('button', { name: '设置', exact: true }).click();
   // 语音模型与音乐模型分页显示，各自带下载设置。
   await page.getByRole('tab', { name: '音乐模型', exact: true }).click();
-  // 同一模型的多种量化合并为一行，用精度切换。
-  await expect(page.getByRole('button', { name: '下载模型', exact: true })).toHaveCount(4);
+  // 同一模型的多种量化合并为一行，用精度切换；含可选的歌词对齐模型。
+  await expect(page.getByRole('button', { name: '下载模型', exact: true })).toHaveCount(5);
   const yue = page.locator('[data-model-id^="yue2-"]');
   await expect(yue).toHaveCount(1);
   await expect(yue).toHaveAttribute('data-model-id', 'yue2-3b-q8');
@@ -92,7 +92,7 @@ test('真实 WAV 导入、播放、裁剪和空状态', async ({ page }) => {
   await expect.poll(() => page.locator('footer audio').evaluate((el: HTMLAudioElement) => el.currentTime)).toBeCloseTo(1.5, 1);
   await page.getByRole('button', { name: '适应完整音轨' }).click();
   await expect(page.getByRole('button', { name: '缩小音轨' })).toBeDisabled();
-  expect(await lane.evaluate(el => el.scrollLeft)).toBe(0);
+  await expect.poll(() => lane.evaluate(el => el.scrollLeft)).toBe(0);
   await progress.fill('1');
   await expect.poll(() => page.locator('footer audio').evaluate((el: HTMLAudioElement) => el.currentTime)).toBeCloseTo(1, 1);
   await page.getByRole('button', { name: '回到开头' }).click();
