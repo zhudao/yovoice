@@ -1463,6 +1463,9 @@
   "@yovoice.library.noSearchResults": {
     "defaultMessage": "Nenhum resultado encontrado"
   },
+  "@yovoice.library.showEarlier": {
+    "defaultMessage": "Mostrar {n} anteriores"
+  },
   "@yovoice.settings.modelDesc.kokoroOfficial": {
     "defaultMessage": "8 idiomas · 49 vozes · Sem japonês"
   },
@@ -3850,5 +3853,20 @@
   },
   "@yovoice.create.precision": {
     "defaultMessage": "Precisão"
+  },
+  "@yovoice.settings.features": {
+    "defaultMessage": "Recursos"
+  },
+  "@yovoice.settings.featuresHint": {
+    "defaultMessage": "Desativar um recurso oculta seus atalhos na barra lateral e no menu Novo. Obras existentes e modelos baixados não são alterados."
+  },
+  "@yovoice.settings.featureStoryHint": {
+    "defaultMessage": "Importe texto ou legendas e dê voz a cada linha por personagem."
+  },
+  "@yovoice.settings.featureMusicHint": {
+    "defaultMessage": "Músicas, instrumentais e partituras, além das configurações de modelos e bancos de som."
+  },
+  "@yovoice.settings.featureAssistantHint": {
+    "defaultMessage": "O assistente flutuante, seu atalho na barra de título e as sugestões. Com a geração de música também desativada, as configurações do serviço de IA e a distribuição de papéis por IA em livros também ficam ocultas."
   }
 }

@@ -1463,6 +1463,9 @@
   "@yovoice.library.noSearchResults": {
     "defaultMessage": "一致する結果はありません"
   },
+  "@yovoice.library.showEarlier": {
+    "defaultMessage": "さらに前の {n} 件を表示"
+  },
   "@yovoice.settings.modelDesc.kokoroOfficial": {
     "defaultMessage": "8 言語 · 49 ボイス · 日本語なし"
   },
@@ -3850,5 +3853,20 @@
   },
   "@yovoice.create.precision": {
     "defaultMessage": "精度"
+  },
+  "@yovoice.settings.features": {
+    "defaultMessage": "機能の表示"
+  },
+  "@yovoice.settings.featuresHint": {
+    "defaultMessage": "オフにするとサイドバーと新規作成メニューから入口が隠れます。既存の作品とダウンロード済みのモデルはそのまま残ります。"
+  },
+  "@yovoice.settings.featureStoryHint": {
+    "defaultMessage": "テキストや字幕を読み込み、キャラクターごとに一行ずつ吹き替えます。"
+  },
+  "@yovoice.settings.featureMusicHint": {
+    "defaultMessage": "歌、インスト、スコアの生成と、対応するモデルとサウンドフォントの設定。"
+  },
+  "@yovoice.settings.featureAssistantHint": {
+    "defaultMessage": "フローティングアシスタント、タイトルバーの入口、提案。音楽生成もオフにすると、AI サービスの設定と書籍の AI 配役も隠れます。"
   }
 }

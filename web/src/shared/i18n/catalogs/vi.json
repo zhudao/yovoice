@@ -1463,6 +1463,9 @@
   "@yovoice.library.noSearchResults": {
     "defaultMessage": "Không có kết quả phù hợp"
   },
+  "@yovoice.library.showEarlier": {
+    "defaultMessage": "Hiện thêm {n} mục cũ hơn"
+  },
   "@yovoice.settings.modelDesc.kokoroOfficial": {
     "defaultMessage": "8 ngôn ngữ · 49 giọng · Không có tiếng Nhật"
   },
@@ -3850,5 +3853,20 @@
   },
   "@yovoice.create.precision": {
     "defaultMessage": "Độ chính xác"
+  },
+  "@yovoice.settings.features": {
+    "defaultMessage": "Tính năng"
+  },
+  "@yovoice.settings.featuresHint": {
+    "defaultMessage": "Khi tắt, mục tương ứng sẽ ẩn khỏi thanh bên và menu Tạo mới. Tác phẩm hiện có và mô hình đã tải không bị ảnh hưởng."
+  },
+  "@yovoice.settings.featureStoryHint": {
+    "defaultMessage": "Nhập văn bản hoặc phụ đề và lồng tiếng từng câu theo nhân vật."
+  },
+  "@yovoice.settings.featureMusicHint": {
+    "defaultMessage": "Bài hát, nhạc không lời và bản phối, cùng cài đặt mô hình và soundfont tương ứng."
+  },
+  "@yovoice.settings.featureAssistantHint": {
+    "defaultMessage": "Trợ lý nổi, lối vào trên thanh tiêu đề và các gợi ý. Khi tắt cả tạo nhạc, cài đặt dịch vụ AI và phân vai bằng AI cho sách cũng bị ẩn."
   }
 }
