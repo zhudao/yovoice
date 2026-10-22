@@ -720,7 +720,7 @@
     "defaultMessage": "{current}, of {total}"
   },
   "@yovoice.player.reveal": {
-    "defaultMessage": "Open audio location"
+    "defaultMessage": "Show in folder"
   },
   "@yovoice.player.skipEnd": {
     "defaultMessage": "Go to end"
@@ -2761,6 +2761,84 @@
   },
   "@yovoice.music.exportWordLrcHint": {
     "defaultMessage": "Enhanced LRC with a timestamp for every word, for players that support karaoke lyrics"
+  },
+  "@yovoice.music.lyricTools": {
+    "defaultMessage": "Lyric tools"
+  },
+  "@yovoice.music.editWords": {
+    "defaultMessage": "Adjust lyric timing"
+  },
+  "@yovoice.music.editWordsHint": {
+    "defaultMessage": "While playing, click a line to start it at the current position; nudge whole lines or fine-tune single words"
+  },
+  "@yovoice.music.syncLyricsHint": {
+    "defaultMessage": "Mark the start of each line while listening"
+  },
+  "@yovoice.music.editThisLine": {
+    "defaultMessage": "Click while playing: this line starts here"
+  },
+  "@yovoice.music.wordEditor": {
+    "defaultMessage": "Lyric timing"
+  },
+  "@yovoice.music.wordEditorHint": {
+    "defaultMessage": "While playing, click a lyric line to anchor it at the playhead; ←/→ nudges the line, ↑/↓ changes line; drag word blocks or their edges for single words"
+  },
+  "@yovoice.music.wordTap": {
+    "defaultMessage": "Tap along"
+  },
+  "@yovoice.music.wordTapStop": {
+    "defaultMessage": "Stop tapping"
+  },
+  "@yovoice.music.wordTapHint": {
+    "defaultMessage": "Press ↓ or Enter as each word starts; it moves to the next word automatically. Esc stops"
+  },
+  "@yovoice.music.wordLine": {
+    "defaultMessage": "Line {n}/{total}"
+  },
+  "@yovoice.music.prevLine": {
+    "defaultMessage": "Previous line"
+  },
+  "@yovoice.music.nextLine": {
+    "defaultMessage": "Next line"
+  },
+  "@yovoice.music.playLine": {
+    "defaultMessage": "Play this line"
+  },
+  "@yovoice.music.wordUndo": {
+    "defaultMessage": "Undo"
+  },
+  "@yovoice.music.wordCancel": {
+    "defaultMessage": "Cancel"
+  },
+  "@yovoice.music.wordSave": {
+    "defaultMessage": "Save"
+  },
+  "@yovoice.music.wordStart": {
+    "defaultMessage": "Adjust the start of “{word}”"
+  },
+  "@yovoice.music.wordEnd": {
+    "defaultMessage": "Adjust the end of “{word}”"
+  },
+  "@yovoice.music.anchorLine": {
+    "defaultMessage": "Anchor to playhead"
+  },
+  "@yovoice.music.anchorLineHint": {
+    "defaultMessage": "Start this line at the current playback position (Enter)"
+  },
+  "@yovoice.music.shiftEarlier": {
+    "defaultMessage": "{n}s earlier"
+  },
+  "@yovoice.music.shiftLater": {
+    "defaultMessage": "{n}s later"
+  },
+  "@yovoice.music.shiftMode": {
+    "defaultMessage": "Adjust mode"
+  },
+  "@yovoice.music.shiftRipple": {
+    "defaultMessage": "Shift following lines"
+  },
+  "@yovoice.music.shiftSingle": {
+    "defaultMessage": "This line only"
   },
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "Auto-align"

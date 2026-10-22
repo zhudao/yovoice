@@ -720,7 +720,7 @@
     "defaultMessage": "{current} / {total}"
   },
   "@yovoice.player.reveal": {
-    "defaultMessage": "오디오 위치 열기"
+    "defaultMessage": "위치 열기"
   },
   "@yovoice.player.skipEnd": {
     "defaultMessage": "끝으로 이동"
@@ -2761,6 +2761,84 @@
   },
   "@yovoice.music.exportWordLrcHint": {
     "defaultMessage": "모든 글자에 시간이 있는 확장 LRC. 노래방 가사를 지원하는 플레이어용"
+  },
+  "@yovoice.music.lyricTools": {
+    "defaultMessage": "가사 도구"
+  },
+  "@yovoice.music.editWords": {
+    "defaultMessage": "가사 타이밍 조정"
+  },
+  "@yovoice.music.editWordsHint": {
+    "defaultMessage": "재생 중 줄을 클릭하면 현재 위치에서 시작합니다. 줄 단위로 앞뒤 조정하거나 단어별로 세밀하게 조정할 수 있습니다"
+  },
+  "@yovoice.music.syncLyricsHint": {
+    "defaultMessage": "들으면서 줄마다 시작 지점을 표시"
+  },
+  "@yovoice.music.editThisLine": {
+    "defaultMessage": "재생 중 클릭: 이 줄을 여기서 시작"
+  },
+  "@yovoice.music.wordEditor": {
+    "defaultMessage": "가사 타이밍 조정"
+  },
+  "@yovoice.music.wordEditorHint": {
+    "defaultMessage": "재생 중 가사 줄을 클릭하면 재생 위치에 고정됩니다. ←/→ 줄 미세 조정, ↑/↓ 줄 이동, 블록이나 양 끝을 끌어 단어별 조정"
+  },
+  "@yovoice.music.wordTap": {
+    "defaultMessage": "탭으로 기록"
+  },
+  "@yovoice.music.wordTapStop": {
+    "defaultMessage": "기록 중지"
+  },
+  "@yovoice.music.wordTapHint": {
+    "defaultMessage": "각 단어가 시작될 때 ↓ 또는 Enter를 누르면 다음 단어로 넘어갑니다. Esc로 중지"
+  },
+  "@yovoice.music.wordLine": {
+    "defaultMessage": "{n}/{total}번째 줄"
+  },
+  "@yovoice.music.prevLine": {
+    "defaultMessage": "이전 줄"
+  },
+  "@yovoice.music.nextLine": {
+    "defaultMessage": "다음 줄"
+  },
+  "@yovoice.music.playLine": {
+    "defaultMessage": "이 줄 재생"
+  },
+  "@yovoice.music.wordUndo": {
+    "defaultMessage": "실행 취소"
+  },
+  "@yovoice.music.wordCancel": {
+    "defaultMessage": "취소"
+  },
+  "@yovoice.music.wordSave": {
+    "defaultMessage": "저장"
+  },
+  "@yovoice.music.wordStart": {
+    "defaultMessage": "“{word}” 시작 조정"
+  },
+  "@yovoice.music.wordEnd": {
+    "defaultMessage": "“{word}” 끝 조정"
+  },
+  "@yovoice.music.anchorLine": {
+    "defaultMessage": "재생 위치에 고정"
+  },
+  "@yovoice.music.anchorLineHint": {
+    "defaultMessage": "이 줄을 현재 재생 위치에서 시작(Enter)"
+  },
+  "@yovoice.music.shiftEarlier": {
+    "defaultMessage": "{n}초 앞당기기"
+  },
+  "@yovoice.music.shiftLater": {
+    "defaultMessage": "{n}초 늦추기"
+  },
+  "@yovoice.music.shiftMode": {
+    "defaultMessage": "조정 방식"
+  },
+  "@yovoice.music.shiftRipple": {
+    "defaultMessage": "뒤 줄도 함께 이동"
+  },
+  "@yovoice.music.shiftSingle": {
+    "defaultMessage": "이 줄만"
   },
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "자동 정렬"

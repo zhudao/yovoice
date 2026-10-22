@@ -720,7 +720,7 @@
     "defaultMessage": "{current} / {total}"
   },
   "@yovoice.player.reveal": {
-    "defaultMessage": "音声の場所を開く"
+    "defaultMessage": "場所を開く"
   },
   "@yovoice.player.skipEnd": {
     "defaultMessage": "末尾へ移動"
@@ -2761,6 +2761,84 @@
   },
   "@yovoice.music.exportWordLrcHint": {
     "defaultMessage": "すべての文字に時刻が付いた拡張 LRC。カラオケ歌詞対応のプレーヤー向け"
+  },
+  "@yovoice.music.lyricTools": {
+    "defaultMessage": "歌詞ツール"
+  },
+  "@yovoice.music.editWords": {
+    "defaultMessage": "歌詞のタイミングを調整"
+  },
+  "@yovoice.music.editWordsHint": {
+    "defaultMessage": "再生中に行をクリックすると現在位置から歌い出します。行ごとの前後調整や単語ごとの微調整も可能"
+  },
+  "@yovoice.music.syncLyricsHint": {
+    "defaultMessage": "聴きながら各行の開始を記録"
+  },
+  "@yovoice.music.editThisLine": {
+    "defaultMessage": "再生中にクリック：この行をここから開始"
+  },
+  "@yovoice.music.wordEditor": {
+    "defaultMessage": "歌詞タイミング調整"
+  },
+  "@yovoice.music.wordEditorHint": {
+    "defaultMessage": "再生中に歌詞の行をクリックすると再生位置に固定。←/→ で行を微調整、↑/↓ で行を移動。ブロックや端をドラッグして単語ごとに調整"
+  },
+  "@yovoice.music.wordTap": {
+    "defaultMessage": "タップで記録"
+  },
+  "@yovoice.music.wordTapStop": {
+    "defaultMessage": "記録を停止"
+  },
+  "@yovoice.music.wordTapHint": {
+    "defaultMessage": "各語が歌い出すときに ↓ か Enter を押すと次の語へ進みます。Esc で停止"
+  },
+  "@yovoice.music.wordLine": {
+    "defaultMessage": "{n}/{total} 行目"
+  },
+  "@yovoice.music.prevLine": {
+    "defaultMessage": "前の行"
+  },
+  "@yovoice.music.nextLine": {
+    "defaultMessage": "次の行"
+  },
+  "@yovoice.music.playLine": {
+    "defaultMessage": "この行を再生"
+  },
+  "@yovoice.music.wordUndo": {
+    "defaultMessage": "元に戻す"
+  },
+  "@yovoice.music.wordCancel": {
+    "defaultMessage": "キャンセル"
+  },
+  "@yovoice.music.wordSave": {
+    "defaultMessage": "保存"
+  },
+  "@yovoice.music.wordStart": {
+    "defaultMessage": "「{word}」の開始を調整"
+  },
+  "@yovoice.music.wordEnd": {
+    "defaultMessage": "「{word}」の終了を調整"
+  },
+  "@yovoice.music.anchorLine": {
+    "defaultMessage": "再生位置に固定"
+  },
+  "@yovoice.music.anchorLineHint": {
+    "defaultMessage": "この行を現在の再生位置から開始（Enter）"
+  },
+  "@yovoice.music.shiftEarlier": {
+    "defaultMessage": "{n} 秒早く"
+  },
+  "@yovoice.music.shiftLater": {
+    "defaultMessage": "{n} 秒遅く"
+  },
+  "@yovoice.music.shiftMode": {
+    "defaultMessage": "調整方法"
+  },
+  "@yovoice.music.shiftRipple": {
+    "defaultMessage": "後続の行も移動"
+  },
+  "@yovoice.music.shiftSingle": {
+    "defaultMessage": "この行だけ"
   },
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "自動アライン"

@@ -720,7 +720,7 @@
     "defaultMessage": "{current} di {total}"
   },
   "@yovoice.player.reveal": {
-    "defaultMessage": "Apri posizione dell’audio"
+    "defaultMessage": "Mostra nella cartella"
   },
   "@yovoice.player.skipEnd": {
     "defaultMessage": "Vai alla fine"
@@ -2761,6 +2761,84 @@
   },
   "@yovoice.music.exportWordLrcHint": {
     "defaultMessage": "LRC avanzato con un tempo per ogni parola, per i lettori che supportano il karaoke"
+  },
+  "@yovoice.music.lyricTools": {
+    "defaultMessage": "Strumenti testo"
+  },
+  "@yovoice.music.editWords": {
+    "defaultMessage": "Regola i tempi del testo"
+  },
+  "@yovoice.music.editWordsHint": {
+    "defaultMessage": "Durante la riproduzione, fai clic su una riga per farla iniziare alla posizione attuale; sposta righe intere o rifinisci le singole parole"
+  },
+  "@yovoice.music.syncLyricsHint": {
+    "defaultMessage": "Segna l’inizio di ogni riga mentre ascolti"
+  },
+  "@yovoice.music.editThisLine": {
+    "defaultMessage": "Clic in riproduzione: la riga inizia qui"
+  },
+  "@yovoice.music.wordEditor": {
+    "defaultMessage": "Tempi del testo"
+  },
+  "@yovoice.music.wordEditorHint": {
+    "defaultMessage": "Durante la riproduzione, fai clic su una riga per ancorarla alla posizione attuale; ←/→ sposta la riga, ↑/↓ cambia riga; trascina i blocchi o i bordi per le singole parole"
+  },
+  "@yovoice.music.wordTap": {
+    "defaultMessage": "Batti a tempo"
+  },
+  "@yovoice.music.wordTapStop": {
+    "defaultMessage": "Interrompi"
+  },
+  "@yovoice.music.wordTapHint": {
+    "defaultMessage": "Premi ↓ o Invio all’inizio di ogni parola; passa da sola alla successiva. Esc per interrompere"
+  },
+  "@yovoice.music.wordLine": {
+    "defaultMessage": "Riga {n}/{total}"
+  },
+  "@yovoice.music.prevLine": {
+    "defaultMessage": "Riga precedente"
+  },
+  "@yovoice.music.nextLine": {
+    "defaultMessage": "Riga successiva"
+  },
+  "@yovoice.music.playLine": {
+    "defaultMessage": "Riproduci questa riga"
+  },
+  "@yovoice.music.wordUndo": {
+    "defaultMessage": "Annulla modifica"
+  },
+  "@yovoice.music.wordCancel": {
+    "defaultMessage": "Annulla"
+  },
+  "@yovoice.music.wordSave": {
+    "defaultMessage": "Salva"
+  },
+  "@yovoice.music.wordStart": {
+    "defaultMessage": "Regola l’inizio di «{word}»"
+  },
+  "@yovoice.music.wordEnd": {
+    "defaultMessage": "Regola la fine di «{word}»"
+  },
+  "@yovoice.music.anchorLine": {
+    "defaultMessage": "Ancora alla riproduzione"
+  },
+  "@yovoice.music.anchorLineHint": {
+    "defaultMessage": "Fai iniziare questa riga alla posizione attuale (Invio)"
+  },
+  "@yovoice.music.shiftEarlier": {
+    "defaultMessage": "{n} s prima"
+  },
+  "@yovoice.music.shiftLater": {
+    "defaultMessage": "{n} s dopo"
+  },
+  "@yovoice.music.shiftMode": {
+    "defaultMessage": "Modalità"
+  },
+  "@yovoice.music.shiftRipple": {
+    "defaultMessage": "Sposta anche le successive"
+  },
+  "@yovoice.music.shiftSingle": {
+    "defaultMessage": "Solo questa riga"
   },
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "Allinea automaticamente"

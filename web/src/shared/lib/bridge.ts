@@ -1,12 +1,13 @@
 import type { Draft, State } from '../workbench';
 import { CallError, parseCallError } from './call-error';
 
-declare global { interface Window { __workbenchPlatform?: 'macos'; __workbenchMediaBase?: string; __workbenchDraft?: Draft; chrome?: { webview?: { postMessage: (data: unknown) => void; addEventListener: (name: string, listener: (event: MessageEvent) => void) => void } } } }
+declare global { interface Window { __workbenchPlatform?: 'macos' | 'linux'; __workbenchMediaBase?: string; __workbenchDraft?: Draft; chrome?: { webview?: { postMessage: (data: unknown) => void; addEventListener: (name: string, listener: (event: MessageEvent) => void) => void } } } }
 
-// 桌面宿主（WebView2 / WKWebView）注入的消息通道；浏览器预览中不存在。
+// 桌面宿主（WebView2 / WKWebView / WebKitGTK）注入的消息通道；浏览器预览中不存在。
 const native = window.chrome?.webview;
 export const isDesktop = !!native;
 export const isMac = window.__workbenchPlatform === 'macos';
+export const isLinux = window.__workbenchPlatform === 'linux';
 
 const listeners = new Set<(state: State) => void>();
 const pending = new Map<string, { resolve: (value: unknown) => void; reject: (reason: Error) => void; timer: ReturnType<typeof setTimeout> | undefined }>();
@@ -38,7 +39,8 @@ export function subscribeDesktopUpdate(listener: (update: unknown) => void) { up
 
 // 数据目录迁移在同一次调用里等待用户选择目录并同步复制全部数据，几 GB 模型远超 120 秒；
 // 超时会先报未知错误而后台仍在复制，结束后又提示重启，因此只由宿主侧限时。
-const longCalls = new Set(['storage.directory']);
+// 导出音频与文本要等用户在保存框里选好位置，停留多久都不算超时。
+const longCalls = new Set(['storage.directory', 'audio.export', 'output.export', 'text.export']);
 
 export function desktopCall<T>(method: string, data: unknown): Promise<T> {
   return new Promise<T>((resolve, reject) => {

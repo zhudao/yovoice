@@ -720,7 +720,7 @@
     "defaultMessage": "{current} из {total}"
   },
   "@yovoice.player.reveal": {
-    "defaultMessage": "Показать аудиофайл"
+    "defaultMessage": "Показать в папке"
   },
   "@yovoice.player.skipEnd": {
     "defaultMessage": "В конец"
@@ -2761,6 +2761,84 @@
   },
   "@yovoice.music.exportWordLrcHint": {
     "defaultMessage": "Расширенный LRC с отметкой времени для каждого слова, для плееров с караоке"
+  },
+  "@yovoice.music.lyricTools": {
+    "defaultMessage": "Инструменты текста"
+  },
+  "@yovoice.music.editWords": {
+    "defaultMessage": "Настроить тайминг текста"
+  },
+  "@yovoice.music.editWordsHint": {
+    "defaultMessage": "Во время воспроизведения нажмите на строку, чтобы она начиналась с текущей позиции; сдвигайте строки целиком или настраивайте отдельные слова"
+  },
+  "@yovoice.music.syncLyricsHint": {
+    "defaultMessage": "Отмечайте начало каждой строки во время прослушивания"
+  },
+  "@yovoice.music.editThisLine": {
+    "defaultMessage": "Нажатие во время воспроизведения: строка начинается здесь"
+  },
+  "@yovoice.music.wordEditor": {
+    "defaultMessage": "Тайминг текста"
+  },
+  "@yovoice.music.wordEditorHint": {
+    "defaultMessage": "Во время воспроизведения нажмите на строку, чтобы привязать её к позиции; ←/→ сдвигает строку, ↑/↓ меняет строку; перетаскивайте блоки или края для отдельных слов"
+  },
+  "@yovoice.music.wordTap": {
+    "defaultMessage": "Отстукивать"
+  },
+  "@yovoice.music.wordTapStop": {
+    "defaultMessage": "Остановить"
+  },
+  "@yovoice.music.wordTapHint": {
+    "defaultMessage": "Нажимайте ↓ или Enter в начале каждого слова — выбор перейдёт к следующему. Esc — остановить"
+  },
+  "@yovoice.music.wordLine": {
+    "defaultMessage": "Строка {n}/{total}"
+  },
+  "@yovoice.music.prevLine": {
+    "defaultMessage": "Предыдущая строка"
+  },
+  "@yovoice.music.nextLine": {
+    "defaultMessage": "Следующая строка"
+  },
+  "@yovoice.music.playLine": {
+    "defaultMessage": "Воспроизвести строку"
+  },
+  "@yovoice.music.wordUndo": {
+    "defaultMessage": "Отменить"
+  },
+  "@yovoice.music.wordCancel": {
+    "defaultMessage": "Отмена"
+  },
+  "@yovoice.music.wordSave": {
+    "defaultMessage": "Сохранить"
+  },
+  "@yovoice.music.wordStart": {
+    "defaultMessage": "Начало «{word}»"
+  },
+  "@yovoice.music.wordEnd": {
+    "defaultMessage": "Конец «{word}»"
+  },
+  "@yovoice.music.anchorLine": {
+    "defaultMessage": "Привязать к позиции"
+  },
+  "@yovoice.music.anchorLineHint": {
+    "defaultMessage": "Начать эту строку с текущей позиции (Enter)"
+  },
+  "@yovoice.music.shiftEarlier": {
+    "defaultMessage": "На {n} с раньше"
+  },
+  "@yovoice.music.shiftLater": {
+    "defaultMessage": "На {n} с позже"
+  },
+  "@yovoice.music.shiftMode": {
+    "defaultMessage": "Режим сдвига"
+  },
+  "@yovoice.music.shiftRipple": {
+    "defaultMessage": "Сдвигать следующие"
+  },
+  "@yovoice.music.shiftSingle": {
+    "defaultMessage": "Только эта строка"
   },
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "Автовыравнивание"
