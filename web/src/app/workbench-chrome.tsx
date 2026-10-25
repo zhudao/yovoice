@@ -36,7 +36,7 @@ import { dismissSplash } from '../shared/lib/splash';
 import { IntroScreen } from './intro-screen';
 import { GuideTour } from './guide-tour';
 import { formatNotice } from '../shared/i18n/format';
-import { isAligner, isKokoroModel, isYuE, isReferenceModel, isBreezeModel, modelEngineReady, runtimeStatus, runtimeUsable, isVoxModel, requiresVoice, projectKind, createDraft, synthesisSettings, performanceSettings, cueSettings, type Character, type Draft, type EngineInfo, type State, type ModelPackage, type Voice, type Generation, type Track, type AssistantContext, modelTab, preferredModel, featureHidden } from '../shared/workbench';
+import { isAligner, isKokoroModel, isYuE, isReferenceModel, isBreezeModel, modelEngineReady, runtimeStatus, runtimeUsable, isVoxModel, requiresVoice, projectKind, createDraft, synthesisSettings, performanceSettings, cueSettings, type Character, type Draft, type EngineInfo, type State, type ModelPackage, type Voice, type Generation, type Track, type AssistantContext, modelTab, preferredModel, featureHidden, assistantUsable } from '../shared/workbench';
 // 助手（含形象与点阵动画）首屏后再加载，不占主包。
 const AssistantDock = lazy(() => import('../features/assistant/assistant-dock').then(module => ({ default: module.AssistantDock })));
 const AssistantTitleButton = lazy(() => import('../features/assistant/assistant-dock').then(module => ({ default: module.AssistantTitleButton })));
@@ -51,6 +51,7 @@ import { UpdateNotice } from '../features/update/update-notice';
 import { PronunciationDialog, type Pronunciation } from './pronunciation-dialog';
 import type { DraftSession } from './use-draft-session';
 import { watchAssistantLive } from '../shared/lib/assistant-live';
+import { AudioCheckBadge } from '../features/media/audio-check';
 import { readLocal, writeLocal } from '../shared/lib/local-store';
 const Settings = lazy(() => import('../features/settings/settings').then(module => ({ default: module.Settings })));
 const VoicePicker = lazy(() => import('../features/media/voice-picker').then(module => ({ default: module.VoicePicker })));
@@ -281,7 +282,7 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
   const assistantContext: AssistantContext = { page: assistantPage, workId: page === 'create' ? draft.id : '', workTitle: page === 'create' ? draft.title : '', workKind: page === 'create' ? projectKind(draft) : '', locale: state.preferences.uiLocale, cue: focusCue };
   useEffect(() => trackAssistantFocus(), []);
   // 主动提示：面板关着、开着主动提示且助手可用时，生成或下载结束会在右下角冒出建议。
-  const assistantReady = !state.assistantMissing && !!state.aiProviders?.find(item => item.id === state.aiProviderID)?.model;
+  const assistantReady = !state.assistantMissing && assistantUsable(state.aiProviders?.find(item => item.id === state.aiProviderID));
   const [nudge, dismissNudge] = useAssistantNudge(state, assistantReady && !assistantHidden && !assistantOpen && !state.preferences.assistantQuiet);
   const actOnNudge = (next: Nudge) => {
     dismissNudge();
@@ -417,6 +418,7 @@ export function WorkbenchChrome({ state, catalog, engine, ready, session, error,
   // 播放器工具栏右侧：打开当前音频所在位置（导出在“更多”菜单里），查看历史（语音生成是“历史生成”，音乐与编曲是本作品的“版本记录”），删除在历史里处理；音乐另有播放页。
   const historyLabel = t(projectKind(draft) === 'text' ? '@yovoice.history.generations' : '@yovoice.history.versions');
   const playerActions = projectKind(draft) === 'story' ? undefined : <HStack gap={2} vAlign="center">
+    {currentVersion ? <AudioCheckBadge check={currentVersion.check} /> : null}
     {currentVersion ? <Button className="player-tool" label={t('@yovoice.player.reveal')} tooltip={t('@yovoice.player.reveal')} size="sm" icon={<FolderOpen />} onClick={() => { void call('media.reveal', { kind: 'outputs', id: currentVersion.id }).catch(e => onError(noticeMessage(e))); }} /> : null}
     {currentVersion && music ? <Button className="player-tool" label={t('@yovoice.music.nowPlaying')} tooltip={t('@yovoice.music.nowPlaying')} size="sm" variant="ghost" icon={<Disc3 />} onClick={() => setNowPlaying(currentVersion)} /> : null}
     {/* 历史入口始终保留：还没生成过时也能进入历史页查看其他作品的生成记录。 */}

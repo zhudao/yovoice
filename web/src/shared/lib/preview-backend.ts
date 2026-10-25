@@ -221,6 +221,17 @@ async function dispatch<T>(method: string, data: unknown): Promise<T> {
     state.history = state.history.map(v => v.id === id ? { ...v, lyricWords, lyricTimes: undefined } : v);
     publish(); return true as T;
   }
+  // 参考片段挑选与音频体检在桌面端测量；预览后端不分析音频，挑选固定取开头 10 秒，体检返回已有结果。
+  if (method === 'voice.suggest') {
+    const voice = state.voices.find(v => v.id === (data as { id: string }).id);
+    if (!voice) throw new CallError('@yovoice.error.audioMissing');
+    return { start: 0, end: Math.min(voice.duration, 10) } as T;
+  }
+  if (method === 'generation.check') {
+    const item = state.history.find(v => v.id === (data as { id: string }).id);
+    if (!item) throw new CallError('@yovoice.error.audioMissing');
+    return (item.check ?? { loudness: -70, peak: -70 }) as T;
+  }
   if (method === 'media.rename' || method === 'media.delete') {
     const { kind, id, name } = data as { kind: string; id: string; name: string };
     if (!['voices', 'outputs'].includes(kind)) throw new CallError('@yovoice.error.audioKindInvalid');
@@ -325,7 +336,8 @@ async function dispatch<T>(method: string, data: unknown): Promise<T> {
     if (!preset) throw new CallError('@yovoice.error.aiProviderInvalid');
     const editable = preset.endpoint !== 'fixed';
     const next: AIProvider = { id: input.id || crypto.randomUUID().replaceAll('-', ''), preset: preset.key, name: input.name?.trim() || preset.name, format: preset.endpoint === 'custom' ? input.format : preset.format, baseURL: editable ? input.baseURL.trim() : preset.baseURL, modelsPath: preset.endpoint === 'custom' ? input.modelsPath : preset.modelsPath, model: input.model?.trim() ?? '' };
-    if (!/^https?:\/\/[^/]+/.test(next.baseURL)) throw new CallError('@yovoice.error.aiProviderInvalid');
+    // ChatGPT 订阅经本机 Codex CLI，没有服务地址。
+    if (next.format !== 'codex_cli' && !/^https?:\/\/[^/]+/.test(next.baseURL)) throw new CallError('@yovoice.error.aiProviderInvalid');
     const providers = state.aiProviders ?? [];
     const old = providers.find(p => p.id === next.id);
     next.keyMask = input.key == null ? old?.keyMask : input.key.trim() ? '••••••••' : undefined;
@@ -624,10 +636,12 @@ export async function previewImportVoice(file: File): Promise<Voice> {
   const context = new AudioContext();
   try {
     const decoded = await context.decodeAudioData(await file.arrayBuffer());
-    if (decoded.duration < 1 || decoded.duration > 60) throw new CallError('@yovoice.error.audioDuration');
-    const wav = encodeWav(decoded);
+    if (decoded.duration < 1 || decoded.duration > 600) throw new CallError('@yovoice.error.audioDuration');
+    // 超过 60 秒的录音：桌面端按清晰度挑一段，预览后端不做测量，固定取开头 10 秒。
+    const excerpt = decoded.duration > 60 ? { start: 0, end: 10, total: Math.round(decoded.duration * 100) / 100 } : undefined;
+    const wav = excerpt ? encodeWav(decoded, excerpt.start, excerpt.end) : encodeWav(decoded);
     const id = crypto.randomUUID().replaceAll('-', '');
-    const voice = { id, name: file.name.replace(/\.[^.]+$/, ''), fileName: id + '.wav', duration: decoded.duration };
+    const voice: Voice = { id, name: file.name.replace(/\.[^.]+$/, ''), fileName: id + '.wav', duration: excerpt ? excerpt.end - excerpt.start : decoded.duration, ...(excerpt ? { excerpt } : {}) };
     await blobStore(voice.fileName, wav); preview().voices.push(voice); publish(); return voice;
   } finally { await context.close(); }
 }
