@@ -3,6 +3,7 @@ package schema
 import (
 	"math"
 	"slices"
+	"strconv"
 	"strings"
 	"unicode/utf16"
 	"yovoice/internal/catalog"
@@ -13,6 +14,15 @@ func TextLen(s string) int { return len(utf16.Encode([]rune(s))) }
 func Validate(d Draft) error {
 	if d.Kind == "score" {
 		return validateScoreDraft(d)
+	}
+	if d.Kind == "sfx" {
+		m, e := catalog.Lookup(d.ModelID)
+		if e != nil {
+			return e
+		}
+		if m.Family != "stable_audio" || m.Variant != "sfx" && m.Variant != "medium" {
+			return msg.Err(msg.ErrModelUnsupported, nil)
+		}
 	}
 	if m, e := catalog.Lookup(d.ModelID); e == nil && catalog.IsMusic(m.Family) {
 		return validateMusic(d, m.Family)
@@ -35,10 +45,11 @@ func Validate(d Draft) error {
 		return e
 	}
 	if m.Family == "kokoro_tts" {
-		if !slices.Contains(m.Voices, d.KokoroSpeaker(m)) {
+		primary, ok := kokoroPrimaryVoice(d.KokoroSpeaker(m), m.Voices)
+		if !ok {
 			return msg.Err(msg.ErrSpeakerInvalid, nil)
 		}
-		if d.SynthesisLanguage != "" && d.SynthesisLanguage != "auto" && d.SynthesisLanguage != KokoroLanguage(d.KokoroSpeaker(m)) {
+		if d.SynthesisLanguage != "" && d.SynthesisLanguage != "auto" && d.SynthesisLanguage != KokoroLanguage(primary) {
 			return msg.Err(msg.ErrLanguageUnsupported, nil)
 		}
 		if d.Seed != nil && (*d.Seed < 0 || *d.Seed > 2147483647) {
@@ -264,6 +275,32 @@ func (d Draft) KokoroSpeaker(m catalog.ModelPackage) string {
 		}
 	}
 	return ""
+}
+
+func kokoroPrimaryVoice(speaker string, voices []string) (string, bool) {
+	if !strings.Contains(speaker, "(") {
+		return speaker, slices.Contains(voices, speaker)
+	}
+	parts := strings.Split(speaker, "+")
+	if len(parts) != 2 {
+		return "", false
+	}
+	ids := [2]string{}
+	for i, part := range parts {
+		open := strings.IndexByte(part, '(')
+		if open <= 0 || !strings.HasSuffix(part, ")") {
+			return "", false
+		}
+		ids[i] = part[:open]
+		weight, err := strconv.ParseFloat(part[open+1:len(part)-1], 64)
+		if err != nil || math.IsNaN(weight) || math.IsInf(weight, 0) || weight <= 0 || !slices.Contains(voices, ids[i]) {
+			return "", false
+		}
+	}
+	if KokoroLanguage(ids[0]) != KokoroLanguage(ids[1]) {
+		return "", false
+	}
+	return ids[0], true
 }
 
 func KokoroLanguage(voice string) string {

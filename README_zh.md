@@ -16,6 +16,11 @@
   <img src="https://img.shields.io/badge/Linux-x64-FCC624?style=flat-square" alt="Linux (x64)" />
 </p>
 <p align="center">
+  <a href="https://www.producthunt.com/products/yovoice?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-yovoice" target="_blank" rel="noopener noreferrer">
+    <img alt="yovoice - Local-first voice, music, and score creation studio | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1293995&amp;theme=light&amp;t=1793070018670" />
+  </a>
+</p>
+<p align="center">
   <a href="https://www.star-history.com/leemysw/yovoice">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=leemysw/yovoice&type=rank&theme=dark" />
@@ -45,7 +50,7 @@ yovoice 是一款适用于 macOS、Windows 和 Linux 的开源、本地优先（
 
 - 🔒 **100% 本地离线与数据隐私**：所有模型均在本地显卡/CPU 推理，文本稿件和声音样本永远不会上传到第三方云端。
 - 💸 **零按字/按秒扣费**：无需订阅昂贵的云端 API（告别 ElevenLabs、Suno、商用配音会员计费）。
-- ⚡ **原生 C++ 极速引擎，免配 Python**：基于 [audio.cpp](https://github.com/0xShug0/audio.cpp) v0.9.2 原生构建，支持 macOS Metal 与 Windows NVIDIA CUDA 12.4/13.3 开箱即用，告别 Conda 与 PyTorch 依赖地狱。
+- ⚡ **原生 C++ 极速引擎，免配 Python**：基于 [audio.cpp](https://github.com/0xShug0/audio.cpp) v0.9.3 原生构建，支持 macOS Metal 与 Windows NVIDIA CUDA 12.4/13.3 开箱即用，告别 Conda 与 PyTorch 依赖地狱。
 - 🎛️ **全流程专业创作流**：多版本试听对比（Takes）、多轨时间轴吸附裁剪、General MIDI 音色库本地渲染与分轨导出（Stems）。
 - 🤖 **原生 MCP 与 AI Agent 协创**：接入 DeepSeek、通义千问、Claude、OpenAI 或本地 Ollama，用对话完成写歌写谱到生成的全流程，并提供 Model Context Protocol (MCP) 服务，支持在 Cursor 或 Claude Code 中直接调用。
 

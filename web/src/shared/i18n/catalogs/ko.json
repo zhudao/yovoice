@@ -164,6 +164,9 @@
   "@yovoice.create.advanced": {
     "defaultMessage": "고급 설정"
   },
+  "@yovoice.create.blendVoices": {
+    "defaultMessage": "음색 혼합"
+  },
   "@yovoice.create.cancelGenerate": {
     "defaultMessage": "생성 취소"
   },
@@ -250,6 +253,12 @@
   },
   "@yovoice.create.repetitionPenalty": {
     "defaultMessage": "반복 페널티"
+  },
+  "@yovoice.create.secondVoice": {
+    "defaultMessage": "두 번째 음색"
+  },
+  "@yovoice.create.secondVoiceWeight": {
+    "defaultMessage": "두 번째 음색 비율"
   },
   "@yovoice.create.seed": {
     "defaultMessage": "랜덤 시드"
@@ -838,6 +847,12 @@
   },
   "@yovoice.settings.removeBlocked": {
     "defaultMessage": "이 모델을 제거하기 전에 관련 작업을 완료하세요."
+  },
+  "@yovoice.settings.performanceFirst": {
+    "defaultMessage": "성능 우선"
+  },
+  "@yovoice.settings.performanceFirstHint": {
+    "defaultMessage": "생성 속도가 빨라지지만 VRAM 사용량이 늘어납니다"
   },
   "@yovoice.settings.removeModel": {
     "defaultMessage": "모델 제거"
@@ -1576,6 +1591,12 @@
   },
   "@yovoice.timeline.fromHistory": {
     "defaultMessage": "버전에서 추가"
+  },
+  "@yovoice.timeline.fromYovoice": {
+    "defaultMessage": "yovoice에서 추가"
+  },
+  "@yovoice.timeline.addGeneration": {
+    "defaultMessage": "추가"
   },
   "@yovoice.nav.library": {
     "defaultMessage": "사운드 라이브러리"
@@ -4059,7 +4080,37 @@
     "defaultMessage": "Stable Audio는 영어 설명만 이해하며 가사를 부르지 않습니다."
   },
   "@yovoice.music.soundPlaceholder": {
-    "defaultMessage": "원하는 효과음을 설명하세요. 예: footsteps on gravel, close perspective"
+    "defaultMessage": "원하는 효과음을 영어로 설명하세요. 예: footsteps on gravel, close perspective"
+  },
+  "@yovoice.settings.updateNotice": {
+    "defaultMessage": "모델 업데이트 {count}개"
+  },
+  "@yovoice.settings.modelUpdateAvailable": {
+    "defaultMessage": "새 버전"
+  },
+  "@yovoice.settings.updateModel": {
+    "defaultMessage": "업데이트"
+  },
+  "@yovoice.project.sfx": {
+    "defaultMessage": "효과음 생성"
+  },
+  "@yovoice.project.new.sfx": {
+    "defaultMessage": "새 효과음"
+  },
+  "@yovoice.music.soundDescription": {
+    "defaultMessage": "효과음 설명"
+  },
+  "@yovoice.assistant.chip.sfx": {
+    "defaultMessage": "효과음 만들기"
+  },
+  "@yovoice.assistant.chip.sfxPrompt": {
+    "defaultMessage": "효과음 프로젝트를 만들고 짧은 효과음을 생성해 줘"
+  },
+  "@yovoice.assistant.nudge.done.sfx": {
+    "defaultMessage": "효과음이 완성되었습니다. 설명을 다듬어 개선할까요?"
+  },
+  "@yovoice.assistant.nudge.donePrompt.sfx": {
+    "defaultMessage": "현재 효과음의 영어 설명을 다듬고 개선된 버전을 생성해 줘"
   },
   "@yovoice.music.generateAudio": {
     "defaultMessage": "오디오 생성"

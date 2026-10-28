@@ -164,6 +164,9 @@
   "@yovoice.create.advanced": {
     "defaultMessage": "Cài đặt nâng cao"
   },
+  "@yovoice.create.blendVoices": {
+    "defaultMessage": "Trộn giọng nói"
+  },
   "@yovoice.create.cancelGenerate": {
     "defaultMessage": "Hủy tạo"
   },
@@ -250,6 +253,12 @@
   },
   "@yovoice.create.repetitionPenalty": {
     "defaultMessage": "Phạt lặp lại"
+  },
+  "@yovoice.create.secondVoice": {
+    "defaultMessage": "Giọng thứ hai"
+  },
+  "@yovoice.create.secondVoiceWeight": {
+    "defaultMessage": "Tỷ trọng giọng thứ hai"
   },
   "@yovoice.create.seed": {
     "defaultMessage": "Hạt giống ngẫu nhiên"
@@ -838,6 +847,12 @@
   },
   "@yovoice.settings.removeBlocked": {
     "defaultMessage": "Hãy hoàn tất các thao tác liên quan trước khi gỡ mô hình này."
+  },
+  "@yovoice.settings.performanceFirst": {
+    "defaultMessage": "Ưu tiên hiệu năng"
+  },
+  "@yovoice.settings.performanceFirstHint": {
+    "defaultMessage": "Tạo nhanh hơn nhưng dùng nhiều VRAM hơn"
   },
   "@yovoice.settings.removeModel": {
     "defaultMessage": "Gỡ mô hình"
@@ -1576,6 +1591,12 @@
   },
   "@yovoice.timeline.fromHistory": {
     "defaultMessage": "Thêm từ các phiên bản"
+  },
+  "@yovoice.timeline.fromYovoice": {
+    "defaultMessage": "Thêm từ yovoice"
+  },
+  "@yovoice.timeline.addGeneration": {
+    "defaultMessage": "Thêm"
   },
   "@yovoice.nav.library": {
     "defaultMessage": "Thư viện âm thanh"
@@ -4059,7 +4080,37 @@
     "defaultMessage": "Stable Audio chỉ hiểu mô tả tiếng Anh và không hát lời."
   },
   "@yovoice.music.soundPlaceholder": {
-    "defaultMessage": "Mô tả âm thanh, ví dụ footsteps on gravel, close perspective"
+    "defaultMessage": "Mô tả âm thanh bằng tiếng Anh, ví dụ footsteps on gravel, close perspective"
+  },
+  "@yovoice.settings.updateNotice": {
+    "defaultMessage": "{count} mô hình có bản mới"
+  },
+  "@yovoice.settings.modelUpdateAvailable": {
+    "defaultMessage": "Có phiên bản mới"
+  },
+  "@yovoice.settings.updateModel": {
+    "defaultMessage": "Cập nhật"
+  },
+  "@yovoice.project.sfx": {
+    "defaultMessage": "Tạo hiệu ứng âm thanh"
+  },
+  "@yovoice.project.new.sfx": {
+    "defaultMessage": "Hiệu ứng âm thanh mới"
+  },
+  "@yovoice.music.soundDescription": {
+    "defaultMessage": "Mô tả âm thanh"
+  },
+  "@yovoice.assistant.chip.sfx": {
+    "defaultMessage": "Tạo hiệu ứng âm thanh"
+  },
+  "@yovoice.assistant.chip.sfxPrompt": {
+    "defaultMessage": "Tạo dự án hiệu ứng âm thanh và tạo một âm thanh ngắn"
+  },
+  "@yovoice.assistant.nudge.done.sfx": {
+    "defaultMessage": "Hiệu ứng âm thanh đã sẵn sàng. Bạn có muốn điều chỉnh mô tả hoặc cải thiện không?"
+  },
+  "@yovoice.assistant.nudge.donePrompt.sfx": {
+    "defaultMessage": "Điều chỉnh mô tả tiếng Anh của hiệu ứng hiện tại và tạo phiên bản cải tiến"
   },
   "@yovoice.music.generateAudio": {
     "defaultMessage": "Tạo âm thanh"

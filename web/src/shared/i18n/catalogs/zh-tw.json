@@ -164,6 +164,9 @@
   "@yovoice.create.advanced": {
     "defaultMessage": "進階設定"
   },
+  "@yovoice.create.blendVoices": {
+    "defaultMessage": "混合音色"
+  },
   "@yovoice.create.cancelGenerate": {
     "defaultMessage": "取消生成"
   },
@@ -250,6 +253,12 @@
   },
   "@yovoice.create.repetitionPenalty": {
     "defaultMessage": "重複懲罰"
+  },
+  "@yovoice.create.secondVoice": {
+    "defaultMessage": "第二音色"
+  },
+  "@yovoice.create.secondVoiceWeight": {
+    "defaultMessage": "第二音色比例"
   },
   "@yovoice.create.seed": {
     "defaultMessage": "隨機種子"
@@ -838,6 +847,12 @@
   },
   "@yovoice.settings.removeBlocked": {
     "defaultMessage": "請先結束相關操作，再移除此模型。"
+  },
+  "@yovoice.settings.performanceFirst": {
+    "defaultMessage": "效能優先"
+  },
+  "@yovoice.settings.performanceFirstHint": {
+    "defaultMessage": "生成更快，佔用更多顯示記憶體"
   },
   "@yovoice.settings.removeModel": {
     "defaultMessage": "移除模型"
@@ -1576,6 +1591,12 @@
   },
   "@yovoice.timeline.fromHistory": {
     "defaultMessage": "從歷史版本新增"
+  },
+  "@yovoice.timeline.fromYovoice": {
+    "defaultMessage": "從 yovoice 新增"
+  },
+  "@yovoice.timeline.addGeneration": {
+    "defaultMessage": "新增"
   },
   "@yovoice.nav.library": {
     "defaultMessage": "聲音庫"
@@ -4059,7 +4080,37 @@
     "defaultMessage": "Stable Audio 只理解英文描述，不演唱歌詞。"
   },
   "@yovoice.music.soundPlaceholder": {
-    "defaultMessage": "描述你想要的音效，例如 footsteps on gravel, close perspective"
+    "defaultMessage": "用英文描述你想要的音效，例如 footsteps on gravel, close perspective"
+  },
+  "@yovoice.settings.updateNotice": {
+    "defaultMessage": "{count} 個模型可更新"
+  },
+  "@yovoice.settings.modelUpdateAvailable": {
+    "defaultMessage": "有新版本"
+  },
+  "@yovoice.settings.updateModel": {
+    "defaultMessage": "更新"
+  },
+  "@yovoice.project.sfx": {
+    "defaultMessage": "音效生成"
+  },
+  "@yovoice.project.new.sfx": {
+    "defaultMessage": "新建音效"
+  },
+  "@yovoice.music.soundDescription": {
+    "defaultMessage": "音效描述"
+  },
+  "@yovoice.assistant.chip.sfx": {
+    "defaultMessage": "做一個音效"
+  },
+  "@yovoice.assistant.chip.sfxPrompt": {
+    "defaultMessage": "新建一個音效作品，產生一段簡短的音效"
+  },
+  "@yovoice.assistant.nudge.done.sfx": {
+    "defaultMessage": "音效產生好了。想調整描述或再改一版嗎？"
+  },
+  "@yovoice.assistant.nudge.donePrompt.sfx": {
+    "defaultMessage": "調整目前音效的英文描述，並產生一個改進版本"
   },
   "@yovoice.music.generateAudio": {
     "defaultMessage": "產生音訊"

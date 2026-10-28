@@ -164,6 +164,9 @@
   "@yovoice.create.advanced": {
     "defaultMessage": "Ajustes avanzados"
   },
+  "@yovoice.create.blendVoices": {
+    "defaultMessage": "Mezclar voces"
+  },
   "@yovoice.create.cancelGenerate": {
     "defaultMessage": "Cancelar generación"
   },
@@ -250,6 +253,12 @@
   },
   "@yovoice.create.repetitionPenalty": {
     "defaultMessage": "Penalización por repetición"
+  },
+  "@yovoice.create.secondVoice": {
+    "defaultMessage": "Segunda voz"
+  },
+  "@yovoice.create.secondVoiceWeight": {
+    "defaultMessage": "Proporción de la segunda voz"
   },
   "@yovoice.create.seed": {
     "defaultMessage": "Semilla aleatoria"
@@ -838,6 +847,12 @@
   },
   "@yovoice.settings.removeBlocked": {
     "defaultMessage": "Termina las operaciones relacionadas antes de quitar este modelo."
+  },
+  "@yovoice.settings.performanceFirst": {
+    "defaultMessage": "Priorizar rendimiento"
+  },
+  "@yovoice.settings.performanceFirstHint": {
+    "defaultMessage": "Genera más rápido y usa más VRAM."
   },
   "@yovoice.settings.removeModel": {
     "defaultMessage": "Quitar modelo"
@@ -1576,6 +1591,12 @@
   },
   "@yovoice.timeline.fromHistory": {
     "defaultMessage": "Añadir desde versiones"
+  },
+  "@yovoice.timeline.fromYovoice": {
+    "defaultMessage": "Añadir desde yovoice"
+  },
+  "@yovoice.timeline.addGeneration": {
+    "defaultMessage": "Añadir"
   },
   "@yovoice.nav.library": {
     "defaultMessage": "Biblioteca de sonidos"
@@ -4059,7 +4080,37 @@
     "defaultMessage": "Stable Audio solo entiende descripciones en inglés y no canta letras."
   },
   "@yovoice.music.soundPlaceholder": {
-    "defaultMessage": "Describe el sonido, p. ej. footsteps on gravel, close perspective"
+    "defaultMessage": "Describe el sonido en inglés, p. ej. footsteps on gravel, close perspective"
+  },
+  "@yovoice.settings.updateNotice": {
+    "defaultMessage": "{count} modelos por actualizar"
+  },
+  "@yovoice.settings.modelUpdateAvailable": {
+    "defaultMessage": "Nueva versión"
+  },
+  "@yovoice.settings.updateModel": {
+    "defaultMessage": "Actualizar"
+  },
+  "@yovoice.project.sfx": {
+    "defaultMessage": "Generación de efectos de sonido"
+  },
+  "@yovoice.project.new.sfx": {
+    "defaultMessage": "Nuevo efecto de sonido"
+  },
+  "@yovoice.music.soundDescription": {
+    "defaultMessage": "Descripción del sonido"
+  },
+  "@yovoice.assistant.chip.sfx": {
+    "defaultMessage": "Crear un efecto de sonido"
+  },
+  "@yovoice.assistant.chip.sfxPrompt": {
+    "defaultMessage": "Crea un proyecto de efectos de sonido y genera un sonido corto"
+  },
+  "@yovoice.assistant.nudge.done.sfx": {
+    "defaultMessage": "El efecto está listo. ¿Quieres ajustar la descripción o mejorarlo?"
+  },
+  "@yovoice.assistant.nudge.donePrompt.sfx": {
+    "defaultMessage": "Ajusta la descripción en inglés del efecto actual y genera una versión mejorada"
   },
   "@yovoice.music.generateAudio": {
     "defaultMessage": "Generar audio"
