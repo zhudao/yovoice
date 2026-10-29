@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"cmp"
 	"errors"
 	"math"
 	"strconv"
@@ -54,6 +55,10 @@ func BuildRequest(d schema.Draft, voice, emotion string) (map[string]any, error)
 			o["seed"] = *d.Seed
 		}
 		return map[string]any{"model": "index", "request": map[string]any{"text": d.Text, "voice_id": d.KokoroSpeaker(m), "options": o}}, nil
+	}
+	switch m.Family {
+	case "ming3_tts", "voxtral_tts", "plapre", "xtts_v2", "gradium_phonon", "fish_drama3":
+		return nativeTTSRequest(d, m, voice)
 	}
 	if m.Family == "omnivoice" || m.Family == "qwen3_tts" {
 		o, _ := d.GenerationOptions(m.Family)
@@ -115,11 +120,9 @@ func BuildRequest(d schema.Draft, voice, emotion string) (map[string]any, error)
 		}
 		r := map[string]any{"text": strings.TrimSpace(d.Text), "options": o}
 		if d.RequiresVoice() {
-			if voice == "" {
-				return nil, msg.Err(msg.ErrVoiceRequired, nil)
+			if err := attachReference(r, o, d, voice, true); err != nil {
+				return nil, err
 			}
-			r["voice_ref"] = voice
-			o["reference_text"] = strings.TrimSpace(d.ReferenceText)
 		}
 		return map[string]any{"model": "index", "request": r}, nil
 	}
@@ -204,6 +207,60 @@ func BuildRequest(d schema.Draft, voice, emotion string) (map[string]any, error)
 		}
 	}
 	return map[string]any{"model": "index", "request": r}, nil
+}
+
+// nativeTTSRequest 构建 audio.cpp v0.9.3 新增 TTS 家族的请求：正文与音色（内置音色或参考音频）放顶层，
+// 高级参数、随机种子和参考原文放 options，均使用上游参数名。
+func nativeTTSRequest(d schema.Draft, m catalog.ModelPackage, voice string) (map[string]any, error) {
+	o, _ := d.GenerationOptions(m.Family)
+	if d.Seed != nil {
+		o["seed"] = *d.Seed
+	}
+	r := map[string]any{"text": strings.TrimSpace(d.Text), "options": o}
+	auto := d.SynthesisLanguage == "" || d.SynthesisLanguage == "auto"
+	switch m.Family {
+	case "ming3_tts":
+		if !auto {
+			r["language"] = d.SynthesisLanguage
+		}
+	case "xtts_v2":
+		// XTTS 必须显式指定语言；未选择或“自动”时按简体中文处理。
+		r["language"] = d.SynthesisLanguage
+		if auto {
+			r["language"] = "zh-cn"
+		}
+	}
+	if d.RequiresVoice() {
+		// XTTS 只用参考音频，不接受原文。
+		if err := attachReference(r, o, d, voice, m.Family != "xtts_v2"); err != nil {
+			return nil, err
+		}
+		return map[string]any{"model": "index", "request": r}, nil
+	}
+	switch m.Family {
+	case "voxtral_tts":
+		r["voice_id"] = cmp.Or(d.Speaker, "casual_male")
+	case "plapre":
+		r["voice_id"] = cmp.Or(d.Speaker, m.Voices[0])
+	case "ming3_tts":
+		if description := strings.TrimSpace(d.VoiceDescription); description != "" {
+			o["template_name"] = "voice_design"
+			o["instruct"] = description
+		}
+	}
+	return map[string]any{"model": "index", "request": r}, nil
+}
+
+// attachReference 把克隆用的参考音频写入请求；withTranscript 时把非空原文写入 options。
+func attachReference(r, o map[string]any, d schema.Draft, voice string, withTranscript bool) error {
+	if voice == "" {
+		return msg.Err(msg.ErrVoiceRequired, nil)
+	}
+	r["voice_ref"] = voice
+	if transcript := strings.TrimSpace(d.ReferenceText); withTranscript && transcript != "" {
+		o["reference_text"] = transcript
+	}
+	return nil
 }
 
 // planningLyrics 是纯音乐出谱时没有歌词用的段落骨架，只给规划器安排结构，不会被唱出来。
