@@ -281,18 +281,6 @@
   "@yovoice.draft.copySuffix": {
     "defaultMessage": " · Copie"
   },
-  "@yovoice.draft.defaultEmotionText": {
-    "defaultMessage": "Douce et posée, comme si l’on parlait à un proche."
-  },
-  "@yovoice.draft.exampleText": {
-    "defaultMessage": "La lumière du matin glisse entre les rideaux,\net la pièce s’éclaire doucement.\n\nServez-vous une tasse de thé bien chaud,\net laissez vos pensées ralentir un instant.\n\nAujourd’hui, commençons par une belle voix."
-  },
-  "@yovoice.draft.exampleTitle": {
-    "defaultMessage": "Narration du matin"
-  },
-  "@yovoice.draft.untitled": {
-    "defaultMessage": "Sans titre"
-  },
   "@yovoice.emotion.afraid": {
     "defaultMessage": "Effrayé"
   },
@@ -502,6 +490,12 @@
   },
   "@yovoice.error.generateFailed": {
     "defaultMessage": "Échec de la génération. Vérifiez le modèle, la VRAM et l’audio de référence. Ouvrez les journaux dans les Paramètres."
+  },
+  "@yovoice.error.jobConflict": {
+    "defaultMessage": "L'ID de requête a déjà été utilisé avec d'autres paramètres, ou le service est occupé."
+  },
+  "@yovoice.error.jobMissing": {
+    "defaultMessage": "La tâche n'existe pas ou a expiré."
   },
   "@yovoice.error.languageUnsupported": {
     "defaultMessage": "Ce modèle ne prend pas en charge cette langue."
@@ -1004,9 +998,6 @@
   "@yovoice.reference.transcriptHelp": {
     "defaultMessage": "Une transcription exacte améliore le clonage ; laissez vide pour n’utiliser que la voix."
   },
-  "@yovoice.reference.designPlaceholder": {
-    "defaultMessage": "Par exemple : female, young adult, moderate pitch. Laissez vide pour une voix automatique."
-  },
   "@yovoice.settings.modelDesc.omni": {
     "defaultMessage": "Multilingue · conception et clonage de voix"
   },
@@ -1021,9 +1012,6 @@
   },
   "@yovoice.settings.modelDesc.qwen": {
     "defaultMessage": "10 langues · clonage de voix de référence"
-  },
-  "@yovoice.reference.designHelp": {
-    "defaultMessage": "Utilisez des attributs séparés par des virgules, comme male/female, young adult/middle-aged, low pitch/moderate pitch, whisper ; les descriptions libres ne sont pas prises en charge."
   },
   "@yovoice.options.text_chunk_size": {
     "defaultMessage": "Taille des segments de texte (0 = valeur par défaut du modèle)"
@@ -1340,9 +1328,6 @@
   "@yovoice.error.referenceTextRequired": {
     "defaultMessage": "Le clonage {model} nécessite la transcription complète de référence."
   },
-  "@yovoice.reference.omniTranscriptHelp": {
-    "defaultMessage": "La transcription doit correspondre à l’audio de référence."
-  },
   "@yovoice.settings.modelDesc.kokoro": {
     "defaultMessage": "Voix prédéfinies · multilingue"
   },
@@ -1384,9 +1369,6 @@
   },
   "@yovoice.character.example": {
     "defaultMessage": "Bonjour, ravi de vous rencontrer. Partageons notre histoire avec le monde."
-  },
-  "@yovoice.character.save": {
-    "defaultMessage": "Enregistrer le personnage"
   },
   "@yovoice.character.copy": {
     "defaultMessage": "Enregistrer le personnage sous"
@@ -1571,14 +1553,8 @@
   "@yovoice.timeline.removeClip": {
     "defaultMessage": "Supprimer l’extrait"
   },
-  "@yovoice.timeline.hint": {
-    "defaultMessage": "Sélectionnez un extrait pour le scinder à la tête de lecture. Faites glisser les extraits pour les déplacer dans le temps ou entre les pistes."
-  },
   "@yovoice.timeline.tracks": {
     "defaultMessage": "Pistes"
-  },
-  "@yovoice.timeline.name": {
-    "defaultMessage": "Nom de {name}"
   },
   "@yovoice.timeline.mute": {
     "defaultMessage": "Couper le son de {name}"
@@ -1616,17 +1592,11 @@
   "@yovoice.project.story": {
     "defaultMessage": "Narration d’histoire"
   },
-  "@yovoice.project.subtitle": {
-    "defaultMessage": "Narration de sous-titres"
-  },
   "@yovoice.project.search": {
     "defaultMessage": "Rechercher des projets"
   },
   "@yovoice.project.empty": {
     "defaultMessage": "Aucun projet pour l’instant"
-  },
-  "@yovoice.project.copy": {
-    "defaultMessage": "Dupliquer le projet"
   },
   "@yovoice.project.rename": {
     "defaultMessage": "Renommer le projet"
@@ -1705,9 +1675,6 @@
   },
   "@yovoice.timeline.redo": {
     "defaultMessage": "Rétablir"
-  },
-  "@yovoice.timeline.trim": {
-    "defaultMessage": "Plage de recadrage"
   },
   "@yovoice.timeline.trimStart": {
     "defaultMessage": "Point d’entrée (s)"
@@ -2051,6 +2018,9 @@
   "@yovoice.music.timesignature": {
     "defaultMessage": "Signature rythmique"
   },
+  "@yovoice.music.steps": {
+    "defaultMessage": "Étapes d'inférence"
+  },
   "@yovoice.error.engineUpgradeRequired": {
     "defaultMessage": "Ce modèle nécessite le moteur d’inférence {version} ou ultérieur. Mettez à jour le moteur dans les Paramètres."
   },
@@ -2224,9 +2194,6 @@
   },
   "@yovoice.ai.keyOptional": {
     "defaultMessage": "Généralement inutile pour les services locaux"
-  },
-  "@yovoice.ai.getKey": {
-    "defaultMessage": "Obtenir une clé"
   },
   "@yovoice.ai.model": {
     "defaultMessage": "Modèle"
@@ -3083,6 +3050,9 @@
   "@yovoice.book.unsupported": {
     "defaultMessage": "Importez un livre au format TXT, Markdown ou EPUB."
   },
+  "@yovoice.book.savedPartial": {
+    "defaultMessage": "{count} chapitres sont déjà enregistrés ; ils ne seront pas recréés en réessayant."
+  },
   "@yovoice.ai.task.running.cast": {
     "defaultMessage": "L'IA distribue les rôles"
   },
@@ -3091,6 +3061,15 @@
   },
   "@yovoice.ai.task.failed.cast": {
     "defaultMessage": "Échec de la distribution par l'IA"
+  },
+  "@yovoice.ai.task.running.image": {
+    "defaultMessage": "L'IA génère une image"
+  },
+  "@yovoice.ai.task.done.image": {
+    "defaultMessage": "L'IA a généré l'image"
+  },
+  "@yovoice.ai.task.failed.image": {
+    "defaultMessage": "Échec de la génération d'image par l'IA"
   },
   "@yovoice.activity.planMelody": {
     "defaultMessage": "Écriture de la partition mélodique"
@@ -3232,6 +3211,12 @@
   },
   "@yovoice.melody.invalid": {
     "defaultMessage": "YuE2 ne peut pas encore chanter cette partition"
+  },
+  "@yovoice.melody.inspectFailed": {
+    "defaultMessage": "Impossible de vérifier la partition"
+  },
+  "@yovoice.melody.staffFailed": {
+    "defaultMessage": "Impossible d'afficher la portée. Passez à la vue pistes ou source."
   },
   "@yovoice.melody.track.vocal": {
     "defaultMessage": "Voix"
@@ -3704,9 +3689,6 @@
   "@yovoice.assets.clearSelection": {
     "defaultMessage": "Désélectionner"
   },
-  "@yovoice.assets.deleteOne": {
-    "defaultMessage": "Supprimer {name}"
-  },
   "@yovoice.assets.deleteTitle": {
     "defaultMessage": "Supprimer {count} ressources ?"
   },
@@ -4012,9 +3994,6 @@
   },
   "@yovoice.check.quiet": {
     "defaultMessage": "volume faible ({loudness} LUFS) ; choisissez une sonie cible à l’export"
-  },
-  "@yovoice.check.dc": {
-    "defaultMessage": "décalage continu"
   },
   "@yovoice.timeline.loudness": {
     "defaultMessage": "Sonie"

@@ -1,6 +1,8 @@
 // Package msg 定义界面可翻译的稳定消息码与结构化调用错误。
 package msg
 
+import "errors"
+
 // Code is a stable catalog key. Spelling matches web @yovoice.* entries.
 type Code string
 
@@ -112,10 +114,13 @@ const (
 	ErrVoxReferenceRequired  Code = "@yovoice.error.voxReferenceRequired"
 	ErrVoxParams             Code = "@yovoice.error.voxParams"
 	ErrLegacyRestore         Code = "@yovoice.error.legacyRestore"
-	ErrMusicStyle            Code = "@yovoice.error.musicStyle"
-	ErrMusicLyrics           Code = "@yovoice.error.musicLyrics"
-	ErrMusicParams           Code = "@yovoice.error.musicParams"
-	ErrMusicLyricsRequired   Code = "@yovoice.error.musicLyricsRequired"
+	// 远程接口的异步任务：任务不存在或已过期；同一任务 ID 用了不同参数，或推理服务繁忙。
+	ErrJobMissing          Code = "@yovoice.error.jobMissing"
+	ErrJobConflict         Code = "@yovoice.error.jobConflict"
+	ErrMusicStyle          Code = "@yovoice.error.musicStyle"
+	ErrMusicLyrics         Code = "@yovoice.error.musicLyrics"
+	ErrMusicParams         Code = "@yovoice.error.musicParams"
+	ErrMusicLyricsRequired Code = "@yovoice.error.musicLyricsRequired"
 	// Stable Audio 改编时没有选起点版本，或选中的版本已删除、音频文件丢失。
 	ErrMusicSourceRequired Code = "@yovoice.error.musicSourceRequired"
 	ErrScoreInvalid        Code = "@yovoice.error.scoreInvalid"
@@ -195,7 +200,8 @@ func Err(code Code, params Params) *CallError {
 }
 
 func Encode(err error) map[string]any {
-	if ce, ok := Classify(err).(*CallError); ok && ce != nil {
+	var ce *CallError
+	if errors.As(Classify(err), &ce) && ce != nil {
 		out := map[string]any{"code": ce.Code}
 		if len(ce.Params) > 0 {
 			out["params"] = ce.Params
@@ -236,6 +242,6 @@ func All() []Code {
 		ErrAIFreeRate, ErrAIFreeBusy, ErrAIFreePromptCap, ErrAIFreeAccess, ErrCodexMissing, ErrCodexLoggedOut, ErrCodexFailed, ErrCodexLimit, ErrCodexNoImage,
 		ErrLocalAPIPort, ErrLocalAPIPortInUse,
 		ErrStorageInsideApp, ErrStorageTargetNotEmpty, ErrStorageSame, ErrStorageInsideData, ErrStorageRestart, ErrDataRootMissing, ErrDiskFull,
-		ErrLegacyRestore, ErrUnknown,
+		ErrLegacyRestore, ErrJobMissing, ErrJobConflict, ErrUnknown,
 	}
 }
