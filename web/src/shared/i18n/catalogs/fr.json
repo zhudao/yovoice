@@ -386,6 +386,9 @@
   "@yovoice.error.audioDecode": {
     "defaultMessage": "Impossible de décoder l’audio. Vérifiez que le fichier n’est pas endommagé, chiffré ou dépourvu de piste."
   },
+  "@yovoice.error.audioEncode": {
+    "defaultMessage": "Impossible d’encoder l’audio exporté. Essayez le WAV ou un autre format."
+  },
   "@yovoice.error.audioDuration": {
     "defaultMessage": "Choisissez un audio de 1 seconde à 10 minutes. Les enregistrements de plus de 60 secondes sont automatiquement réduits à leur passage le plus net."
   },
@@ -1816,6 +1819,24 @@
   },
   "@yovoice.timeline.formatVtt": {
     "defaultMessage": "Sous-titres WebVTT"
+  },
+  "@yovoice.export.format": {
+    "defaultMessage": "Format"
+  },
+  "@yovoice.export.formatFlac": {
+    "defaultMessage": "FLAC sans perte"
+  },
+  "@yovoice.export.formatM4a": {
+    "defaultMessage": "M4A (AAC)"
+  },
+  "@yovoice.export.formatFlacHint": {
+    "defaultMessage": "Sans perte et environ deux fois plus léger que le WAV ; lu par la plupart des lecteurs."
+  },
+  "@yovoice.export.formatM4aHint": {
+    "defaultMessage": "Fichier léger pour mobiles, messageries et plateformes vidéo (AAC 256 kbit/s)."
+  },
+  "@yovoice.export.tags": {
+    "defaultMessage": "Écrire le titre, les paroles et la pochette dans le fichier"
   },
   "@yovoice.timeline.exportCaptions": {
     "defaultMessage": "Exporter les sous-titres"
@@ -3944,6 +3965,15 @@
   "@yovoice.options.abc_temperature": {
     "defaultMessage": "Température de partition"
   },
+  "@yovoice.options.abc_top_p": {
+    "defaultMessage": "Top P partition"
+  },
+  "@yovoice.options.abc_top_k": {
+    "defaultMessage": "Top K partition"
+  },
+  "@yovoice.options.abc_repetition_penalty": {
+    "defaultMessage": "Pénalité de répétition de partition"
+  },
   "@yovoice.options.semantic_temperature": {
     "defaultMessage": "Température audio"
   },
@@ -4273,5 +4303,238 @@
   },
   "@yovoice.transcribe.emptyBody": {
     "defaultMessage": "Importez un audio ou une vidéo. Le modèle de reconnaissance vocale Qwen3 ASR produit le texte avec le minutage de chaque mot, exportable en sous-titres SRT ou WebVTT. Jusqu’à 1 heure et 20 Mo."
+  },
+  "@yovoice.settings.importLocalModel": {
+    "defaultMessage": "Importer un modèle local"
+  },
+  "@yovoice.settings.localModelHint": {
+    "defaultMessage": "Choisissez le modèle et la précision, puis importez son GGUF audio.cpp (SF2 pour les banques de sons). Pour les paquets, sélectionnez le GGUF principal et gardez la structure des fichiers. Les fichiers restent en place ; retirer le modèle supprime uniquement son enregistrement. Les poids PyTorch/MLX doivent être convertis."
+  },
+  "@yovoice.error.localModelInvalid": {
+    "defaultMessage": "Choisissez un GGUF audio.cpp de la famille sélectionnée ou un SF2 compatible. Les poids PyTorch/MLX doivent être convertis."
+  },
+  "@yovoice.error.localModelIncomplete": {
+    "defaultMessage": "Paquet incomplet ou incompatible. Sélectionnez le GGUF principal et conservez la structure de tous les fichiers associés."
+  },
+  "@yovoice.activity.separateStems": {
+    "defaultMessage": "Séparation des pistes"
+  },
+  "@yovoice.activity.transcribeMidi": {
+    "defaultMessage": "Transcription en MIDI"
+  },
+  "@yovoice.error.stemModelRequired": {
+    "defaultMessage": "La séparation des pistes nécessite le modèle HTDemucs 6 pistes. Téléchargez-le dans Modèles, dans les Réglages."
+  },
+  "@yovoice.error.stemSource": {
+    "defaultMessage": "Cette version est une piste ou un extrait et ne peut pas être séparée à nouveau."
+  },
+  "@yovoice.error.midiModelRequired": {
+    "defaultMessage": "La transcription MIDI nécessite le modèle MuScriptor. Téléchargez-le dans Modèles, dans les Réglages."
+  },
+  "@yovoice.error.midiEmpty": {
+    "defaultMessage": "Aucune note n’a été trouvée dans cet audio."
+  },
+  "@yovoice.error.adapterMissing": {
+    "defaultMessage": "Le LoRA utilisé par ce projet a été supprimé. Choisissez-en ou importez-en un autre."
+  },
+  "@yovoice.error.adapterInvalid": {
+    "defaultMessage": "Ce n’est pas un fichier safetensors valide. Choisissez un fichier LoRA YuE2."
+  },
+  "@yovoice.settings.modelDesc.stems": {
+    "defaultMessage": "Sépare une chanson en batterie, basse, voix, guitare, piano et autres · 44,1 kHz stéréo"
+  },
+  "@yovoice.settings.modelDesc.muscriptor": {
+    "defaultMessage": "Transcrit une chanson en MIDI multi-instrument modifiable dans Arrangement · Usage non commercial uniquement (CC BY-NC)"
+  },
+  "@yovoice.stems.separate": {
+    "defaultMessage": "Séparer les pistes"
+  },
+  "@yovoice.stems.toMidi": {
+    "defaultMessage": "Transcrire en MIDI"
+  },
+  "@yovoice.stems.name.drums": {
+    "defaultMessage": "Batterie"
+  },
+  "@yovoice.stems.name.bass": {
+    "defaultMessage": "Basse"
+  },
+  "@yovoice.stems.name.other": {
+    "defaultMessage": "Autres"
+  },
+  "@yovoice.stems.name.vocals": {
+    "defaultMessage": "Voix"
+  },
+  "@yovoice.stems.name.guitar": {
+    "defaultMessage": "Guitare"
+  },
+  "@yovoice.stems.name.piano": {
+    "defaultMessage": "Piano"
+  },
+  "@yovoice.options.ar_lora": {
+    "defaultMessage": "LoRA de composition"
+  },
+  "@yovoice.options.ar_lora_scale": {
+    "defaultMessage": "Intensité du LoRA de composition"
+  },
+  "@yovoice.options.nar_lora": {
+    "defaultMessage": "LoRA de timbre"
+  },
+  "@yovoice.options.nar_lora_scale": {
+    "defaultMessage": "Intensité du LoRA de timbre"
+  },
+  "@yovoice.lora.ar": {
+    "defaultMessage": "LoRA de composition"
+  },
+  "@yovoice.lora.nar": {
+    "defaultMessage": "LoRA de timbre"
+  },
+  "@yovoice.lora.none": {
+    "defaultMessage": "Aucun"
+  },
+  "@yovoice.lora.scale": {
+    "defaultMessage": "Intensité"
+  },
+  "@yovoice.lora.import": {
+    "defaultMessage": "Importer un LoRA…"
+  },
+  "@yovoice.options.candidates": {
+    "defaultMessage": "Candidats"
+  },
+  "@yovoice.stems.exportAll": {
+    "defaultMessage": "Exporter toutes les pistes…"
+  },
+  "@yovoice.error.stemsMissing": {
+    "defaultMessage": "Cette version n’a pas encore de pistes. Séparez d’abord les pistes."
+  },
+  "@yovoice.resing.action": {
+    "defaultMessage": "Rechanter les mesures modifiées"
+  },
+  "@yovoice.resing.label": {
+    "defaultMessage": "Mesures {from}–{to} rechantées"
+  },
+  "@yovoice.activity.resing": {
+    "defaultMessage": "Rechant des mesures modifiées"
+  },
+  "@yovoice.error.resingSource": {
+    "defaultMessage": "Seules les versions YuE2 créées depuis une partition de mélodie peuvent être rechantées en partie, et le projet doit aussi avoir une partition."
+  },
+  "@yovoice.error.resingWhole": {
+    "defaultMessage": "Le tempo, la tonalité, le nombre de mesures ou de sections a changé : régénérez toute la chanson."
+  },
+  "@yovoice.error.resingNoChange": {
+    "defaultMessage": "La partition et les paroles sont identiques à cette version : rien à rechanter."
+  },
+  "@yovoice.error.resingAlign": {
+    "defaultMessage": "La nouvelle prise est trop différente de l’original pour être raccordée. Régénérez toute la chanson ou essayez une autre graine."
+  },
+  "@yovoice.melody.hum": {
+    "defaultMessage": "Fredonner"
+  },
+  "@yovoice.melody.humStop": {
+    "defaultMessage": "Arrêter l’enregistrement"
+  },
+  "@yovoice.melody.humHint": {
+    "defaultMessage": "Fredonnez ou chantez une mélodie (jusqu’à 2 minutes) ; elle devient une partition arrangée dans votre style. Nécessite SheetSage2."
+  },
+  "@yovoice.error.humTooShort": {
+    "defaultMessage": "L’enregistrement est trop court. Fredonnez au moins 3 secondes."
+  },
+  "@yovoice.music.styleFromImage": {
+    "defaultMessage": "Style depuis une image"
+  },
+  "@yovoice.music.styleFromImageHint": {
+    "defaultMessage": "Choisissez une image et le service d’IA connecté propose des étiquettes de style. Le service doit accepter les images."
+  },
+  "@yovoice.error.imageInvalid": {
+    "defaultMessage": "Choisissez une image JPEG, PNG ou WebP de 8 Mo maximum."
+  },
+  "@yovoice.voice.previewExcerpt": {
+    "defaultMessage": "Écouter la sélection"
+  },
+  "@yovoice.voice.cancelExcerpt": {
+    "defaultMessage": "Annuler la sélection"
+  },
+  "@yovoice.voice.excerptLength": {
+    "defaultMessage": "{selected} s sur {total} s sélectionnées. Gardez 1 à 60 secondes."
+  "@yovoice.options.text_chunk_tokens": {
+    "defaultMessage": "Tokens de texte par segment"
+  },
+  "@yovoice.options.text_normalization": {
+    "defaultMessage": "Normaliser les nombres et symboles"
+  },
+  "@yovoice.error.modelOptionUnsupported": {
+    "defaultMessage": "Le moteur sélectionné ne prend pas en charge {name}. Utilisez un moteur compatible ou retirez ce réglage."
+  },
+  "@yovoice.runtime.title": {
+    "defaultMessage": "Exécution et cache"
+  },
+  "@yovoice.runtime.help": {
+    "defaultMessage": "Ces réglages sont enregistrés dans le projet. Le modèle est rechargé à la prochaine génération après modification. Les clés correspondent au moteur."
+  },
+  "@yovoice.runtime.streaming": {
+    "defaultMessage": "Écouter pendant la génération"
+  },
+  "@yovoice.runtime.streamingHelp": {
+    "defaultMessage": "Lisez les segments dès leur réception. Le résultat complet est enregistré à la fin."
+  },
+  "@yovoice.runtime.streamingUnsupported": {
+    "defaultMessage": "Le moteur actuel ne prend pas en charge la diffusion pour ce modèle."
+  },
+  "@yovoice.runtime.retryHelp": {
+    "defaultMessage": "La diffusion VoxCPM2 désactive les nouvelles tentatives en cas d’échec."
+  },
+  "@yovoice.runtime.threads": {
+    "defaultMessage": "Threads d’inférence (0 = automatique)"
+  },
+  "@yovoice.runtime.device": {
+    "defaultMessage": "Indice du GPU (à partir de 0)"
+  },
+  "@yovoice.runtime.idle": {
+    "defaultMessage": "Décharger après inactivité (secondes, 0 = désactivé)"
+  },
+  "@yovoice.runtime.reset": {
+    "defaultMessage": "Rétablir les valeurs du moteur"
+  },
+  "@yovoice.runtime.unload": {
+    "defaultMessage": "Décharger le modèle et vider le cache"
+  },
+  "@yovoice.runtime.unloaded": {
+    "defaultMessage": "Modèle déchargé et cache libéré."
+  },
+  "@yovoice.runtime.livePlaying": {
+    "defaultMessage": "Écoute des segments générés. Le résultat complet sera aussi enregistré."
+  },
+  "@yovoice.runtime.stopPreview": {
+    "defaultMessage": "Arrêter l’aperçu"
+  },
+  "@yovoice.runtime.audioUnavailable": {
+    "defaultMessage": "Impossible de lire l’aperçu. Le résultat complet sera disponible à la fin."
+  },
+  "@yovoice.runtime.audioDisconnected": {
+    "defaultMessage": "Connexion de l’aperçu interrompue. Le résultat complet sera disponible à la fin."
+  },
+  "@yovoice.runtime.audioBufferFull": {
+    "defaultMessage": "La mémoire tampon de l’aperçu est pleine. Le résultat complet sera disponible à la fin."
+  },
+  "@yovoice.error.streamingRetry": {
+    "defaultMessage": "VoxCPM2 ne peut pas réessayer en diffusion. Désactivez les nouvelles tentatives ou la diffusion."
+  },
+  "@yovoice.options.stream_chunk_policy": {
+    "defaultMessage": "Cadence des blocs"
+  },
+  "@yovoice.options.stream_frames_per_event": {
+    "defaultMessage": "Trames par bloc"
+  },
+  "@yovoice.options.stream_left_context": {
+    "defaultMessage": "Trames du contexte précédent"
+  },
+  "@yovoice.options.stream_lookahead_margin": {
+    "defaultMessage": "Trames d’anticipation"
+  },
+  "@yovoice.options.value.grow": {
+    "defaultMessage": "Croissante"
+  },
+  "@yovoice.options.value.fixed": {
+    "defaultMessage": "Fixe"
   }
 }

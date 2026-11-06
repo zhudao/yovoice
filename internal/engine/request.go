@@ -51,6 +51,7 @@ func BuildRequest(d schema.Draft, voice, emotion string) (map[string]any, error)
 	}
 	if m.Family == "kokoro_tts" {
 		o, _ := d.GenerationOptions(m.Family)
+		o["speed"] = d.Speed
 		if d.Seed != nil {
 			o["seed"] = *d.Seed
 		}
@@ -141,6 +142,9 @@ func BuildRequest(d schema.Draft, voice, emotion string) (map[string]any, error)
 			o["text_chunk_size"] = 200
 		}
 		o["guidance_scale"], o["num_inference_steps"] = guidance, steps
+		if d.Runtime != nil && d.Runtime.Streaming {
+			o["retry_badcase"] = false
+		}
 		if d.Seed != nil {
 			o["seed"] = *d.Seed
 		}
@@ -277,6 +281,10 @@ func yue2Request(d schema.Draft) (map[string]any, error) {
 	}
 	mode, _ := options["cot"].(string)
 	delete(options, "cot")
+	delete(options, "candidates")
+	for _, key := range adapterKeys {
+		delete(options, key)
+	}
 	style := strings.TrimSpace(d.Text)
 	lyrics := strings.TrimSpace(d.Lyrics)
 	abc := d.Abc

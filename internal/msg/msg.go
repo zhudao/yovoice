@@ -53,6 +53,10 @@ const (
 	// ActivityTranscribeSpeech 为转写页分段识别上传的音频，ActivityAlignText 为给语音版本对齐字幕时间，都带 done/total。
 	ActivityTranscribeSpeech Code = "@yovoice.activity.transcribeSpeech"
 	ActivityAlignText        Code = "@yovoice.activity.alignText"
+	// 分轨：HTDemucs 把一首歌分成鼓、贝斯、人声、吉他、钢琴和其他六轨；扒 MIDI：MuScriptor 把音频转成多乐器 MIDI。
+	ActivitySeparateStems  Code = "@yovoice.activity.separateStems"
+	ActivityTranscribeMIDI Code = "@yovoice.activity.transcribeMidi"
+	ActivityResing         Code = "@yovoice.activity.resing"
 
 	ErrBusy                  Code = "@yovoice.error.busy"
 	ErrProxyURL              Code = "@yovoice.error.proxyURL"
@@ -78,6 +82,7 @@ const (
 	ErrAudioDuration         Code = "@yovoice.error.audioDuration"
 	ErrAudioFormat           Code = "@yovoice.error.audioFormat"
 	ErrAudioDecode           Code = "@yovoice.error.audioDecode"
+	ErrAudioEncode           Code = "@yovoice.error.audioEncode"
 	ErrAudioConverterMissing Code = "@yovoice.error.audioConverterMissing"
 	ErrNameLength            Code = "@yovoice.error.nameLength"
 	ErrDraftLimits           Code = "@yovoice.error.draftLimits"
@@ -92,33 +97,39 @@ const (
 	ErrEmotionVoiceRequired  Code = "@yovoice.error.emotionVoiceRequired"
 	ErrVoiceRequired         Code = "@yovoice.error.voiceRequired"
 	ErrVoiceBusyDelete       Code = "@yovoice.error.voiceBusyDelete"
-	ErrModelRequired         Code = "@yovoice.error.modelRequired"
-	ErrModelUnsupported      Code = "@yovoice.error.modelUnsupported"
-	ErrModelMoved            Code = "@yovoice.error.modelMoved"
-	ErrModelForgetBlocked    Code = "@yovoice.error.modelForgetBlocked"
-	ErrDownloadSource        Code = "@yovoice.error.downloadSource"
-	ErrRuntimeRequired       Code = "@yovoice.error.runtimeRequired"
-	ErrRuntimeMissing        Code = "@yovoice.error.runtimeMissing"
-	ErrRuntimeUnique         Code = "@yovoice.error.runtimeUnique"
-	ErrRuntimeArchivePath    Code = "@yovoice.error.runtimeArchivePath"
-	ErrRuntimeArchiveLink    Code = "@yovoice.error.runtimeArchiveLink"
-	ErrRuntimeArchiveSize    Code = "@yovoice.error.runtimeArchiveSize"
-	ErrEngineStartFailed     Code = "@yovoice.error.engineStartFailed"
-	ErrEngineStartTimeout    Code = "@yovoice.error.engineStartTimeout"
-	ErrEngineNoAudio         Code = "@yovoice.error.engineNoAudio"
-	ErrEngineCrashed         Code = "@yovoice.error.engineCrashed"
-	ErrCPUBundleInvalid      Code = "@yovoice.error.cpuBundleInvalid"
-	ErrBackendUnsupported    Code = "@yovoice.error.backendUnsupported"
-	ErrPlatformArch          Code = "@yovoice.error.platformArch"
-	ErrMacBackend            Code = "@yovoice.error.macBackend"
-	ErrMacAppleSilicon       Code = "@yovoice.error.macAppleSilicon"
-	ErrRequestInvalid        Code = "@yovoice.error.requestInvalid"
-	ErrMethodUnsupported     Code = "@yovoice.error.methodUnsupported"
-	ErrVoxModeInvalid        Code = "@yovoice.error.voxModeInvalid"
-	ErrVoxTextLimits         Code = "@yovoice.error.voxTextLimits"
-	ErrVoxReferenceRequired  Code = "@yovoice.error.voxReferenceRequired"
-	ErrVoxParams             Code = "@yovoice.error.voxParams"
-	ErrLegacyRestore         Code = "@yovoice.error.legacyRestore"
+
+	ErrStreamingRetry         Code = "@yovoice.error.streamingRetry"
+	ErrModelOptionUnsupported Code = "@yovoice.error.modelOptionUnsupported"
+
+	ErrLocalModelInvalid    Code = "@yovoice.error.localModelInvalid"
+	ErrLocalModelIncomplete Code = "@yovoice.error.localModelIncomplete"
+	ErrModelRequired        Code = "@yovoice.error.modelRequired"
+	ErrModelUnsupported     Code = "@yovoice.error.modelUnsupported"
+	ErrModelMoved           Code = "@yovoice.error.modelMoved"
+	ErrModelForgetBlocked   Code = "@yovoice.error.modelForgetBlocked"
+	ErrDownloadSource       Code = "@yovoice.error.downloadSource"
+	ErrRuntimeRequired      Code = "@yovoice.error.runtimeRequired"
+	ErrRuntimeMissing       Code = "@yovoice.error.runtimeMissing"
+	ErrRuntimeUnique        Code = "@yovoice.error.runtimeUnique"
+	ErrRuntimeArchivePath   Code = "@yovoice.error.runtimeArchivePath"
+	ErrRuntimeArchiveLink   Code = "@yovoice.error.runtimeArchiveLink"
+	ErrRuntimeArchiveSize   Code = "@yovoice.error.runtimeArchiveSize"
+	ErrEngineStartFailed    Code = "@yovoice.error.engineStartFailed"
+	ErrEngineStartTimeout   Code = "@yovoice.error.engineStartTimeout"
+	ErrEngineNoAudio        Code = "@yovoice.error.engineNoAudio"
+	ErrEngineCrashed        Code = "@yovoice.error.engineCrashed"
+	ErrCPUBundleInvalid     Code = "@yovoice.error.cpuBundleInvalid"
+	ErrBackendUnsupported   Code = "@yovoice.error.backendUnsupported"
+	ErrPlatformArch         Code = "@yovoice.error.platformArch"
+	ErrMacBackend           Code = "@yovoice.error.macBackend"
+	ErrMacAppleSilicon      Code = "@yovoice.error.macAppleSilicon"
+	ErrRequestInvalid       Code = "@yovoice.error.requestInvalid"
+	ErrMethodUnsupported    Code = "@yovoice.error.methodUnsupported"
+	ErrVoxModeInvalid       Code = "@yovoice.error.voxModeInvalid"
+	ErrVoxTextLimits        Code = "@yovoice.error.voxTextLimits"
+	ErrVoxReferenceRequired Code = "@yovoice.error.voxReferenceRequired"
+	ErrVoxParams            Code = "@yovoice.error.voxParams"
+	ErrLegacyRestore        Code = "@yovoice.error.legacyRestore"
 	// 远程接口的异步任务：任务不存在或已过期；同一任务 ID 用了不同参数，或推理服务繁忙。
 	ErrJobMissing          Code = "@yovoice.error.jobMissing"
 	ErrJobConflict         Code = "@yovoice.error.jobConflict"
@@ -143,9 +154,23 @@ const (
 	ErrTranscribeEmpty        Code = "@yovoice.error.transcribeEmpty"
 	ErrAlignText              Code = "@yovoice.error.alignText"
 	ErrAlignTextEmpty         Code = "@yovoice.error.alignTextEmpty"
-	ErrAlignLyrics            Code = "@yovoice.error.alignLyrics"
-	ErrAlignEmpty             Code = "@yovoice.error.alignEmpty"
-	ErrEngineUpgradeRequired  Code = "@yovoice.error.engineUpgradeRequired"
+	// 分轨与扒 MIDI 的模型未下载、对一首分轨结果再分轨、扒出的 MIDI 没有音符。
+	ErrStemModelRequired Code = "@yovoice.error.stemModelRequired"
+	ErrStemSource        Code = "@yovoice.error.stemSource"
+	ErrStemsMissing      Code = "@yovoice.error.stemsMissing"
+	ErrMidiModelRequired Code = "@yovoice.error.midiModelRequired"
+	ErrMidiEmpty         Code = "@yovoice.error.midiEmpty"
+	// LoRA：选中的适配器文件已被删除、导入的文件不是 safetensors。
+	ErrAdapterMissing        Code = "@yovoice.error.adapterMissing"
+	ErrAdapterInvalid        Code = "@yovoice.error.adapterInvalid"
+	ErrResingSource          Code = "@yovoice.error.resingSource"
+	ErrResingWhole           Code = "@yovoice.error.resingWhole"
+	ErrResingNoChange        Code = "@yovoice.error.resingNoChange"
+	ErrImageInvalid          Code = "@yovoice.error.imageInvalid"
+	ErrResingAlign           Code = "@yovoice.error.resingAlign"
+	ErrAlignLyrics           Code = "@yovoice.error.alignLyrics"
+	ErrAlignEmpty            Code = "@yovoice.error.alignEmpty"
+	ErrEngineUpgradeRequired Code = "@yovoice.error.engineUpgradeRequired"
 	// AI 服务（可选）：未配置、鉴权、限流、网络、响应异常与结果无效。
 	ErrAIProviderInvalid Code = "@yovoice.error.aiProviderInvalid"
 	ErrAINotConfigured   Code = "@yovoice.error.aiNotConfigured"
@@ -230,24 +255,24 @@ func All() []Code {
 		ActivityDownload, ActivityDownloading, ActivityVerifying,
 		ActivityRuntimeDownload, ActivityRuntimeExtract, ActivityEngineStart,
 		ActivityGenerate, ActivitySynthesizing, ActivitySavingAudio, ActivityRendering,
-		ActivityCompleted, ActivityCancelled, ActivityPaused, ActivityFailed, ActivityInterrupted, ActivityRelocate, ActivityPlanMelody, ActivityTranscribe, ActivitySeparateVocals, ActivityAlignLyrics, ActivityRecognize, ActivityTranscribeSpeech, ActivityAlignText,
+		ActivityCompleted, ActivityCancelled, ActivityPaused, ActivityFailed, ActivityInterrupted, ActivityRelocate, ActivityPlanMelody, ActivityTranscribe, ActivitySeparateVocals, ActivityAlignLyrics, ActivityRecognize, ActivityTranscribeSpeech, ActivityAlignText, ActivitySeparateStems, ActivityTranscribeMIDI, ActivityResing,
 		ErrBusy, ErrProxyURL, ErrModelDirAbsolute, ErrModelDirSpace,
 		ErrDownloadHTTP, ErrDownloadRange, ErrDownloadSize, ErrDownloadIncomplete,
 		ErrDownloadStale, ErrDownloadChecksum, ErrDownloadOversized,
 		ErrGenerateFailed, ErrParamsOutOfRange, ErrStateSaveFailed, ErrStateCorrupt,
 		ErrAudioPathInvalid, ErrAudioPathSymlink, ErrAudioMissing, ErrAudioKindInvalid, ErrAudioIDInvalid,
-		ErrAudioTooLarge, ErrAudioDuration, ErrAudioFormat, ErrAudioDecode, ErrAudioConverterMissing,
+		ErrAudioTooLarge, ErrAudioDuration, ErrAudioFormat, ErrAudioDecode, ErrAudioEncode, ErrAudioConverterMissing,
 		ErrNameLength, ErrDraftLimits, ErrDraftIDInvalid, ErrTextRequired, ErrTitleLength,
 		ErrLanguageUnsupported, ErrModeInvalid, ErrEmotionInvalid, ErrEmotionStrength,
 		ErrEmotionTextRequired, ErrEmotionVoiceRequired, ErrVoiceRequired, ErrVoiceBusyDelete,
-		ErrModelRequired, ErrModelUnsupported, ErrModelMoved, ErrModelForgetBlocked,
+		ErrStreamingRetry, ErrModelOptionUnsupported, ErrLocalModelInvalid, ErrLocalModelIncomplete, ErrModelRequired, ErrModelUnsupported, ErrModelMoved, ErrModelForgetBlocked,
 		ErrDownloadSource, ErrRuntimeRequired, ErrRuntimeMissing, ErrRuntimeUnique,
 		ErrRuntimeArchivePath, ErrRuntimeArchiveLink, ErrRuntimeArchiveSize,
 		ErrEngineStartFailed, ErrEngineStartTimeout, ErrEngineNoAudio, ErrEngineCrashed,
 		ErrCPUBundleInvalid, ErrBackendUnsupported, ErrPlatformArch, ErrMacBackend, ErrMacAppleSilicon,
 		ErrRequestInvalid, ErrMethodUnsupported,
 		ErrVoxModeInvalid, ErrVoxTextLimits, ErrVoxReferenceRequired, ErrVoxParams,
-		ErrMusicStyle, ErrMusicLyrics, ErrMusicParams, ErrMusicLyricsRequired, ErrMusicSourceRequired, ErrEngineUpgradeRequired, ErrScoreInvalid, ErrScoreTooLong, ErrMidiInvalid, ErrMelodyInvalid, ErrMelodyEmpty, ErrCoverModelRequired, ErrMelodySoundFontRequired, ErrAlignModelRequired, ErrAlignLyrics, ErrAlignEmpty, ErrRecognizeModelRequired, ErrRecognizeEmpty, ErrTranscribeEmpty, ErrAlignText, ErrAlignTextEmpty,
+		ErrMusicStyle, ErrMusicLyrics, ErrMusicParams, ErrMusicLyricsRequired, ErrMusicSourceRequired, ErrEngineUpgradeRequired, ErrScoreInvalid, ErrScoreTooLong, ErrMidiInvalid, ErrMelodyInvalid, ErrMelodyEmpty, ErrCoverModelRequired, ErrMelodySoundFontRequired, ErrAlignModelRequired, ErrAlignLyrics, ErrAlignEmpty, ErrRecognizeModelRequired, ErrRecognizeEmpty, ErrTranscribeEmpty, ErrAlignText, ErrAlignTextEmpty, ErrStemModelRequired, ErrStemSource, ErrStemsMissing, ErrMidiModelRequired, ErrMidiEmpty, ErrAdapterMissing, ErrAdapterInvalid, ErrResingSource, ErrResingWhole, ErrResingNoChange, ErrResingAlign, ErrImageInvalid,
 		ErrAIProviderInvalid, ErrAINotConfigured, ErrAIAuth, ErrAIRateLimit, ErrAINetwork, ErrAIResponse, ErrAIModelsPath, ErrAIResultInvalid, ErrAITimeout, ErrAssistantMissing, ErrAssistantProvider,
 		ErrAIFreeRate, ErrAIFreeBusy, ErrAIFreePromptCap, ErrAIFreeAccess, ErrCodexMissing, ErrCodexLoggedOut, ErrCodexFailed, ErrCodexLimit, ErrCodexNoImage,
 		ErrLocalAPIPort, ErrLocalAPIPortInUse,

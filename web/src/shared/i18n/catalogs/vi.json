@@ -386,6 +386,9 @@
   "@yovoice.error.audioDecode": {
     "defaultMessage": "Không thể giải mã âm thanh. Kiểm tra xem tệp có bị hỏng, mã hóa hoặc thiếu rãnh âm thanh không."
   },
+  "@yovoice.error.audioEncode": {
+    "defaultMessage": "Không thể mã hóa âm thanh xuất. Hãy thử WAV hoặc định dạng khác."
+  },
   "@yovoice.error.audioDuration": {
     "defaultMessage": "Chọn âm thanh dài từ 1 giây đến 10 phút. Bản ghi dài hơn 60 giây sẽ tự động được cắt lấy đoạn rõ nhất."
   },
@@ -1816,6 +1819,24 @@
   },
   "@yovoice.timeline.formatVtt": {
     "defaultMessage": "Phụ đề WebVTT"
+  },
+  "@yovoice.export.format": {
+    "defaultMessage": "Định dạng"
+  },
+  "@yovoice.export.formatFlac": {
+    "defaultMessage": "FLAC không mất dữ liệu"
+  },
+  "@yovoice.export.formatM4a": {
+    "defaultMessage": "M4A (AAC)"
+  },
+  "@yovoice.export.formatFlacHint": {
+    "defaultMessage": "Không mất chất lượng, dung lượng khoảng một nửa WAV; phát được trên hầu hết ứng dụng nghe nhạc."
+  },
+  "@yovoice.export.formatM4aHint": {
+    "defaultMessage": "Tệp nhỏ cho điện thoại, ứng dụng nhắn tin và nền tảng video (AAC 256 kbps)."
+  },
+  "@yovoice.export.tags": {
+    "defaultMessage": "Ghi tiêu đề, lời bài hát và ảnh bìa vào tệp"
   },
   "@yovoice.timeline.exportCaptions": {
     "defaultMessage": "Xuất phụ đề"
@@ -3944,6 +3965,15 @@
   "@yovoice.options.abc_temperature": {
     "defaultMessage": "Nhiệt độ bản nhạc"
   },
+  "@yovoice.options.abc_top_p": {
+    "defaultMessage": "Top P bản nhạc"
+  },
+  "@yovoice.options.abc_top_k": {
+    "defaultMessage": "Top K bản nhạc"
+  },
+  "@yovoice.options.abc_repetition_penalty": {
+    "defaultMessage": "Phạt lặp bản nhạc"
+  },
   "@yovoice.options.semantic_temperature": {
     "defaultMessage": "Nhiệt độ âm thanh"
   },
@@ -4273,5 +4303,238 @@
   },
   "@yovoice.transcribe.emptyBody": {
     "defaultMessage": "Tải âm thanh hoặc video lên. Mô hình nhận dạng giọng nói Qwen3 ASR sẽ chép ra văn bản kèm thời gian từng từ, có thể xuất phụ đề SRT / WebVTT. Tối đa 1 giờ và 20 MB."
+  },
+  "@yovoice.settings.importLocalModel": {
+    "defaultMessage": "Nhập mô hình cục bộ"
+  },
+  "@yovoice.settings.localModelHint": {
+    "defaultMessage": "Chọn mô hình và độ chính xác, rồi nhập GGUF của audio.cpp (SF2 cho bộ âm sắc). Với gói nhiều tệp, chọn GGUF chính và giữ cấu trúc tệp đi kèm. Tệp giữ nguyên vị trí; xóa mô hình chỉ hủy đăng ký. Trọng số PyTorch/MLX cần được chuyển đổi trước."
+  },
+  "@yovoice.error.localModelInvalid": {
+    "defaultMessage": "Chọn GGUF audio.cpp thuộc họ mô hình đã chọn hoặc SF2 được hỗ trợ. Trọng số PyTorch/MLX cần được chuyển đổi trước."
+  },
+  "@yovoice.error.localModelIncomplete": {
+    "defaultMessage": "Gói mô hình thiếu tệp hoặc không khớp. Chọn GGUF chính và giữ cấu trúc tất cả tệp đi kèm."
+  },
+  "@yovoice.activity.separateStems": {
+    "defaultMessage": "Đang tách bè"
+  },
+  "@yovoice.activity.transcribeMidi": {
+    "defaultMessage": "Đang chuyển sang MIDI"
+  },
+  "@yovoice.error.stemModelRequired": {
+    "defaultMessage": "Tách bè cần mô hình HTDemucs 6 bè. Hãy tải về trong phần Mô hình ở Cài đặt."
+  },
+  "@yovoice.error.stemSource": {
+    "defaultMessage": "Phiên bản này là một bè hoặc một đoạn cắt nên không thể tách tiếp."
+  },
+  "@yovoice.error.midiModelRequired": {
+    "defaultMessage": "Chuyển sang MIDI cần mô hình MuScriptor. Hãy tải về trong phần Mô hình ở Cài đặt."
+  },
+  "@yovoice.error.midiEmpty": {
+    "defaultMessage": "Không tìm thấy nốt nhạc nào trong âm thanh này."
+  },
+  "@yovoice.error.adapterMissing": {
+    "defaultMessage": "LoRA mà dự án này dùng đã bị xoá. Hãy chọn hoặc nhập LoRA khác."
+  },
+  "@yovoice.error.adapterInvalid": {
+    "defaultMessage": "Đây không phải tệp safetensors hợp lệ. Hãy chọn tệp LoRA của YuE2."
+  },
+  "@yovoice.settings.modelDesc.stems": {
+    "defaultMessage": "Tách bài hát thành trống, bass, giọng hát, guitar, piano và phần còn lại · 44,1 kHz stereo"
+  },
+  "@yovoice.settings.modelDesc.muscriptor": {
+    "defaultMessage": "Chuyển bài hát thành MIDI nhiều nhạc cụ, có thể tiếp tục chỉnh trong Phối khí · Chỉ dùng phi thương mại (CC BY-NC)"
+  },
+  "@yovoice.stems.separate": {
+    "defaultMessage": "Tách bè"
+  },
+  "@yovoice.stems.toMidi": {
+    "defaultMessage": "Chuyển sang MIDI"
+  },
+  "@yovoice.stems.name.drums": {
+    "defaultMessage": "Trống"
+  },
+  "@yovoice.stems.name.bass": {
+    "defaultMessage": "Bass"
+  },
+  "@yovoice.stems.name.other": {
+    "defaultMessage": "Phần còn lại"
+  },
+  "@yovoice.stems.name.vocals": {
+    "defaultMessage": "Giọng hát"
+  },
+  "@yovoice.stems.name.guitar": {
+    "defaultMessage": "Guitar"
+  },
+  "@yovoice.stems.name.piano": {
+    "defaultMessage": "Piano"
+  },
+  "@yovoice.options.ar_lora": {
+    "defaultMessage": "LoRA sáng tác"
+  },
+  "@yovoice.options.ar_lora_scale": {
+    "defaultMessage": "Độ mạnh LoRA sáng tác"
+  },
+  "@yovoice.options.nar_lora": {
+    "defaultMessage": "LoRA âm sắc"
+  },
+  "@yovoice.options.nar_lora_scale": {
+    "defaultMessage": "Độ mạnh LoRA âm sắc"
+  },
+  "@yovoice.lora.ar": {
+    "defaultMessage": "LoRA sáng tác"
+  },
+  "@yovoice.lora.nar": {
+    "defaultMessage": "LoRA âm sắc"
+  },
+  "@yovoice.lora.none": {
+    "defaultMessage": "Không dùng"
+  },
+  "@yovoice.lora.scale": {
+    "defaultMessage": "Độ mạnh"
+  },
+  "@yovoice.lora.import": {
+    "defaultMessage": "Nhập LoRA…"
+  },
+  "@yovoice.options.candidates": {
+    "defaultMessage": "Số phương án"
+  },
+  "@yovoice.stems.exportAll": {
+    "defaultMessage": "Xuất tất cả các bè…"
+  },
+  "@yovoice.error.stemsMissing": {
+    "defaultMessage": "Phiên bản này chưa có bè. Hãy tách bè trước."
+  },
+  "@yovoice.resing.action": {
+    "defaultMessage": "Hát lại các ô nhịp đã sửa"
+  },
+  "@yovoice.resing.label": {
+    "defaultMessage": "Đã hát lại ô nhịp {from}–{to}"
+  },
+  "@yovoice.activity.resing": {
+    "defaultMessage": "Đang hát lại các ô nhịp đã sửa"
+  },
+  "@yovoice.error.resingSource": {
+    "defaultMessage": "Chỉ phiên bản YuE2 tạo từ bản nhạc giai điệu mới hát lại từng phần được, và dự án cũng cần có bản nhạc giai điệu."
+  },
+  "@yovoice.error.resingWhole": {
+    "defaultMessage": "Tốc độ, giọng, số ô nhịp hoặc số đoạn đã thay đổi nên chỉ có thể tạo lại cả bài."
+  },
+  "@yovoice.error.resingNoChange": {
+    "defaultMessage": "Bản nhạc và lời giống hệt phiên bản này, không có gì để hát lại."
+  },
+  "@yovoice.error.resingAlign": {
+    "defaultMessage": "Bản hát mới khác bản gốc quá nhiều nên không nối được. Hãy tạo lại cả bài hoặc thử hạt giống khác."
+  },
+  "@yovoice.melody.hum": {
+    "defaultMessage": "Ngân nga giai điệu"
+  },
+  "@yovoice.melody.humStop": {
+    "defaultMessage": "Dừng ghi âm"
+  },
+  "@yovoice.melody.humHint": {
+    "defaultMessage": "Ngân nga hoặc hát một giai điệu (tối đa 2 phút), nó sẽ thành bản nhạc giai điệu được phối theo phong cách của bạn. Cần SheetSage2."
+  },
+  "@yovoice.error.humTooShort": {
+    "defaultMessage": "Bản ghi quá ngắn. Hãy ngân nga ít nhất 3 giây."
+  },
+  "@yovoice.music.styleFromImage": {
+    "defaultMessage": "Lấy phong cách từ ảnh"
+  },
+  "@yovoice.music.styleFromImageHint": {
+    "defaultMessage": "Chọn một bức ảnh, dịch vụ AI đã kết nối sẽ gợi ý thẻ phong cách. Dịch vụ cần hỗ trợ ảnh."
+  },
+  "@yovoice.error.imageInvalid": {
+    "defaultMessage": "Hãy chọn ảnh JPEG, PNG hoặc WebP không quá 8 MB."
+  },
+  "@yovoice.voice.previewExcerpt": {
+    "defaultMessage": "Nghe thử đoạn đã chọn"
+  },
+  "@yovoice.voice.cancelExcerpt": {
+    "defaultMessage": "Hủy chọn"
+  },
+  "@yovoice.voice.excerptLength": {
+    "defaultMessage": "Đã chọn {selected} giây trên {total} giây. Hãy giữ từ 1 đến 60 giây."
+  "@yovoice.options.text_chunk_tokens": {
+    "defaultMessage": "Số token văn bản tối đa mỗi đoạn"
+  },
+  "@yovoice.options.text_normalization": {
+    "defaultMessage": "Chuẩn hóa số và ký hiệu"
+  },
+  "@yovoice.error.modelOptionUnsupported": {
+    "defaultMessage": "Bộ suy luận đã chọn không hỗ trợ {name}. Hãy dùng bộ tương thích hoặc xóa cài đặt này."
+  },
+  "@yovoice.runtime.title": {
+    "defaultMessage": "Thực thi và bộ nhớ đệm"
+  },
+  "@yovoice.runtime.help": {
+    "defaultMessage": "Cài đặt được lưu trong dự án. Thay đổi sẽ tải lại mô hình ở lần tạo tiếp theo. Tên tham số giống bộ suy luận."
+  },
+  "@yovoice.runtime.streaming": {
+    "defaultMessage": "Nghe trong khi tạo"
+  },
+  "@yovoice.runtime.streamingHelp": {
+    "defaultMessage": "Phát từng đoạn khi nhận được và lưu kết quả đầy đủ sau khi hoàn tất."
+  },
+  "@yovoice.runtime.streamingUnsupported": {
+    "defaultMessage": "Bộ suy luận hiện tại không hỗ trợ phát trực tuyến cho mô hình này."
+  },
+  "@yovoice.runtime.retryHelp": {
+    "defaultMessage": "Phát trực tuyến VoxCPM2 sẽ tắt thử lại khi lỗi."
+  },
+  "@yovoice.runtime.threads": {
+    "defaultMessage": "Luồng suy luận (0 = tự động)"
+  },
+  "@yovoice.runtime.device": {
+    "defaultMessage": "Chỉ số GPU (bắt đầu từ 0)"
+  },
+  "@yovoice.runtime.idle": {
+    "defaultMessage": "Gỡ khi không hoạt động (giây, 0 = tắt)"
+  },
+  "@yovoice.runtime.reset": {
+    "defaultMessage": "Khôi phục mặc định"
+  },
+  "@yovoice.runtime.unload": {
+    "defaultMessage": "Gỡ mô hình và xóa bộ nhớ đệm"
+  },
+  "@yovoice.runtime.unloaded": {
+    "defaultMessage": "Đã gỡ mô hình và giải phóng bộ nhớ đệm."
+  },
+  "@yovoice.runtime.livePlaying": {
+    "defaultMessage": "Đang nghe các đoạn đã tạo. Kết quả đầy đủ vẫn sẽ được lưu."
+  },
+  "@yovoice.runtime.stopPreview": {
+    "defaultMessage": "Dừng nghe thử"
+  },
+  "@yovoice.runtime.audioUnavailable": {
+    "defaultMessage": "Không thể phát nghe thử. Hãy phát kết quả đầy đủ sau khi tạo."
+  },
+  "@yovoice.runtime.audioDisconnected": {
+    "defaultMessage": "Kết nối nghe thử bị gián đoạn. Hãy phát kết quả đầy đủ sau khi tạo."
+  },
+  "@yovoice.runtime.audioBufferFull": {
+    "defaultMessage": "Bộ đệm nghe thử đã đầy. Hãy phát kết quả đầy đủ sau khi tạo."
+  },
+  "@yovoice.error.streamingRetry": {
+    "defaultMessage": "VoxCPM2 không thể thử lại khi phát trực tuyến. Hãy tắt thử lại hoặc phát trực tuyến."
+  },
+  "@yovoice.options.stream_chunk_policy": {
+    "defaultMessage": "Nhịp phát đoạn"
+  },
+  "@yovoice.options.stream_frames_per_event": {
+    "defaultMessage": "Số khung mỗi đoạn"
+  },
+  "@yovoice.options.stream_left_context": {
+    "defaultMessage": "Khung ngữ cảnh trước"
+  },
+  "@yovoice.options.stream_lookahead_margin": {
+    "defaultMessage": "Số khung đọc trước"
+  },
+  "@yovoice.options.value.grow": {
+    "defaultMessage": "Tăng dần"
+  },
+  "@yovoice.options.value.fixed": {
+    "defaultMessage": "Cố định"
   }
 }
