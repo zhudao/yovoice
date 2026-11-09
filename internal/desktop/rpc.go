@@ -138,13 +138,16 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 		return w.ImportTimelineGeneration(ctx, p.ID)
 	case "voice.update":
 		return true, w.UpdateVoice(p.ID, p.Name, p.ReferenceText)
-	case "voice.record", "voice.decode", "timeline.import":
+	case "voice.record", "voice.decode", "voice.suggestSource", "timeline.import":
 		b, e := base64.StdEncoding.DecodeString(p.Base64)
 		if e != nil {
 			return nil, msg.Err(msg.ErrRequestInvalid, nil)
 		}
 		if method == "voice.decode" {
 			return w.DecodeVoiceSource(ctx, bytes.NewReader(b))
+		}
+		if method == "voice.suggestSource" {
+			return w.SuggestVoiceSource(ctx, bytes.NewReader(b))
 		}
 		if method == "timeline.import" {
 			return w.ImportTimelineFrom(ctx, bytes.NewReader(b), p.Name)
@@ -230,7 +233,7 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 	case "model.import":
 		return true, w.ImportModel(p.ID, p.Path)
 	case "model.download":
-		return true, w.DownloadModel(p.ID)
+		return true, w.DownloadModel(p.ID, p.Version)
 	case "model.forget":
 		return true, w.ForgetModel(p.ID)
 	case "runtime.unload":
@@ -323,6 +326,14 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 		}
 		file, e := w.ListenMelody(ctx, input.Abc)
 		return map[string]string{"fileName": file}, e
+	case "score.renderTracks":
+		var input struct {
+			Score schema.Score `json:"score"`
+		}
+		if e := json.Unmarshal(data, &input); e != nil {
+			return nil, msg.Err(msg.ErrRequestInvalid, nil)
+		}
+		return w.RenderScoreTracks(ctx, input.Score)
 	case "melody.dismiss":
 		return true, w.DismissMelody(p.ID)
 	case "generation.separateStems":
