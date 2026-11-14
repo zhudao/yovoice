@@ -72,6 +72,9 @@ func (a *app) dispatch(method string, data json.RawMessage) (any, error) {
 		available := input.Available != nil && *input.Available
 		ui(func() { gtkWidgetSetVisible(a.inspectorButton, available) })
 		return true, nil
+	case "window.theme":
+		// macOS 的透明标题栏要跟着主题换底色；Linux 用系统标题栏，网页铺满客户区，无需处理。
+		return true, nil
 	case "window.immersive":
 		// macOS 播放页把网页铺进标题栏；Linux 保留系统标题栏，与 Windows 一致。
 		return true, nil
@@ -187,8 +190,8 @@ func (a *app) dispatch(method string, data json.RawMessage) (any, error) {
 		}
 		return true, writeAtomic(path, wav)
 	case "text.export":
-		// 字幕（SRT/VTT）、歌词（LRC）与旋律谱（ABC）是界面生成的 UTF-8 文本，宿主只负责选位置并写文件。
-		names := map[string]string{"srt": T("SRT 字幕", "SRT Subtitles"), "vtt": T("WebVTT 字幕", "WebVTT Subtitles"), "lrc": T("LRC 歌词", "LRC Lyrics"), "abc": T("ABC 旋律谱", "ABC Melody Score")}
+		// 字幕（SRT/VTT）、歌词（LRC）、旋律谱（ABC）与快捷键设置（JSON）是界面生成的 UTF-8 文本，宿主只负责选位置并写文件。
+		names := map[string]string{"srt": T("SRT 字幕", "SRT Subtitles"), "vtt": T("WebVTT 字幕", "WebVTT Subtitles"), "lrc": T("LRC 歌词", "LRC Lyrics"), "abc": T("ABC 旋律谱", "ABC Melody Score"), "json": T("快捷键设置", "Keyboard Shortcuts")}
 		label, ok := names[input.Format]
 		if !ok || input.Text == nil || len(*input.Text) > 20_000_000 {
 			return nil, errors.New(T("导出文件格式无效。", "The exported file format is invalid."))

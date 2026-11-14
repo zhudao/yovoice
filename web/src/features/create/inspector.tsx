@@ -12,19 +12,19 @@ import { ModelSelector } from './model-selector';
 import { Selector } from '../../shared/selector';
 import { Switch } from '@astryxdesign/core/Switch';
 import { useTranslator } from '@astryxdesign/core/i18n';
-import { ChevronUp, ChevronRight, LoaderCircle } from 'lucide-react';
+import { ChevronUp, ChevronRight } from 'lucide-react';
 import { ReferenceControls } from './reference-controls';
 import { VoxControls } from './vox-controls';
 import { DesignCloneControls } from './design-clone-controls';
-import { isVoiceModel, isReferenceModel, isVoxModel, isBreezeModel, isMingModel, isVoxtralModel, isPlapreModel, isXTTSModel, isGradiumModel, isDramaModel, formatTime, type Draft, type Mode, type State, type ModelPackage } from '../../shared/workbench';
+import { isVoiceModel, isReferenceModel, isVoxModel, isBreezeModel, isMingModel, isVoxtralModel, isPlapreModel, isXTTSModel, isGradiumModel, isDramaModel, type Draft, type Mode, type State, type ModelPackage } from '../../shared/workbench';
 import { VoxtralControls } from './voxtral-controls';
 import { XTTSControls } from './xtts-controls';
 import { GradiumControls } from './gradium-controls';
 import type { Track } from '../../shared/workbench';
-import { formatActivity } from '../../shared/i18n/format';
-import { useElapsed } from '../../shared/lib/use-elapsed';
+import { EngineStatus } from '../../shared/ui/engine-status';
 import { overflowTitle } from '../../shared/ui/overflow-title';
 import { MorphFrame } from '../../shared/ui/morph-frame';
+import { useHotkeyAria, useHotkeyText, withHotkey } from '../../shared/hotkeys/hotkeys';
 
 const modes: Mode[] = ['speaker', 'reference', 'vector', 'text'];
 const emotionKeys = ['happy', 'angry', 'sad', 'afraid', 'disgusted', 'melancholy', 'surprised', 'calm'] as const;
@@ -54,8 +54,10 @@ const advancedFields = [
   ['lengthPenalty', '@yovoice.create.lengthPenalty', -2, 2, 0.1],
 ] as const;
 
-export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEmotion, play, generate, cancel, settings, advanced, setAdvanced, embedded = false, libraryActions, generationAction, allowModelManagement = true }: {
+export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEmotion, play, generate, cancel, settings, advanced, setAdvanced, embedded = false, libraryActions, generationAction, allowModelManagement = true, generateHotkey = 'create.generate' }: {
   embedded?: boolean; libraryActions?: ReactNode; generationAction?: ReactNode; allowModelManagement?: boolean;
+  /** 生成按钮提示里显示的快捷键命令（语音生成与故事各有一条）。 */
+  generateHotkey?: string;
   draft: Draft; state: State; catalog: ModelPackage[]; change: (patch: Partial<Draft>) => void; chooseVoice: () => void; chooseEmotion: () => void;
   play: (track: Track) => void; generate: () => void; cancel: () => void; settings: () => void; close?: () => void; advanced: boolean; setAdvanced: (v: boolean) => void;
 }) {
@@ -66,7 +68,8 @@ export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEm
   const generating = busy && state.activity?.kind === 'generate' && (!state.activity.projectId || state.activity.projectId === draft.id) && !state.activity.characterId;
   const [tuneEmotions, setTuneEmotions] = useState(false);
   const [moreEmotions, setMoreEmotions] = useState(false);
-  const elapsed = useElapsed(generating, state.activity?.startedAt);
+  const generateKeys = useHotkeyText(generateHotkey), generateAria = useHotkeyAria(generateHotkey);
+  const cancelKeys = useHotkeyText('global.cancel'), cancelAria = useHotkeyAria('global.cancel');
   const languageOptions = (draft.modelId.startsWith('index-2.5')
     ? (['zh', 'en', 'ja', 'es', 'ar'] as const)
     : (['zh', 'en'] as const)).map(value => ({ value, label: t(`@yovoice.language.${value}`) }));
@@ -75,13 +78,10 @@ export function Inspector({ draft, state, catalog, change, chooseVoice, chooseEm
   // 当前模型的目录条目；目录里没有（目录更新后模型下架）时，需要条目的控件不渲染，页面不崩。
   const currentModel = catalog.find(model => model.id === draft.modelId);
   return <VStack as="aside" className={embedded ? undefined : "inspector"} gap={0}>
+    {/* 生成与取消是两个不同的按钮（key 不同）：鼠标点了“生成”后焦点不会留在原地变成“取消生成”，再按空格不会误取消。 */}
     {!embedded ? <MorphFrame><VStack className="generation-action" gap={3}>
-      {generationAction ?? (generating ? <Button label={t('@yovoice.create.cancelGenerate')} onClick={cancel} width="100%" /> : <Button label={t('@yovoice.create.generate')} variant="primary" width="100%" aria-keyshortcuts="Control+Enter" isDisabled={busy || !(draft.subtitles ? draft.subtitles.cues.some(cue => cue.text.trim()) : draft.text.trim())} onClick={generate} />)}
-      {generating && !generationAction ? <HStack className="generation-status" gap={2} vAlign="center">
-        <LoaderCircle size={14} className="generation-spinner" aria-hidden="true" />
-        <small className="grow" role="status">{state.activity ? formatActivity(t, state.activity) : ''}</small>
-        <small className="generation-elapsed" aria-label={t('@yovoice.create.elapsed')}>{formatTime(elapsed)}</small>
-      </HStack> : null}
+      {generationAction ?? (generating ? <Button key="cancel" label={t('@yovoice.create.cancelGenerate')} tooltip={withHotkey(t('@yovoice.create.cancelGenerate'), cancelKeys, undefined)} aria-keyshortcuts={cancelAria} onClick={cancel} width="100%" /> : <Button key="generate" label={t('@yovoice.create.generate')} tooltip={withHotkey(t('@yovoice.create.generate'), generateKeys, undefined)} variant="primary" width="100%" aria-keyshortcuts={generateAria} isDisabled={busy || !(draft.subtitles ? draft.subtitles.cues.some(cue => cue.text.trim()) : draft.text.trim())} onClick={generate} />)}
+      {!generationAction ? <EngineStatus activity={generating ? state.activity : null} modelId={draft.modelId} /> : null}
     </VStack></MorphFrame>
     : null}
     <VStack className={embedded ? undefined : "inspector-scroll"} gap={5}>

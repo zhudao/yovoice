@@ -209,6 +209,8 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 		return w.DeleteAssets(in.Items), nil
 	case "assets.image":
 		return w.ImagePreview(p.ID)
+	case "generation.gene":
+		return w.GenerationGene(p.ID)
 	case "generation.lyricTimes":
 		return true, w.SetLyricTimes(p.ID, p.Times)
 	case "generation.lyricWords":
@@ -235,14 +237,7 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 		}
 		return schema.FormatCaptions(in.Captions, in.Format, in.Speaker)
 	case "generation.alignLyrics":
-		var in struct {
-			ID    string                `json:"id"`
-			Lines []workbench.LyricLine `json:"lines"`
-		}
-		if e := json.Unmarshal(data, &in); e != nil {
-			return nil, msg.Err(msg.ErrRequestInvalid, nil)
-		}
-		return true, w.AlignLyrics(in.ID, in.Lines)
+		return true, w.AlignLyrics(p.ID)
 	case "preferences.save":
 		preferences := schema.Preferences{DownloadSource: "modelscope", Backend: "cpu", UiLocale: schema.UiLocaleZhCN}
 		if e := json.Unmarshal(data, &preferences); e != nil {
@@ -283,6 +278,8 @@ func Call(ctx context.Context, w *workbench.Workbench, method string, data json.
 		return true, w.ForgetModel(p.ID)
 	case "runtime.unload":
 		return true, w.UnloadEngine()
+	case "runtime.status":
+		return w.EngineStatus(ctx), nil
 	case "runtime.install":
 		return true, w.InstallRuntime()
 	case "ai.provider.save":

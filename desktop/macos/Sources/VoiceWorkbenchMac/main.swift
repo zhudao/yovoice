@@ -47,7 +47,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         window.title = "yovoice"
         window.titlebarSeparatorStyle = .none
         window.titlebarAppearsTransparent = true
-        window.backgroundColor = NSColor(srgbRed: 247.0 / 255.0, green: 247.0 / 255.0, blue: 247.0 / 255.0, alpha: 1.0)
+        restoreWindowTheme()
         let accessory = NSTitlebarAccessoryViewController()
         accessory.layoutAttribute = .left
         let sidebarButton = NSButton(image: NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: HostL10n.t("sidebar.toggle"))!, target: self, action: #selector(toggleSidebar))
@@ -170,7 +170,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
     private func setImmersive(_ active: Bool, chrome: Bool) {
         if active { window.styleMask.insert(.fullSizeContentView) } else { window.styleMask.remove(.fullSizeContentView) }
         window.titleVisibility = active ? .hidden : .visible
-        window.titlebarAccessoryViewControllers.forEach { $0.isHidden = active }
+        // 只设控制器的 isHidden 时，较新的 macOS 上左右两侧的附件仍会留在标题栏里（播放页左上角露出侧栏按钮），连同附件视图一起隐藏。
+        window.titlebarAccessoryViewControllers.forEach { $0.isHidden = active; $0.view.isHidden = active }
         for kind in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] { window.standardWindowButton(kind)?.isHidden = active && !chrome }
     }
     private func layoutTitleButtons() {
@@ -217,17 +218,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             return true
         }
         appItem.submenu?.addItem(.separator())
+        // 隐藏（⌘H）、隐藏其他（⌥⌘H）与全部显示，和系统里其他应用一致。
+        appItem.submenu?.addItem(withTitle: HostL10n.t("menu.hide"), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appItem.submenu?.addItem(withTitle: HostL10n.t("menu.hideOthers"), action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h").keyEquivalentModifierMask = [.command, .option]
+        appItem.submenu?.addItem(withTitle: HostL10n.t("menu.showAll"), action: #selector(NSApplication.unhideAllApplications(_:)), keyEquivalent: "")
+        appItem.submenu?.addItem(.separator())
         appItem.submenu?.addItem(withTitle: HostL10n.t("menu.quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        // 编辑菜单：WKWebView 里的撤销、重做与剪贴板快捷键都经菜单项转给网页的输入框；网页自己处理（preventDefault）的按键不会走到这里。
+        // 键位写大写 Z 即 ⇧⌘Z。
         let edit = NSMenuItem()
         menu.addItem(edit)
         edit.submenu = NSMenu(title: HostL10n.t("menu.edit"))
-        for (title, action, key) in [(HostL10n.t("menu.undo"), "undo:", "z"), (HostL10n.t("menu.cut"), "cut:", "x"), (HostL10n.t("menu.copy"), "copy:", "c"), (HostL10n.t("menu.paste"), "paste:", "v"), (HostL10n.t("menu.selectAll"), "selectAll:", "a")] {
+        for (title, action, key) in [(HostL10n.t("menu.undo"), "undo:", "z"), (HostL10n.t("menu.redo"), "redo:", "Z"), ("", "", ""), (HostL10n.t("menu.cut"), "cut:", "x"), (HostL10n.t("menu.copy"), "copy:", "c"), (HostL10n.t("menu.paste"), "paste:", "v"), (HostL10n.t("menu.selectAll"), "selectAll:", "a")] {
+            if action.isEmpty { edit.submenu?.addItem(.separator()); continue }
             edit.submenu?.addItem(withTitle: title, action: Selector(action), keyEquivalent: key)
         }
+        // 窗口菜单：没有单独的“文件”“显示”菜单，关闭窗口（⌘W）与全屏（⌃⌘F）也放在这里；关闭后点程序坞图标重新打开。
         let windowItem = NSMenuItem()
         menu.addItem(windowItem)
         windowItem.submenu = NSMenu(title: HostL10n.t("menu.window"))
         windowItem.submenu?.addItem(withTitle: HostL10n.t("menu.minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+        windowItem.submenu?.addItem(withTitle: HostL10n.t("menu.zoom"), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "")
+        windowItem.submenu?.addItem(withTitle: HostL10n.t("menu.fullScreen"), action: #selector(NSWindow.toggleFullScreen(_:)), keyEquivalent: "f").keyEquivalentModifierMask = [.command, .control]
+        windowItem.submenu?.addItem(.separator())
+        windowItem.submenu?.addItem(withTitle: HostL10n.t("menu.close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
         NSApp.windowsMenu = windowItem.submenu
         NSApp.mainMenu = menu
     }
@@ -314,6 +328,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         web?.configuration.userContentController.removeScriptMessageHandler(forName: "workbench")
         let configuration = WKWebViewConfiguration()
         configuration.mediaTypesRequiringUserActionForPlayback = []
+        // 开启网页元素全屏（requestFullscreen）：播放页按 F 或点全屏按钮时铺满整个屏幕；WKWebView 默认关闭，document.fullscreenEnabled 为假。
+        // 最低支持 macOS 14，这个属性（macOS 12.3 起）无需再判断版本。
+        configuration.preferences.isElementFullscreenEnabled = true
         configuration.userContentController.add(self, name: "workbench")
         let savedSidebar = UserDefaults.standard.string(forKey: "sidebar-layout") ?? ""
         let sidebarJSON = String(data: try! JSONSerialization.data(withJSONObject: [savedSidebar]), encoding: .utf8)!
@@ -369,8 +386,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         decisionHandler(trusted(navigationAction.request.url) ? .allow : .cancel)
     }
     // 页面不开新窗口；本地页面打开的 https 链接（如获取 AI 密钥）交给系统浏览器。
+    // 回环地址的 http 链接也放行：连本机的社区服务调试时，登录确认页在 localhost 上。
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        if let url = navigationAction.request.url, url.scheme == "https", trusted(webView.url) { NSWorkspace.shared.open(url) }
+        if let url = navigationAction.request.url, url.scheme == "https" || (url.scheme == "http" && ["localhost", "127.0.0.1"].contains(url.host ?? "")), trusted(webView.url) { NSWorkspace.shared.open(url) }
         return nil
     }
     #if DEBUG
@@ -511,6 +529,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         }
     }
 
+    // 启动时沿用上次的主题底色；从没设置过时跟随系统外观（浅色纸白、深色夜墨）。
+    private func restoreWindowTheme() {
+        applyWindowTheme(UserDefaults.standard.dictionary(forKey: "window-theme") ?? ["system": true])
+    }
+
+    private func applyWindowTheme(_ saved: [String: Any]) {
+        let system = saved["system"] as? Bool == true
+        let color = Self.color(hex: saved["background"] as? String ?? "")
+        if system {
+            // 跟随系统时底色也随外观切换，系统换成深色时不必等网页重新上报。
+            window.appearance = nil
+            window.backgroundColor = NSColor(name: nil) { appearance in
+                appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua ? Self.color(hex: "#0F0F11")! : Self.color(hex: "#F7F7F7")!
+            }
+        } else {
+            window.appearance = NSAppearance(named: saved["dark"] as? Bool == true ? .darkAqua : .aqua)
+            window.backgroundColor = color ?? Self.color(hex: "#F7F7F7")!
+        }
+        web?.underPageBackgroundColor = window.backgroundColor
+    }
+
+    // 解析 #RRGGBB；其他格式返回 nil。
+    static func color(hex: String) -> NSColor? {
+        guard hex.count == 7, hex.hasPrefix("#"), let value = UInt32(hex.dropFirst(), radix: 16) else { return nil }
+        return NSColor(srgbRed: CGFloat((value >> 16) & 0xFF) / 255, green: CGFloat((value >> 8) & 0xFF) / 255, blue: CGFloat(value & 0xFF) / 255, alpha: 1)
+    }
+
     private func handle(_ message: [String: Any]) async throws -> [String: Any] {
         var message = message
         var data = message["data"] as? [String: Any] ?? [:]
@@ -518,6 +563,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         if method == "inspector.available" {
             inspectorVisible = data["available"] as? Bool == true
             layoutTitleButtons()
+            return ["id": message["id"]!, "result": true]
+        }
+        if method == "window.theme" {
+            // 界面主题的页面底色与深浅。标题栏透明，露出的是窗口底色，标题与按钮颜色跟随外观；
+            // 记下来，下次启动窗口一出现就是这个颜色。跟随系统时交给系统外观，不固定深浅。
+            guard let hex = data["background"] as? String, Self.color(hex: hex) != nil else { return ["id": message["id"]!, "result": false] }
+            let saved: [String: Any] = ["background": hex, "dark": data["dark"] as? Bool == true, "system": data["system"] as? Bool == true]
+            UserDefaults.standard.set(saved, forKey: "window-theme")
+            applyWindowTheme(saved)
             return ["id": message["id"]!, "result": true]
         }
         if method == "window.immersive" {
@@ -616,9 +670,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
             return ["id": message["id"]!, "result": true]
         }
         if method == "text.export" {
-            // 字幕（SRT/VTT）、歌词（LRC）与旋律谱（ABC）是界面生成的 UTF-8 文本，宿主只负责选位置并写文件。
+            // 字幕（SRT/VTT）、歌词（LRC）、旋律谱（ABC）与快捷键设置（JSON）是界面生成的 UTF-8 文本，宿主只负责选位置并写文件。
             let format = data["format"] as? String ?? ""
-            guard ["srt", "vtt", "lrc", "abc"].contains(format), let text = data["text"] as? String, text.utf8.count <= 20_000_000 else { throw failure(HostL10n.t("err.textExportInvalid")) }
+            guard ["srt", "vtt", "lrc", "abc", "json"].contains(format), let text = data["text"] as? String, text.utf8.count <= 20_000_000 else { throw failure(HostL10n.t("err.textExportInvalid")) }
             let panel = NSSavePanel()
             panel.allowedContentTypes = [UTType(filenameExtension: format) ?? .plainText]
             panel.nameFieldStringValue = (data["name"] as? String ?? "yovoice." + format)

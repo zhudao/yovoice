@@ -164,6 +164,67 @@ func TestTranscribeSpeech(t *testing.T) {
 	}
 }
 
+// 设置里选了 Parakeet 时转写改用它：单文件模型不带对齐模型，逐词时间来自识别本身，词里并入的标点要去掉，断句结果与 Qwen3 一致。
+func TestTranscribeSpeechParakeet(t *testing.T) {
+	wb := recognizeWorkbench(t, true)
+	model := filepath.Join(wb.Store.Root, "models", "parakeet-tdt-0.6b-v3-q8_0.gguf")
+	must(t, os.WriteFile(model, nil, 0600))
+	must(t, wb.Store.Update(func(s *schema.State) {
+		s.Models = append(s.Models, schema.InstalledModel{ID: "parakeet-tdt-0.6b-v3-q8", Path: model})
+	}, true))
+	p := wb.Store.Read().Preferences
+	p.RecognizeModel = "parakeet-tdt-0.6b-v3-q8"
+	must(t, wb.SavePreferences(p))
+	wav := filepath.Join(t.TempDir(), "talk.wav")
+	must(t, audio.WriteMono(wav, tone(70, 24000, [2]int{25, 26}, [2]int{50, 51}), 24000))
+	b, e := os.ReadFile(wav)
+	must(t, e)
+	must(t, wb.TranscribeSpeech("访谈.wav", bytes.NewReader(b)))
+	<-wb.Done()
+	s := wb.Store.Read()
+	if s.Activity.Status != "completed" || len(s.Transcripts) != 1 || s.Activity.ModelID == nil || *s.Activity.ModelID != "parakeet-tdt-0.6b-v3-q8" {
+		t.Fatalf("%+v", s.Activity)
+	}
+	c, e := wb.ReadTranscript(s.Transcripts[0].ID)
+	must(t, e)
+	if len(c.Words) != 36 || c.Words[3].Word != "气" || c.Words[5].Word != "好" || len(c.Captions) != 3 || c.Captions[1].Text != "今天天气真好，我们去散步吧" {
+		t.Fatalf("%+v", c)
+	}
+	// 选的模型不是语音识别模型时拒绝保存。
+	p.RecognizeModel = "index-2.5-q8"
+	if e := wb.SavePreferences(p); !isCode(e, msg.ErrRequestInvalid) {
+		t.Fatalf("%v", e)
+	}
+}
+
+// Confucius4-R2T2 只给文字：每段末尾补静音后识别，全部识别完再用包里的对齐模型逐段对齐，字幕照常分行。
+// 只装了它时也能给语音版本对齐字幕。
+func TestTranscribeSpeechConfucius(t *testing.T) {
+	wb := recognizeWorkbench(t, true)
+	dir := filepath.Join(wb.Store.Root, "models", "Confucius4-R2T2-GGUF")
+	must(t, os.MkdirAll(filepath.Join(dir, "Qwen3-ForcedAligner-0.6B-GGUF"), 0700))
+	must(t, os.WriteFile(filepath.Join(dir, "r2t2-q8_0.gguf"), nil, 0600))
+	must(t, os.WriteFile(filepath.Join(dir, "Qwen3-ForcedAligner-0.6B-GGUF", "qwen3-forced-aligner-0.6b-q8_0.gguf"), nil, 0600))
+	must(t, wb.Store.Update(func(s *schema.State) {
+		s.Models = []schema.InstalledModel{{ID: "confucius4-r2t2-q8", Path: dir}}
+	}, true))
+	wav := filepath.Join(t.TempDir(), "talk.wav")
+	must(t, audio.WriteMono(wav, tone(70, 24000, [2]int{25, 26}, [2]int{50, 51}), 24000))
+	b, e := os.ReadFile(wav)
+	must(t, e)
+	must(t, wb.TranscribeSpeech("访谈.wav", bytes.NewReader(b)))
+	<-wb.Done()
+	s := wb.Store.Read()
+	if s.Activity.Status != "completed" || len(s.Transcripts) != 1 || *s.Activity.ModelID != "confucius4-r2t2-q8" {
+		t.Fatalf("%+v", s.Activity)
+	}
+	c, e := wb.ReadTranscript(s.Transcripts[0].ID)
+	must(t, e)
+	if len(c.Words) != 36 || c.Words[3].Word != "气" || c.Words[12].Start < 25 || len(c.Captions) != 3 || c.Captions[1].Text != "今天天气真好，我们去散步吧" {
+		t.Fatalf("%+v", c)
+	}
+}
+
 // 模拟分离器在每段的 0.5～1 秒、2.5～3 秒返回信号。第二段裁去前两秒，试听仍来自完整原音轨。
 func TestTranscribeIsolatedPlaybackAndBoundaries(t *testing.T) {
 	converter := os.Getenv("YOVOICE_TEST_FFMPEG")
@@ -202,7 +263,7 @@ func TestTranscribeIsolatedPlaybackAndBoundaries(t *testing.T) {
 		t.Fatal("第二段应裁掉前两秒上下文，保留原时间轴上的人声")
 	}
 
-	must(t, wb.startTranscribeSpeech("访谈.wav", upload, converter, 1))
+	must(t, wb.startTranscribeSpeech("访谈.wav", upload, converter, 1, ""))
 	<-wb.Done()
 	state := wb.Store.Read()
 	if state.Activity.Status != "completed" || len(state.Transcripts) != 1 {
@@ -219,5 +280,91 @@ func TestTranscribeIsolatedPlaybackAndBoundaries(t *testing.T) {
 	}
 	if math.Abs(float64(samples[62*rate+3*rate/4+1])) < .01 || record.Duration != seconds {
 		t.Fatal("试听应保留原音轨和时长")
+	}
+}
+
+// mediaTools 返回测试用的 FFmpeg 与 ffprobe，缺少时跳过。
+func mediaTools(t *testing.T) (string, string) {
+	t.Helper()
+	tools := [2]string{os.Getenv("YOVOICE_TEST_FFMPEG"), os.Getenv("YOVOICE_TEST_FFPROBE")}
+	for i, name := range []string{"ffmpeg", "ffprobe"} {
+		if tools[i] == "" {
+			path, err := exec.LookPath(name)
+			if err != nil {
+				t.Skip("需要 FFmpeg 与 ffprobe 执行真实转换")
+			}
+			tools[i] = path
+		}
+	}
+	return tools[0], tools[1]
+}
+
+// 只有界面能播放的容器且带画面时保留原视频：mp4 移进 outputs 供预览，删除记录时一起删；
+// mkv、带封面的 m4a 不保留；转换失败时上传照常删除，不会留下视频。
+func TestTranscribeKeepsVideo(t *testing.T) {
+	converter, prober := mediaTools(t)
+	ctx := context.Background()
+	dir := t.TempDir()
+	media := func(name string, args ...string) string {
+		path := filepath.Join(dir, name)
+		args = append([]string{"-v", "error", "-f", "lavfi", "-i", "sine=frequency=220:sample_rate=48000",
+			"-f", "lavfi", "-i", "color=size=64x64:rate=10", "-t", "3"}, args...)
+		if output, err := exec.Command(converter, append(args, path)...).CombinedOutput(); err != nil {
+			t.Fatalf("%s: %s: %v", name, output, err)
+		}
+		return path
+	}
+	mp4 := media("clip.mp4", "-map", "0:a", "-map", "1:v", "-c:v", "mpeg4", "-c:a", "aac")
+	mkv := media("clip.mkv", "-map", "0:a", "-map", "1:v", "-c:v", "mpeg4", "-c:a", "aac")
+	cover := media("cover.m4a", "-map", "0:a", "-map", "1:v", "-frames:v", "1", "-c:v", "png", "-disposition:v:0", "attached_pic", "-c:a", "aac")
+	for _, tc := range []struct{ name, path, want string }{
+		{"访谈.MP4", mp4, ".mp4"}, {"访谈.mov", mp4, ".mov"}, {"访谈.mkv", mkv, ""}, {"访谈.mp4", cover, ""}, {"访谈.m4a", cover, ""},
+	} {
+		if got := transcribeVideo(ctx, prober, tc.name, tc.path); got != tc.want {
+			t.Errorf("%s：%q，应为 %q", tc.name, got, tc.want)
+		}
+	}
+
+	wb := recognizeWorkbench(t, true)
+	original, err := os.ReadFile(mp4)
+	must(t, err)
+	upload := filepath.Join(wb.Store.Root, "downloads", "upload-video")
+	must(t, os.WriteFile(upload, original, 0600))
+	must(t, wb.startTranscribeSpeech("访谈.mp4", upload, converter, 1, ".mp4"))
+	<-wb.Done()
+	s := wb.Store.Read()
+	if s.Activity.Status != "completed" || len(s.Transcripts) != 1 {
+		t.Fatalf("转写未完成：%+v", s.Activity)
+	}
+	r := s.Transcripts[0]
+	if r.AudioFile != r.ID+".wav" || r.VideoFile != r.ID+".mp4" {
+		t.Fatalf("%+v", r)
+	}
+	outputs := filepath.Join(wb.Store.Root, "outputs")
+	if saved, err := os.ReadFile(filepath.Join(outputs, r.VideoFile)); err != nil || !bytes.Equal(saved, original) {
+		t.Fatalf("原视频没有保存：%v", err)
+	}
+	if _, err := audio.Duration(filepath.Join(outputs, r.AudioFile)); err != nil {
+		t.Fatalf("试听音轨应为 WAV：%v", err)
+	}
+	if _, err := os.Stat(upload); !os.IsNotExist(err) {
+		t.Fatalf("上传文件应已移走：%v", err)
+	}
+	must(t, wb.DeleteTranscript(r.ID))
+	if _, err := os.Stat(filepath.Join(outputs, r.VideoFile)); !os.IsNotExist(err) {
+		t.Fatalf("删除记录后原视频仍在：%v", err)
+	}
+
+	must(t, os.WriteFile(upload, []byte("不是视频"), 0600))
+	must(t, wb.startTranscribeSpeech("坏.mp4", upload, converter, 1, ".mp4"))
+	<-wb.Done()
+	if s := wb.Store.Read(); s.Activity.Status != "failed" || len(s.Transcripts) != 0 {
+		t.Fatalf("%+v", s.Activity)
+	}
+	if _, err := os.Stat(upload); !os.IsNotExist(err) {
+		t.Fatalf("失败后上传文件应删除：%v", err)
+	}
+	if left, _ := filepath.Glob(filepath.Join(outputs, "*.mp4")); len(left) != 0 {
+		t.Fatalf("失败后不应留下视频：%v", left)
 	}
 }

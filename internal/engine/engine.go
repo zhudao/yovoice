@@ -20,6 +20,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+	"unicode"
 	"yovoice/internal/audio"
 	"yovoice/internal/catalog"
 	"yovoice/internal/diag"
@@ -38,6 +39,7 @@ type Engine struct {
 	stopping *atomic.Bool
 	// settings 是偏好里的引擎运行参数，下次启动引擎时生效；变化后引擎按新参数重启。
 	settings      atomic.Pointer[schema.EngineSettings]
+	live          atomic.Pointer[liveRuntime]
 	endpoint, key string
 	client        *http.Client
 }
@@ -197,15 +199,16 @@ func (e *Engine) start(ctx context.Context, executable, model string, definition
 	if len(session) > 0 {
 		entry["session_options"] = session
 	}
-	config := map[string]any{"host": "127.0.0.1", "port": port, "backend": catalog.ServerBackend(backend), "device": 0, "threads": max(1, min(runtime.NumCPU()/2, 8)), "lazy_load": true, "max_loaded_models": 1, "idle_unload_ms": 300000, "log_request_body": false, "max_request_body_bytes": 1048576, "models": []any{entry}}
+	idleSeconds := 300
+	if settings != nil && settings.IdleUnloadSeconds != nil {
+		idleSeconds = *settings.IdleUnloadSeconds
+	}
+	config := map[string]any{"host": "127.0.0.1", "port": port, "backend": catalog.ServerBackend(backend), "device": 0, "threads": max(1, min(runtime.NumCPU()/2, 8)), "lazy_load": true, "max_loaded_models": 1, "idle_unload_ms": idleSeconds * 1000, "log_request_body": false, "max_request_body_bytes": 1048576, "models": []any{entry}}
 	if settings != nil {
 		if settings.Threads > 0 {
 			config["threads"] = settings.Threads
 		}
 		config["device"] = settings.Device
-		if settings.IdleUnloadSeconds != nil {
-			config["idle_unload_ms"] = *settings.IdleUnloadSeconds * 1000
-		}
 	}
 	b, err := json.Marshal(config)
 	if err != nil {
@@ -256,10 +259,18 @@ func (e *Engine) start(ctx context.Context, executable, model string, definition
 	e.process = c
 	e.done = make(chan error, 1)
 	e.stopping = new(atomic.Bool)
+	e.endpoint = fmt.Sprintf("http://127.0.0.1:%d/", port)
+	live := &liveRuntime{
+		endpoint: e.endpoint,
+		status:   Status{ModelID: definition.ID, ModelName: definition.Name, IdleUnloadSeconds: idleSeconds},
+		stopping: e.stopping,
+	}
+	e.live.Store(live)
 	done, stopping, pid, launched := e.done, e.stopping, c.Process.Pid, time.Now()
 	diag.Log(e.root, "engine.started", "family", family, "task", task, "backend", backend, "pid", pid)
 	diag.Go(e.root, "engine.wait", func() {
 		err := c.Wait()
+		e.live.CompareAndSwap(live, nil)
 		event := "engine.exited"
 		if stopping.Load() {
 			event = "engine.stopped"
@@ -273,7 +284,6 @@ func (e *Engine) start(ctx context.Context, executable, model string, definition
 		done <- err
 		close(done)
 	})
-	e.endpoint = fmt.Sprintf("http://127.0.0.1:%d/", port)
 	attempts := 120
 	if family == "kokoro_tts" {
 		// 多语言包包含日文词典；首次读取内嵌资源需要更长时间。
@@ -299,6 +309,7 @@ func (e *Engine) start(ctx context.Context, executable, model string, definition
 		}
 		cancel()
 		if healthy {
+			live.ready.Store(true)
 			e.key = key
 			diag.Log(e.root, "engine.ready", "family", family, "pid", pid, "startup_ms", time.Since(launched).Milliseconds())
 			return nil
@@ -597,13 +608,13 @@ type AlignedWord struct {
 const alignerRate = 16000
 
 // packageStage 在多文件工具包（歌词对齐包、语音识别包）里找出某一步的模型文件，并给出启动内核所需的家族与任务。
-// 两个包都带 Qwen3 Forced Aligner，装了哪个都能做逐字对齐。
+// 这些包都带 Qwen3 Forced Aligner，装了哪个都能做逐字对齐。
 func packageStage(m schema.InstalledModel, prefix, family, task string) (string, catalog.ModelPackage, error) {
 	definition, err := catalog.Lookup(m.ID)
 	if err != nil {
 		return "", definition, err
 	}
-	if definition.Family != "lyric_align" && definition.Family != "qwen3_asr" {
+	if definition.Family != "lyric_align" && definition.Family != "qwen3_asr" && definition.Family != "confucius4_r2t2" {
 		return "", definition, msg.Err(msg.ErrModelUnsupported, nil)
 	}
 	for _, f := range definition.Files {
@@ -693,9 +704,10 @@ type Recognition struct {
 	Words    []AlignedWord
 }
 
-// Recognize 用语音识别包里的 Qwen3 ASR 把一段 16 kHz 单声道语音转成文字。timestamps 为真时由引擎接着用包内的
-// Qwen3 Forced Aligner 给出逐词时间；这时整段一次识别不再切块，调用方要把音频切到 30 秒左右以内。
-// 会话始终配置对齐模型，识别参考文本和转写共用同一个已启动的引擎。
+// Recognize 用语音识别模型把一段 16 kHz 单声道语音转成文字。timestamps 为真时给出逐词时间，整段一次识别不再切块，
+// 调用方要把音频切到 30 秒左右以内：Qwen3 ASR 由包内的 Qwen3 Forced Aligner 对齐（会话始终配置对齐模型，识别参考文本
+// 和转写共用同一个已启动的引擎）；Parakeet TDT 是单文件模型，逐词时间来自解码本身。Confucius4-R2T2 不给时间，
+// Words 为空，调用方识别完全部片段后再用包内的对齐模型调 AlignWords（见 catalog.AlignsSeparately）。
 func (e *Engine) Recognize(ctx context.Context, executable string, m schema.InstalledModel, backend, wav string, timestamps bool, progress func(msg.Code, msg.Params)) (result Recognition, err error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
@@ -704,9 +716,19 @@ func (e *Engine) Recognize(ctx context.Context, executable string, m schema.Inst
 			e.stop()
 		}
 	}()
-	path, definition, err := packageStage(m, "Qwen3-ASR", "qwen3_asr", "asr")
-	if err != nil {
+	path, definition := m.Path, catalog.ModelPackage{}
+	if definition, err = catalog.Lookup(m.ID); err != nil {
 		return result, err
+	}
+	switch definition.Family {
+	case "confucius4_r2t2":
+		if path, definition, err = packageStage(m, definition.RemotePath, "confucius4_r2t2", "asr"); err != nil {
+			return result, err
+		}
+	case "qwen3_asr":
+		if path, definition, err = packageStage(m, "Qwen3-ASR", "qwen3_asr", "asr"); err != nil {
+			return result, err
+		}
 	}
 	if definition.Family == "qwen3_asr" {
 		aligner, _, err := packageStage(m, "Qwen3-ForcedAligner", "qwen3_forced_aligner", "align")
@@ -721,9 +743,13 @@ func (e *Engine) Recognize(ctx context.Context, executable string, m schema.Inst
 	// 引擎就绪后报告“正在识别”；分段转写的调用方把它换成带段数的进度。
 	progress(msg.ActivityRecognize, nil)
 	request := map[string]any{"audio": wav, "text": ""}
-	if timestamps {
-		// 发布包不带引擎默认的 VAD 模型，切段由调用方按停顿完成，这里整段送入。
-		request["options"] = map[string]string{"return_timestamps": "true", "audio_chunk_mode": "none", "clamp_timestamps_to_audio": "true"}
+	if timestamps && !catalog.AlignsSeparately(definition.Family) {
+		// 发布包不带引擎默认的 VAD 模型，切段由调用方按停顿完成，这里整段送入。Parakeet 的时间不会超出输入，没有对应的限制项。
+		options := map[string]string{"return_timestamps": "true", "audio_chunk_mode": "none"}
+		if definition.Family == "qwen3_asr" {
+			options["clamp_timestamps_to_audio"] = "true"
+		}
+		request["options"] = options
 	}
 	out, err := e.run(ctx, map[string]any{"model": "index", "request": request})
 	if err != nil {
@@ -731,7 +757,12 @@ func (e *Engine) Recognize(ctx context.Context, executable string, m schema.Inst
 	}
 	result = Recognition{Text: strings.TrimSpace(out.Text), Language: out.Language}
 	for _, w := range out.Words {
-		result.Words = append(result.Words, AlignedWord{Word: w.Word, Start: float64(w.StartSample) / alignerRate, End: float64(w.EndSample) / alignerRate})
+		// Parakeet 把紧跟的标点并进词里；字幕断句要靠词与词之间的标点，这里和对齐模型一样只留词本身。
+		word := strings.TrimFunc(w.Word, func(r rune) bool { return unicode.IsPunct(r) || unicode.IsSpace(r) })
+		if word == "" {
+			continue
+		}
+		result.Words = append(result.Words, AlignedWord{Word: word, Start: float64(w.StartSample) / alignerRate, End: float64(w.EndSample) / alignerRate})
 	}
 	return result, nil
 }

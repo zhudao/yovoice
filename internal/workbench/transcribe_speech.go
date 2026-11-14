@@ -2,21 +2,27 @@ package workbench
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
+	"unicode"
 	"yovoice/internal/audio"
+	"yovoice/internal/catalog"
 	"yovoice/internal/diag"
+	"yovoice/internal/engine"
 	"yovoice/internal/msg"
 	"yovoice/internal/schema"
 )
 
-// 每段最多 30 秒；识别和逐词对齐都在同一段里完成。
+// 每段最多 30 秒；识别和逐词对齐都按段完成。
 const transcribeChunk = 30.0
 
 // startTranscribeSpeech 接管上传文件；只有任务成功提交时才把所选音轨移入转写记录。
-func (w *Workbench) startTranscribeSpeech(original, upload, converter string, track int) (err error) {
+// video 不为空时（见 transcribeTracks）上传的原视频以该扩展名一并移入 outputs 供预览，失败或取消时照常删除。
+func (w *Workbench) startTranscribeSpeech(original, upload, converter string, track int, video string) (err error) {
 	defer func() {
 		if err != nil {
 			_ = os.Remove(upload)
@@ -25,10 +31,11 @@ func (w *Workbench) startTranscribeSpeech(original, upload, converter string, tr
 	w.edit.Lock()
 	defer w.edit.Unlock()
 	s := w.Store.Read()
-	model, err := w.toolModel(s, "qwen3_asr")
+	model, err := w.recognizer(s)
 	if err != nil {
 		return err
 	}
+	family := modelFamily(model.ID)
 	settings := schema.TranscribeSettings{}
 	if s.Preferences.Transcribe != nil {
 		settings = *s.Preferences.Transcribe
@@ -94,9 +101,17 @@ func (w *Workbench) startTranscribeSpeech(original, upload, converter string, tr
 		chunks := speechChunks(speech, recognizeRate, int(transcribeChunk*recognizeRate))
 		var text, language string
 		var words []schema.LyricWord
+		// 识别后另行对齐的模型分两遍：先识别全部片段，再换对齐模型逐段对齐，引擎只切换一次模型。
+		separate := catalog.AlignsSeparately(family)
+		steps := len(chunks)
+		if separate {
+			steps *= 2
+		}
+		parts := make([]string, len(chunks))
+		heard := make([]engine.Recognition, len(chunks))
 		for j, c := range chunks {
-			part := filepath.Join(dir, "part.wav")
-			if e := audio.WriteMono(part, speech[c[0]:c[1]], recognizeRate); e != nil {
+			parts[j] = filepath.Join(dir, fmt.Sprintf("part-%d.wav", j))
+			if e := audio.WriteMono(parts[j], recognizeInput(family, speech[c[0]:c[1]]), recognizeRate); e != nil {
 				return e
 			}
 			// 引擎就绪后报告的“正在识别”换成带段数的进度；启动引擎等其他消息照常显示。
@@ -104,15 +119,36 @@ func (w *Workbench) startTranscribeSpeech(original, upload, converter string, tr
 				if code == msg.ActivityRecognize {
 					code, params = msg.ActivityTranscribeSpeech, msg.Params{"done": j + 1, "total": len(chunks)}
 				}
-				w.progress(code, params, int64(j), int64(len(chunks)))
+				w.progress(code, params, int64(j), int64(steps))
 			}
-			result, e := w.engine.Recognize(ctx, *s.RuntimePath, model, s.Preferences.Backend, part, true, progress)
+			result, e := w.engine.Recognize(ctx, *s.RuntimePath, model, s.Preferences.Backend, parts[j], true, progress)
 			if e != nil {
 				return e
 			}
+			heard[j] = result
 			text = joinSpeech(text, result.Text)
 			if language == "" {
 				language = result.Language
+			}
+		}
+		for j, c := range chunks {
+			result := heard[j]
+			if separate && strings.TrimSpace(result.Text) != "" {
+				lang := result.Language
+				if lang == "" {
+					lang = alignLanguage(result.Text)
+				}
+				// 对齐模型启动时报告“正在启动引擎”等消息，启动后不再报告，这里先显示对齐进度。
+				progress := func(code msg.Code, params msg.Params) { w.progress(code, params, int64(len(chunks)+j), int64(steps)) }
+				progress(msg.ActivityAlignText, msg.Params{"done": j + 1, "total": len(chunks)})
+				aligned, e := w.engine.AlignWords(ctx, *s.RuntimePath, model, s.Preferences.Backend, parts[j], result.Text, lang, progress)
+				if e != nil {
+					return e
+				}
+				// 字幕断句靠词与词之间的标点，对齐结果里和识别模型一样只留词本身。
+				result.Words = slices.DeleteFunc(aligned, func(a engine.AlignedWord) bool {
+					return strings.TrimFunc(a.Word, func(r rune) bool { return unicode.IsPunct(r) || unicode.IsSpace(r) }) == ""
+				})
 			}
 			offset := float64(c[0]) / recognizeRate
 			for _, a := range result.Words {
@@ -128,6 +164,12 @@ func (w *Workbench) startTranscribeSpeech(original, upload, converter string, tr
 			words = []schema.LyricWord{}
 		}
 		record := schema.Transcript{ID: schema.NewID(), Name: transcriptName(original), Language: language, Duration: round3(duration), CreatedAt: time.Now().UTC()}
+		record.AudioFile = record.ID + ".wav"
+		source := ""
+		// 直接送去识别的 WAV 本身就是上传文件，不会带视频；只有转换过的上传才可能另存原视频。
+		if video != "" && wav != upload {
+			record.VideoFile, source = record.ID+video, upload
+		}
 		if settings.IsolateVocals {
 			// 双声道原音轨只供分离使用，试听保留未处理的原音轨，但统一转成 24 kHz 单声道。
 			playback := filepath.Join(dir, "playback.wav")
@@ -139,7 +181,7 @@ func (w *Workbench) startTranscribeSpeech(original, upload, converter string, tr
 		if err := ctx.Err(); err != nil {
 			return err
 		}
-		return w.saveTranscript(record, schema.TranscriptContent{Text: text, Words: words}, wav, ".wav")
+		return w.saveTranscript(record, schema.TranscriptContent{Text: text, Words: words}, wav, source)
 	})
 	if err == nil {
 		w.tagActivity("transcribe")

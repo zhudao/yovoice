@@ -1,7 +1,7 @@
 import catalogFile from '@internal/catalog/catalog.json';
 import aiPresets from '@internal/llm/presets.json';
 import audited from '@internal/desktop/audited.json';
-import { performanceSettings, newId, type Draft, type State, type Preferences, type Character, type SynthesisSettings, type AIProvider, type AITask, type Activity, type LocalAPIStatus, type LogFilter, aiTimeoutDefault, type Asset, type AssetKind, type AssetResult, projectKind, modelMainFile, type MessageCode, type TranscriptCaption, type TranscriptContent, type CommunityItem } from '../../workbench';
+import { performanceSettings, newId, isRecognizer, type Draft, type State, type Preferences, type Character, type SynthesisSettings, type AIProvider, type AITask, type Activity, type LocalAPIStatus, type LogFilter, aiTimeoutDefault, type Asset, type AssetKind, type AssetResult, projectKind, modelMainFile, type MessageCode, type TranscriptCaption, type TranscriptContent, type CommunityItem } from '../../workbench';
 import { download } from '../client';
 import { CallError } from '../call-error';
 import { encodeError, previewExportLogs, previewLog, previewQueryLogs } from '../preview-logs';
@@ -150,6 +150,8 @@ async function dispatch<T>(method: string, data: unknown): Promise<T> {
     if (index < 0) state.drafts.unshift(draft); else state.drafts[index] = draft;
     publish(); return true as T;
   }
+  // 浏览器预览不解码音频，封面按版本编号推一条起伏。
+  if (method === 'generation.gene') return '' as T;
   if (method === 'generation.lyricTimes') {
     const { id, times } = data as { id: string; times: number[] };
     const item = state.history.find(v => v.id === id);
@@ -183,7 +185,7 @@ async function dispatch<T>(method: string, data: unknown): Promise<T> {
   if (method === 'voice.recognize') {
     const voice = state.voices.find(v => v.id === (data as { id: string }).id);
     if (!voice) throw new CallError('@yovoice.error.audioMissing');
-    if (!state.models.some(m => m.id.startsWith('qwen3-asr-'))) throw new CallError('@yovoice.error.recognizeModelRequired');
+    if (!state.models.some(m => isRecognizer(m.id))) throw new CallError('@yovoice.error.recognizeModelRequired');
     const text = `${voice.name}：浏览器预览不运行识别模型，这是模拟的识别文字。`;
     state.transcript = { id: newId(), voiceId: voice.id, text, language: 'Chinese', createdAt: new Date().toISOString() };
     if (!voice.referenceText?.trim()) state.voices = state.voices.map(v => v.id === voice.id ? { ...v, referenceText: text } : v);
@@ -193,7 +195,7 @@ async function dispatch<T>(method: string, data: unknown): Promise<T> {
   if (method === 'generation.alignText') {
     const item = state.history.find(v => v.id === (data as { id: string }).id);
     if (!item) throw new CallError('@yovoice.error.audioMissing');
-    if (!state.models.some(m => m.id.startsWith('qwen3-asr-') || m.id.startsWith('lyric-align-'))) throw new CallError('@yovoice.error.recognizeModelRequired');
+    if (!state.models.some(m => m.id.startsWith('qwen3-asr-') || m.id.startsWith('confucius4-r2t2-') || m.id.startsWith('lyric-align-'))) throw new CallError('@yovoice.error.recognizeModelRequired');
     const letters = ['music', 'sfx', 'score'].includes(item.settings.kind ?? '') ? [] : item.settings.text.replace(/\[[^[\]\n]{1,40}\]/g, '').match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]|[\p{L}\p{N}']+/gu) ?? [];
     if (!letters.length) throw new CallError('@yovoice.error.alignText');
     const span = item.duration / letters.length;
@@ -217,7 +219,7 @@ async function dispatch<T>(method: string, data: unknown): Promise<T> {
   }
   // 转写记录与桌面端一样长期保存：记录在状态里，字幕文件存进 IndexedDB；预览不上传音频，没有原音频可试听。
   if (method === 'speech.transcribe') {
-    if (!state.models.some(m => m.id.startsWith('qwen3-asr-'))) throw new CallError('@yovoice.error.recognizeModelRequired');
+    if (!state.models.some(m => isRecognizer(m.id))) throw new CallError('@yovoice.error.recognizeModelRequired');
     const name = String((data as { name?: string }).name ?? '').replace(/^.*[\\/]/, '').replace(/\.[^.]+$/, '').slice(0, 100);
     const text = '浏览器预览不运行识别模型。这是模拟的转写文字，用来演示字幕分行和导出！';
     const words = (text.match(/\p{Script=Han}/gu) ?? []).map((word, i) => ({ word, start: +(i * .3).toFixed(3), end: +(i * .3 + .25).toFixed(3) }));

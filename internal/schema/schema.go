@@ -226,6 +226,8 @@ type Generation struct {
 	Segment   *GenerationSegment `json:"segment,omitempty"`
 	// LyricTimes 是播放页校准的歌词时间：按顺序记录每一行（含器乐段落）的开始秒数。
 	LyricTimes []float64 `json:"lyricTimes,omitempty"`
+	// Gene 是整首歌从头到尾的响度起伏（96 个十六进制字符），封面照着它画；第一次显示封面时才算，算不出来时为空。
+	Gene string `json:"gene,omitempty"`
 	// LyricWords 是强制对齐得到的逐字时间，按歌词顺序排列；与 LyricTimes 只保留较新的一份。
 	LyricWords []LyricWord `json:"lyricWords,omitempty"`
 	// TextWords 是语音版本的正文对齐到音频上的逐字时间，用于导出字幕；歌曲、音效与编曲版本没有。
@@ -345,14 +347,23 @@ type Preferences struct {
 	AssistantQuiet bool `json:"assistantQuiet,omitempty"`
 	// HiddenFeatures 是在设置中隐藏的功能入口（见 OptionalFeatures），为空时全部显示。
 	HiddenFeatures []string `json:"hiddenFeatures,omitempty"`
+	// Theme 是界面主题（见 Themes），为空时跟随系统外观。
+	Theme string `json:"theme,omitempty"`
 	// Engine 是推理引擎的运行参数（设置 › 推理引擎 › 高级运行参数），为空时全部沿用默认值。
 	Engine *EngineSettings `json:"engine,omitempty"`
 	// Transcribe 是语音转写的限制与断句参数（设置 › 常规 › 语音转写），为空时全部沿用默认值。
 	Transcribe *TranscribeSettings `json:"transcribe,omitempty"`
+	// RecognizeModel 是转写和识别参考文本用的语音识别模型（设置 › 模型 › 语音识别模型），为空或已移除时按默认顺序取已安装的。
+	RecognizeModel string `json:"recognizeModel,omitempty"`
+	// Hotkeys 是改过的快捷键与快捷键开关（设置 › 快捷键），为空时全部沿用默认值。
+	Hotkeys *HotkeySettings `json:"hotkeys,omitempty"`
 }
 
 // OptionalFeatures 是可在设置中隐藏的功能：故事配音、音乐生成（含编曲）、语音转写与 Ocho 助手。
 var OptionalFeatures = []string{"story", "music", "transcribe", "assistant"}
+
+// Themes 是可选的界面主题：纸白、夜墨、青岸、宣纸、苔绿、深海，与 web/src/shared/workbench/types.ts 的 appThemes 一致。
+var Themes = []string{"paper", "ink", "lagoon", "sand", "sage", "abyss"}
 
 type State struct {
 	// RuntimeOptions 来自所选引擎的模型清单，运行时重新读取，不写入状态数据库。
@@ -431,6 +442,9 @@ type Transcript struct {
 	Duration  float64 `json:"duration"`
 	FileName  string  `json:"fileName"`
 	AudioFile string  `json:"audioFile,omitempty"`
+	// VideoFile 是输入带视频画面、且容器是界面能直接播放的格式（mp4、m4v、mov、webm）时，
+	// 保存在同目录里的原始视频，供转写编辑页预览；其他输入为空。
+	VideoFile string `json:"videoFile,omitempty"`
 	// Excerpt 是字幕开头的一小段，列表里展示，免得为显示摘录读取字幕文件。
 	Excerpt   string     `json:"excerpt,omitempty"`
 	CreatedAt time.Time  `json:"createdAt"`

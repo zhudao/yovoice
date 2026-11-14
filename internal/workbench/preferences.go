@@ -40,6 +40,9 @@ func (w *Workbench) savePreferences(p schema.Preferences) error {
 			return msg.Err(msg.ErrRequestInvalid, nil)
 		}
 	}
+	if p.Theme != "" && !slices.Contains(schema.Themes, p.Theme) {
+		return msg.Err(msg.ErrRequestInvalid, nil)
+	}
 	if p.Engine != nil {
 		if err := p.Engine.Validate(); err != nil {
 			return err
@@ -48,12 +51,25 @@ func (w *Workbench) savePreferences(p schema.Preferences) error {
 			p.Engine = nil
 		}
 	}
+	if p.RecognizeModel != "" {
+		if m, e := catalog.Lookup(p.RecognizeModel); e != nil || !catalog.IsRecognizer(m.Family) {
+			return msg.Err(msg.ErrRequestInvalid, nil)
+		}
+	}
 	if p.Transcribe != nil {
 		if err := p.Transcribe.Validate(); err != nil {
 			return err
 		}
 		if p.Transcribe.Empty() {
 			p.Transcribe = nil
+		}
+	}
+	if p.Hotkeys != nil {
+		if err := p.Hotkeys.Validate(); err != nil {
+			return err
+		}
+		if p.Hotkeys.Empty() {
+			p.Hotkeys = nil
 		}
 	}
 	if p.ModelDirectory != nil && !filepath.IsAbs(*p.ModelDirectory) {
