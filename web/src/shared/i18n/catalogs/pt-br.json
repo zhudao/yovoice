@@ -1811,6 +1811,12 @@
   "@yovoice.timeline.preventClipping": {
     "defaultMessage": "Evitar clipping"
   },
+  "@yovoice.timeline.exportBalance": {
+    "defaultMessage": "Igualar o volume dos papéis"
+  },
+  "@yovoice.timeline.exportBalanceHint": {
+    "defaultMessage": "Deixa cada papel com volume parecido. Só o arquivo exportado muda; a linha do tempo continua igual."
+  },
   "@yovoice.timeline.peak": {
     "defaultMessage": "Pico"
   },
@@ -2750,9 +2756,6 @@
   "@yovoice.music.seekLyric": {
     "defaultMessage": "Tocar a partir desta linha"
   },
-  "@yovoice.music.lyricsEstimated": {
-    "defaultMessage": "O tempo da letra é estimado pela duração da música"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "Voltar {n} segundos"
   },
@@ -2777,32 +2780,17 @@
   "@yovoice.music.lyricStyleScroll": {
     "defaultMessage": "Rolagem"
   },
-  "@yovoice.music.lyricStyleScrollHint": {
-    "defaultMessage": "A letra rola com a música e a linha atual acende palavra por palavra"
-  },
   "@yovoice.music.lyricStyleStage": {
     "defaultMessage": "Holofote"
   },
-  "@yovoice.music.lyricStyleStageHint": {
-    "defaultMessage": "Uma linha por vez, cada palavra salta e brilha. Ideal para gravar a tela"
-  },
   "@yovoice.music.exportWordLrc": {
     "defaultMessage": "Exportar letra por palavra"
-  },
-  "@yovoice.music.exportWordLrcHint": {
-    "defaultMessage": "LRC avançado com horário em cada palavra, para players com letras de karaokê"
   },
   "@yovoice.music.lyricTools": {
     "defaultMessage": "Ferramentas de letra"
   },
   "@yovoice.music.editWords": {
     "defaultMessage": "Ajustar tempo da letra"
-  },
-  "@yovoice.music.editWordsHint": {
-    "defaultMessage": "Durante a reprodução, clique em uma linha para ela começar na posição atual; mova linhas inteiras ou ajuste palavras individuais"
-  },
-  "@yovoice.music.syncLyricsHint": {
-    "defaultMessage": "Marque o início de cada linha enquanto ouve"
   },
   "@yovoice.music.editThisLine": {
     "defaultMessage": "Clique durante a reprodução: a linha começa aqui"
@@ -2873,23 +2861,8 @@
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "Alinhar automaticamente"
   },
-  "@yovoice.music.aligningLyrics": {
-    "defaultMessage": "Alinhando"
-  },
-  "@yovoice.music.alignLyricsHint": {
-    "defaultMessage": "Separa a voz e alinha cada palavra da letra ao canto; salvo com esta versão"
-  },
-  "@yovoice.music.alignLyricsDownload": {
-    "defaultMessage": "Baixe primeiro o alinhador de letras opcional (cerca de 1,3 GB)"
-  },
-  "@yovoice.music.lyricsAligned": {
-    "defaultMessage": "Letra alinhada palavra por palavra à voz; sincronize para ajustar"
-  },
-  "@yovoice.music.lyricsAnalyzed": {
-    "defaultMessage": "Tempo da letra posicionado pelos vocais; sincronize para refinar"
-  },
-  "@yovoice.music.lyricsSynced": {
-    "defaultMessage": "Tempo da letra sincronizado"
+  "@yovoice.music.stopAlign": {
+    "defaultMessage": "Parar alinhamento"
   },
   "@yovoice.music.syncHint": {
     "defaultMessage": "Pressione ↓ ou clique em Próxima linha quando cada linha começar; Backspace desfaz a última linha"
@@ -3162,7 +3135,7 @@
     "defaultMessage": "Reconhecimento de fala para transcrições e legendas · ajuste da NetEase Youdao sobre o Qwen3 ASR 1.7B, 30 idiomas, tempos do alinhador incluído · NetEase Youdao Model Use License"
   },
   "@yovoice.settings.recognizeModel": {
-    "defaultMessage": "Modelo em uso"
+    "defaultMessage": "Reconhecimento de fala"
   },
   "@yovoice.settings.recognizeModelHint": {
     "defaultMessage": "Usado em transcrições e texto de referência. O Parakeet só reconhece idiomas europeus; para chinês, japonês, coreano e outros, use o Qwen3 ASR."
@@ -6007,5 +5980,29 @@
   },
   "@yovoice.guide.assistantPlain": {
     "defaultMessage": "Pressione o botão do assistente na barra de título e diga o que quer, por exemplo: “Crie uma narração e dê uma voz a cada personagem”. Antes, configure um serviço de IA nas Configurações."
+  },
+  "@yovoice.settings.tabDefaultModels": {
+    "defaultMessage": "Padrões"
+  },
+  "@yovoice.settings.alignSeparator": {
+    "defaultMessage": "Separação de voz para alinhar letras"
+  },
+  "@yovoice.settings.alignSeparatorHint": {
+    "defaultMessage": "A voz é separada antes do alinhamento. O BS-RoFormer dá a voz mais limpa, mas é lento; o HTDemucs é bem mais rápido, mas em músicas com acompanhamento pesado o alinhamento pode ser menos preciso."
+  },
+  "@yovoice.settings.alignSeparatorMore": {
+    "defaultMessage": "A voz é separada antes do alinhamento, agora com o BS-RoFormer do pacote de alinhamento: voz mais limpa, porém lento. Baixe o HTDemucs 6-stem em Modelos de música para trocar por ele, que é bem mais rápido."
+  },
+  "@yovoice.settings.alignSeparatorRoformer": {
+    "defaultMessage": "BS-RoFormer · voz mais limpa"
+  },
+  "@yovoice.settings.alignSeparatorHtdemucs": {
+    "defaultMessage": "HTDemucs 6-stem · mais rápido"
+  },
+  "@yovoice.settings.defaultModelMissing": {
+    "defaultMessage": "Nenhum modelo baixado ainda"
+  },
+  "@yovoice.settings.defaultModelGet": {
+    "defaultMessage": "Baixar"
   }
 }

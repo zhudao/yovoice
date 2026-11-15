@@ -1811,6 +1811,12 @@
   "@yovoice.timeline.preventClipping": {
     "defaultMessage": "Защита от перегрузки"
   },
+  "@yovoice.timeline.exportBalance": {
+    "defaultMessage": "Выровнять громкость ролей"
+  },
+  "@yovoice.timeline.exportBalanceHint": {
+    "defaultMessage": "Приводит все роли к похожей громкости. Меняется только экспортируемый файл, таймлайн остаётся прежним."
+  },
   "@yovoice.timeline.peak": {
     "defaultMessage": "Пик"
   },
@@ -2750,9 +2756,6 @@
   "@yovoice.music.seekLyric": {
     "defaultMessage": "Воспроизвести с этой строки"
   },
-  "@yovoice.music.lyricsEstimated": {
-    "defaultMessage": "Тайминг текста рассчитан приблизительно по длительности песни"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "Назад на {n} с"
   },
@@ -2777,32 +2780,17 @@
   "@yovoice.music.lyricStyleScroll": {
     "defaultMessage": "Прокрутка"
   },
-  "@yovoice.music.lyricStyleScrollHint": {
-    "defaultMessage": "Весь текст прокручивается, текущая строка подсвечивается по словам"
-  },
   "@yovoice.music.lyricStyleStage": {
     "defaultMessage": "Прожектор"
   },
-  "@yovoice.music.lyricStyleStageHint": {
-    "defaultMessage": "По одной строке: слова выпрыгивают и светятся. Удобно для записи экрана"
-  },
   "@yovoice.music.exportWordLrc": {
     "defaultMessage": "Экспорт текста по словам"
-  },
-  "@yovoice.music.exportWordLrcHint": {
-    "defaultMessage": "Расширенный LRC с отметкой времени для каждого слова, для плееров с караоке"
   },
   "@yovoice.music.lyricTools": {
     "defaultMessage": "Инструменты текста"
   },
   "@yovoice.music.editWords": {
     "defaultMessage": "Настроить тайминг текста"
-  },
-  "@yovoice.music.editWordsHint": {
-    "defaultMessage": "Во время воспроизведения нажмите на строку, чтобы она начиналась с текущей позиции; сдвигайте строки целиком или настраивайте отдельные слова"
-  },
-  "@yovoice.music.syncLyricsHint": {
-    "defaultMessage": "Отмечайте начало каждой строки во время прослушивания"
   },
   "@yovoice.music.editThisLine": {
     "defaultMessage": "Нажатие во время воспроизведения: строка начинается здесь"
@@ -2873,23 +2861,8 @@
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "Автовыравнивание"
   },
-  "@yovoice.music.aligningLyrics": {
-    "defaultMessage": "Выравнивание"
-  },
-  "@yovoice.music.alignLyricsHint": {
-    "defaultMessage": "Отделяет вокал и выравнивает каждое слово текста по пению; сохраняется с этой версией"
-  },
-  "@yovoice.music.alignLyricsDownload": {
-    "defaultMessage": "Сначала скачайте необязательную модель выравнивания текста (около 1,3 ГБ)"
-  },
-  "@yovoice.music.lyricsAligned": {
-    "defaultMessage": "Текст выровнен по вокалу пословно; синхронизируйте, чтобы уточнить"
-  },
-  "@yovoice.music.lyricsAnalyzed": {
-    "defaultMessage": "Тайминг текста расставлен по вокалу; синхронизируйте для уточнения"
-  },
-  "@yovoice.music.lyricsSynced": {
-    "defaultMessage": "Тайминг текста синхронизирован"
+  "@yovoice.music.stopAlign": {
+    "defaultMessage": "Остановить выравнивание"
   },
   "@yovoice.music.syncHint": {
     "defaultMessage": "Нажимайте ↓ или «Следующая строка» в начале каждой строки; Backspace отменяет последнюю строку"
@@ -3162,7 +3135,7 @@
     "defaultMessage": "Распознавание речи для расшифровок и субтитров · дообученная NetEase Youdao модель Qwen3 ASR 1.7B, 30 языков, тайминг от встроенного выравнивателя · NetEase Youdao Model Use License"
   },
   "@yovoice.settings.recognizeModel": {
-    "defaultMessage": "Используемая модель"
+    "defaultMessage": "Распознавание речи"
   },
   "@yovoice.settings.recognizeModelHint": {
     "defaultMessage": "Для расшифровок и опорного текста. Parakeet знает только европейские языки; для китайского, японского, корейского и других используйте Qwen3 ASR."
@@ -6007,5 +5980,29 @@
   },
   "@yovoice.guide.assistantPlain": {
     "defaultMessage": "Нажмите кнопку ассистента в заголовке окна и просто скажите, что нужно, например: «Создай чтение истории и подбери голос каждому персонажу». Сначала добавьте ИИ-сервис в настройках."
+  },
+  "@yovoice.settings.tabDefaultModels": {
+    "defaultMessage": "По умолчанию"
+  },
+  "@yovoice.settings.alignSeparator": {
+    "defaultMessage": "Отделение вокала для выравнивания текста"
+  },
+  "@yovoice.settings.alignSeparatorHint": {
+    "defaultMessage": "Перед выравниванием выделяется вокал. BS-RoFormer даёт самый чистый вокал, но работает медленно; HTDemucs намного быстрее, но на песнях с плотным аккомпанементом выравнивание может быть менее точным."
+  },
+  "@yovoice.settings.alignSeparatorMore": {
+    "defaultMessage": "Перед выравниванием выделяется вокал, сейчас — с помощью BS-RoFormer из пакета выравнивания: самый чистый вокал, но медленно. Скачайте HTDemucs 6-stem в разделе «Музыкальные модели», чтобы перейти на гораздо более быструю модель."
+  },
+  "@yovoice.settings.alignSeparatorRoformer": {
+    "defaultMessage": "BS-RoFormer · чище вокал"
+  },
+  "@yovoice.settings.alignSeparatorHtdemucs": {
+    "defaultMessage": "HTDemucs 6-stem · быстрее"
+  },
+  "@yovoice.settings.defaultModelMissing": {
+    "defaultMessage": "Модель ещё не скачана"
+  },
+  "@yovoice.settings.defaultModelGet": {
+    "defaultMessage": "Скачать"
   }
 }

@@ -1811,6 +1811,12 @@
   "@yovoice.timeline.preventClipping": {
     "defaultMessage": "Übersteuerung verhindern"
   },
+  "@yovoice.timeline.exportBalance": {
+    "defaultMessage": "Lautstärke der Rollen angleichen"
+  },
+  "@yovoice.timeline.exportBalanceHint": {
+    "defaultMessage": "Bringt alle Rollen auf eine ähnliche Lautstärke. Nur die exportierte Datei ändert sich, die Zeitleiste bleibt unverändert."
+  },
   "@yovoice.timeline.peak": {
     "defaultMessage": "Spitzenpegel"
   },
@@ -2750,9 +2756,6 @@
   "@yovoice.music.seekLyric": {
     "defaultMessage": "Ab dieser Zeile abspielen"
   },
-  "@yovoice.music.lyricsEstimated": {
-    "defaultMessage": "Songtext-Timing anhand der Songlänge geschätzt"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "{n} Sekunden zurück"
   },
@@ -2777,32 +2780,17 @@
   "@yovoice.music.lyricStyleScroll": {
     "defaultMessage": "Scrollend"
   },
-  "@yovoice.music.lyricStyleScrollHint": {
-    "defaultMessage": "Der ganze Text scrollt mit, die aktuelle Zeile leuchtet Wort für Wort auf"
-  },
   "@yovoice.music.lyricStyleStage": {
     "defaultMessage": "Spotlight"
   },
-  "@yovoice.music.lyricStyleStageHint": {
-    "defaultMessage": "Eine Zeile pro Bild, jedes Wort springt hervor und leuchtet. Ideal für Bildschirmaufnahmen"
-  },
   "@yovoice.music.exportWordLrc": {
     "defaultMessage": "Liedtext mit Wortzeiten exportieren"
-  },
-  "@yovoice.music.exportWordLrcHint": {
-    "defaultMessage": "Erweitertes LRC mit Zeitstempel pro Wort, für Player mit Karaoke-Liedtexten"
   },
   "@yovoice.music.lyricTools": {
     "defaultMessage": "Liedtext-Werkzeuge"
   },
   "@yovoice.music.editWords": {
     "defaultMessage": "Liedtext-Timing anpassen"
-  },
-  "@yovoice.music.editWordsHint": {
-    "defaultMessage": "Beim Abspielen eine Zeile anklicken, damit sie an der aktuellen Stelle beginnt; ganze Zeilen verschieben oder einzelne Wörter feinjustieren"
-  },
-  "@yovoice.music.syncLyricsHint": {
-    "defaultMessage": "Beim Zuhören den Beginn jeder Zeile markieren"
   },
   "@yovoice.music.editThisLine": {
     "defaultMessage": "Beim Abspielen klicken: Zeile beginnt hier"
@@ -2873,23 +2861,8 @@
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "Automatisch ausrichten"
   },
-  "@yovoice.music.aligningLyrics": {
-    "defaultMessage": "Wird ausgerichtet"
-  },
-  "@yovoice.music.alignLyricsHint": {
-    "defaultMessage": "Trennt den Gesang ab und richtet jedes Wort des Textes am Gesang aus; wird mit dieser Version gespeichert"
-  },
-  "@yovoice.music.alignLyricsDownload": {
-    "defaultMessage": "Lade zuerst den optionalen Liedtext-Aligner herunter (ca. 1,3 GB)"
-  },
-  "@yovoice.music.lyricsAligned": {
-    "defaultMessage": "Liedtext Wort für Wort am Gesang ausgerichtet; zum Feinjustieren synchronisieren"
-  },
-  "@yovoice.music.lyricsAnalyzed": {
-    "defaultMessage": "Songtext-Timing aus dem Gesang ermittelt; zum Verfeinern synchronisieren"
-  },
-  "@yovoice.music.lyricsSynced": {
-    "defaultMessage": "Songtext-Timing synchronisiert"
+  "@yovoice.music.stopAlign": {
+    "defaultMessage": "Ausrichtung stoppen"
   },
   "@yovoice.music.syncHint": {
     "defaultMessage": "Drücken Sie ↓ oder klicken Sie auf „Nächste Zeile“, wenn jede Zeile beginnt; Rücktaste macht die letzte Zeile rückgängig"
@@ -3162,7 +3135,7 @@
     "defaultMessage": "Spracherkennung für Transkripte und Untertitel · Feinabstimmung von Qwen3 ASR 1.7B durch NetEase Youdao, 30 Sprachen, Zeitangaben vom mitgelieferten Aligner · NetEase Youdao Model Use License"
   },
   "@yovoice.settings.recognizeModel": {
-    "defaultMessage": "Verwendetes Modell"
+    "defaultMessage": "Spracherkennung"
   },
   "@yovoice.settings.recognizeModelHint": {
     "defaultMessage": "Für Transkripte und Referenztext. Parakeet kennt nur europäische Sprachen; für Chinesisch, Japanisch, Koreanisch und andere Qwen3 ASR verwenden."
@@ -6007,5 +5980,29 @@
   },
   "@yovoice.guide.assistantPlain": {
     "defaultMessage": "Drücke den Assistenten-Knopf in der Titelleiste und sag einfach, was du möchtest, etwa „Erstelle eine Geschichte und gib jeder Figur eine Stimme“. Richte vorher in den Einstellungen einen KI-Dienst ein."
+  },
+  "@yovoice.settings.tabDefaultModels": {
+    "defaultMessage": "Standard"
+  },
+  "@yovoice.settings.alignSeparator": {
+    "defaultMessage": "Gesangstrennung für die Liedtext-Ausrichtung"
+  },
+  "@yovoice.settings.alignSeparatorHint": {
+    "defaultMessage": "Vor der Ausrichtung wird der Gesang getrennt. BS-RoFormer liefert den saubersten Gesang, ist aber langsam; HTDemucs ist viel schneller, kann aber bei dichter Begleitung ungenauer ausrichten."
+  },
+  "@yovoice.settings.alignSeparatorMore": {
+    "defaultMessage": "Vor der Ausrichtung wird der Gesang getrennt, derzeit mit dem BS-RoFormer aus dem Ausrichtungspaket: sauberster Gesang, aber langsam. Lade HTDemucs 6-stem unter Musikmodelle herunter, um auf das viel schnellere Modell zu wechseln."
+  },
+  "@yovoice.settings.alignSeparatorRoformer": {
+    "defaultMessage": "BS-RoFormer · sauberer Gesang"
+  },
+  "@yovoice.settings.alignSeparatorHtdemucs": {
+    "defaultMessage": "HTDemucs 6-stem · schneller"
+  },
+  "@yovoice.settings.defaultModelMissing": {
+    "defaultMessage": "Noch kein Modell heruntergeladen"
+  },
+  "@yovoice.settings.defaultModelGet": {
+    "defaultMessage": "Herunterladen"
   }
 }

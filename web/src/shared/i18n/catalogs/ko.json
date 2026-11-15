@@ -1811,6 +1811,12 @@
   "@yovoice.timeline.preventClipping": {
     "defaultMessage": "클리핑 방지"
   },
+  "@yovoice.timeline.exportBalance": {
+    "defaultMessage": "역할별 음량 맞추기"
+  },
+  "@yovoice.timeline.exportBalanceHint": {
+    "defaultMessage": "역할마다 비슷한 음량으로 맞춥니다. 내보낸 파일만 바뀌고 타임라인은 그대로입니다."
+  },
   "@yovoice.timeline.peak": {
     "defaultMessage": "피크"
   },
@@ -2750,9 +2756,6 @@
   "@yovoice.music.seekLyric": {
     "defaultMessage": "이 줄부터 재생"
   },
-  "@yovoice.music.lyricsEstimated": {
-    "defaultMessage": "가사 타이밍은 곡 길이를 기준으로 추정했습니다"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "{n}초 뒤로"
   },
@@ -2777,32 +2780,17 @@
   "@yovoice.music.lyricStyleScroll": {
     "defaultMessage": "스크롤"
   },
-  "@yovoice.music.lyricStyleScrollHint": {
-    "defaultMessage": "곡 전체가 스크롤되고 현재 줄이 한 글자씩 밝아짐"
-  },
   "@yovoice.music.lyricStyleStage": {
     "defaultMessage": "스포트라이트"
   },
-  "@yovoice.music.lyricStyleStageHint": {
-    "defaultMessage": "한 줄씩 보여 주며 글자가 노래에 맞춰 튀어나와 빛남. 화면 녹화에 적합"
-  },
   "@yovoice.music.exportWordLrc": {
     "defaultMessage": "글자 단위 가사 내보내기"
-  },
-  "@yovoice.music.exportWordLrcHint": {
-    "defaultMessage": "모든 글자에 시간이 있는 확장 LRC. 노래방 가사를 지원하는 플레이어용"
   },
   "@yovoice.music.lyricTools": {
     "defaultMessage": "가사 도구"
   },
   "@yovoice.music.editWords": {
     "defaultMessage": "가사 타이밍 조정"
-  },
-  "@yovoice.music.editWordsHint": {
-    "defaultMessage": "재생 중 줄을 클릭하면 현재 위치에서 시작합니다. 줄 단위로 앞뒤 조정하거나 단어별로 세밀하게 조정할 수 있습니다"
-  },
-  "@yovoice.music.syncLyricsHint": {
-    "defaultMessage": "들으면서 줄마다 시작 지점을 표시"
   },
   "@yovoice.music.editThisLine": {
     "defaultMessage": "재생 중 클릭: 이 줄을 여기서 시작"
@@ -2873,23 +2861,8 @@
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "자동 정렬"
   },
-  "@yovoice.music.aligningLyrics": {
-    "defaultMessage": "정렬 중"
-  },
-  "@yovoice.music.alignLyricsHint": {
-    "defaultMessage": "보컬을 분리한 뒤 가사를 단어별로 노래에 맞춥니다. 결과는 이 버전에 저장됩니다"
-  },
-  "@yovoice.music.alignLyricsDownload": {
-    "defaultMessage": "먼저 선택 사항인 가사 정렬 모델을 다운로드하세요(약 1.3 GB)"
-  },
-  "@yovoice.music.lyricsAligned": {
-    "defaultMessage": "가사를 노래에 맞춰 단어별로 정렬했습니다. 직접 보정할 수도 있습니다"
-  },
-  "@yovoice.music.lyricsAnalyzed": {
-    "defaultMessage": "보컬을 분석해 가사 타이밍을 배치했습니다. 싱크로 더 정확하게 맞출 수 있습니다"
-  },
-  "@yovoice.music.lyricsSynced": {
-    "defaultMessage": "가사 타이밍 싱크 완료"
+  "@yovoice.music.stopAlign": {
+    "defaultMessage": "정렬 중지"
   },
   "@yovoice.music.syncHint": {
     "defaultMessage": "각 줄이 시작될 때 ↓를 누르거나 다음 줄을 클릭하세요. Backspace를 누르면 마지막 줄이 취소됩니다"
@@ -3162,7 +3135,7 @@
     "defaultMessage": "음성 인식: 받아쓰기와 자막 · NetEase Youdao가 Qwen3 ASR 1.7B를 미세 조정, 30개 언어, 시간은 포함된 정렬 모델이 제공 · NetEase Youdao 모델 사용 라이선스"
   },
   "@yovoice.settings.recognizeModel": {
-    "defaultMessage": "사용할 인식 모델"
+    "defaultMessage": "음성 인식"
   },
   "@yovoice.settings.recognizeModelHint": {
     "defaultMessage": "받아쓰기와 참조 텍스트 인식에 사용합니다. Parakeet은 유럽 언어만 지원하므로 한국어, 중국어, 일본어 등은 Qwen3 ASR을 사용하세요."
@@ -6007,5 +5980,29 @@
   },
   "@yovoice.guide.assistantPlain": {
     "defaultMessage": "제목 표시줄의 어시스턴트 버튼을 눌러 원하는 작업을 말해 보세요. 예: “스토리 내레이션을 만들고 캐릭터마다 목소리를 정해 줘”. 먼저 설정에서 AI 서비스를 추가해야 합니다."
+  },
+  "@yovoice.settings.tabDefaultModels": {
+    "defaultMessage": "기본 모델"
+  },
+  "@yovoice.settings.alignSeparator": {
+    "defaultMessage": "가사 정렬용 보컬 분리"
+  },
+  "@yovoice.settings.alignSeparatorHint": {
+    "defaultMessage": "정렬 전에 보컬을 분리합니다. BS-RoFormer는 보컬이 가장 깨끗하지만 느리고, HTDemucs는 훨씬 빠르지만 반주가 큰 곡에서는 정확도가 떨어질 수 있습니다."
+  },
+  "@yovoice.settings.alignSeparatorMore": {
+    "defaultMessage": "정렬 전에 보컬을 분리합니다. 지금은 정렬 패키지의 BS-RoFormer를 쓰며, 보컬이 가장 깨끗하지만 느립니다. '음악 모델'에서 HTDemucs 6-stem을 내려받으면 훨씬 빠른 이 모델로 바꿀 수 있습니다."
+  },
+  "@yovoice.settings.alignSeparatorRoformer": {
+    "defaultMessage": "BS-RoFormer · 더 깨끗한 보컬"
+  },
+  "@yovoice.settings.alignSeparatorHtdemucs": {
+    "defaultMessage": "HTDemucs 6-stem · 더 빠름"
+  },
+  "@yovoice.settings.defaultModelMissing": {
+    "defaultMessage": "아직 내려받은 모델이 없습니다"
+  },
+  "@yovoice.settings.defaultModelGet": {
+    "defaultMessage": "내려받기"
   }
 }

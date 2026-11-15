@@ -1811,6 +1811,12 @@
   "@yovoice.timeline.preventClipping": {
     "defaultMessage": "防止削波"
   },
+  "@yovoice.timeline.exportBalance": {
+    "defaultMessage": "統一各角色音量"
+  },
+  "@yovoice.timeline.exportBalanceHint": {
+    "defaultMessage": "按角色調到相近的音量，只影響匯出的檔案，不改時間軸。"
+  },
   "@yovoice.timeline.peak": {
     "defaultMessage": "峰值"
   },
@@ -2750,9 +2756,6 @@
   "@yovoice.music.seekLyric": {
     "defaultMessage": "從這一句開始播放"
   },
-  "@yovoice.music.lyricsEstimated": {
-    "defaultMessage": "歌詞時間依歌曲時長估算"
-  },
   "@yovoice.music.rewind": {
     "defaultMessage": "倒退 {n} 秒"
   },
@@ -2777,32 +2780,17 @@
   "@yovoice.music.lyricStyleScroll": {
     "defaultMessage": "滾動歌詞"
   },
-  "@yovoice.music.lyricStyleScrollHint": {
-    "defaultMessage": "整首歌詞隨播放滾動，當前句逐字點亮"
-  },
   "@yovoice.music.lyricStyleStage": {
     "defaultMessage": "浮光"
   },
-  "@yovoice.music.lyricStyleStageHint": {
-    "defaultMessage": "一句一屏，字隨演唱逐個躍出並發光，適合錄影"
-  },
   "@yovoice.music.exportWordLrc": {
     "defaultMessage": "匯出逐字歌詞"
-  },
-  "@yovoice.music.exportWordLrcHint": {
-    "defaultMessage": "增強 LRC，每個字都帶時間，支援卡拉 OK 歌詞的播放器可逐字顯示"
   },
   "@yovoice.music.lyricTools": {
     "defaultMessage": "歌詞工具"
   },
   "@yovoice.music.editWords": {
     "defaultMessage": "調整歌詞時間"
-  },
-  "@yovoice.music.editWordsHint": {
-    "defaultMessage": "播放中點一句就從目前位置開始唱，可整句前後微調，也能逐字細調"
-  },
-  "@yovoice.music.syncLyricsHint": {
-    "defaultMessage": "邊聽邊逐行標記每句的開始"
   },
   "@yovoice.music.editThisLine": {
     "defaultMessage": "播放中點擊：這一句從目前位置開始"
@@ -2873,23 +2861,8 @@
   "@yovoice.music.alignLyrics": {
     "defaultMessage": "智慧對齊"
   },
-  "@yovoice.music.aligningLyrics": {
-    "defaultMessage": "正在對齊"
-  },
-  "@yovoice.music.alignLyricsHint": {
-    "defaultMessage": "分離人聲後把歌詞逐字對到演唱上，結果隨版本儲存"
-  },
-  "@yovoice.music.alignLyricsDownload": {
-    "defaultMessage": "需要先下載可選的歌詞對齊模型（約 1.3 GB）"
-  },
-  "@yovoice.music.lyricsAligned": {
-    "defaultMessage": "歌詞已按演唱逐字對齊，可再手動校準"
-  },
-  "@yovoice.music.lyricsAnalyzed": {
-    "defaultMessage": "歌詞時間已依人聲自動定位，可再校準"
-  },
-  "@yovoice.music.lyricsSynced": {
-    "defaultMessage": "歌詞時間已校準"
+  "@yovoice.music.stopAlign": {
+    "defaultMessage": "停止對齊"
   },
   "@yovoice.music.syncHint": {
     "defaultMessage": "每一行開始唱時按 ↓ 或點「下一行」，按 Backspace 復原上一行"
@@ -3162,7 +3135,7 @@
     "defaultMessage": "語音辨識：轉寫音訊、產生字幕 · 網易有道基於 Qwen3 ASR 1.7B 微調，30 種語言，由包內的對齊模型提供時間 · 遵循網易有道模型使用協議"
   },
   "@yovoice.settings.recognizeModel": {
-    "defaultMessage": "使用的辨識模型"
+    "defaultMessage": "語音辨識"
   },
   "@yovoice.settings.recognizeModelHint": {
     "defaultMessage": "轉寫和辨識參考文字都用它。Parakeet 只認歐洲語言，中文、日文、韓文等請用 Qwen3 ASR。"
@@ -6007,5 +5980,29 @@
   },
   "@yovoice.guide.assistantPlain": {
     "defaultMessage": "點標題列的助手按鈕，直接說要做什麼，例如「新增一個故事配音，替每個角色配好聲音」。使用前需要在設定裡設定 AI 服務。"
+  },
+  "@yovoice.settings.tabDefaultModels": {
+    "defaultMessage": "預設模型"
+  },
+  "@yovoice.settings.alignSeparator": {
+    "defaultMessage": "歌詞對齊的人聲分離"
+  },
+  "@yovoice.settings.alignSeparatorHint": {
+    "defaultMessage": "對齊前先分出人聲。BS-RoFormer 人聲最乾淨，但比較慢；HTDemucs 快很多，伴奏重的歌可能對得沒那麼準。"
+  },
+  "@yovoice.settings.alignSeparatorMore": {
+    "defaultMessage": "對齊前先分出人聲，目前用對齊套件裡的 BS-RoFormer，人聲最乾淨但比較慢。在「音樂模型」裡下載 HTDemucs 6-stem 後可以換成它，快很多。"
+  },
+  "@yovoice.settings.alignSeparatorRoformer": {
+    "defaultMessage": "BS-RoFormer · 人聲更乾淨"
+  },
+  "@yovoice.settings.alignSeparatorHtdemucs": {
+    "defaultMessage": "HTDemucs 6-stem · 更快"
+  },
+  "@yovoice.settings.defaultModelMissing": {
+    "defaultMessage": "還沒下載可用的模型"
+  },
+  "@yovoice.settings.defaultModelGet": {
+    "defaultMessage": "去下載"
   }
 }

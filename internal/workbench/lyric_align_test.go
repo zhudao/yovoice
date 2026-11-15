@@ -72,6 +72,38 @@ func TestAlignLyrics(t *testing.T) {
 	}
 }
 
+// 设置里选了 HTDemucs 且已下载时用它分人声，缓存与 BS-RoFormer 的分开存；选了但没下载时照常用 BS-RoFormer。
+func TestAlignLyricsHTDemucs(t *testing.T) {
+	wb, id := alignWorkbench(t, true)
+	must(t, wb.Store.Update(func(s *schema.State) { s.Preferences.AlignSeparator = AlignSeparatorHTDemucs }, true))
+	must(t, wb.AlignLyrics(id))
+	<-wb.Done()
+	runtimeDir := filepath.Join(wb.Store.Root, "runtime")
+	if _, e := os.Stat(filepath.Join(runtimeDir, "align-vocals-"+id+".wav")); e != nil {
+		t.Fatalf("没装 HTDemucs 时应退回 BS-RoFormer：%v", e)
+	}
+	model := filepath.Join(wb.Store.Root, "models", "HTDemucs-6s")
+	must(t, os.MkdirAll(model, 0700))
+	must(t, os.WriteFile(filepath.Join(model, "htdemucs-6s-f16.gguf"), nil, 0600))
+	must(t, wb.Store.Update(func(s *schema.State) {
+		s.Models = append(s.Models, schema.InstalledModel{ID: "htdemucs-6stems-f16", Path: model})
+	}, true))
+	must(t, wb.AlignLyrics(id))
+	<-wb.Done()
+	s := wb.Store.Read()
+	if s.Activity.Status != "completed" || len(s.History[0].LyricWords) != 5 {
+		t.Fatalf("%+v %+v", s.Activity, s.History[0].LyricWords)
+	}
+	if _, e := os.Stat(filepath.Join(runtimeDir, "align-vocals-htdemucs-"+id+".wav")); e != nil {
+		t.Fatal(e)
+	}
+	p := s.Preferences
+	p.AlignSeparator = "spleeter"
+	if e := wb.SavePreferences(p); !isCode(e, msg.ErrRequestInvalid) {
+		t.Fatalf("%v", e)
+	}
+}
+
 func isCode(e error, code msg.Code) bool {
 	c, ok := e.(*msg.CallError)
 	return ok && c.Code == code
@@ -141,5 +173,16 @@ func TestGenerationGene(t *testing.T) {
 	}
 	if _, e := wb.GenerationGene("ffffffffffffffffffffffffffffffff"); !isCode(e, msg.ErrAudioMissing) {
 		t.Fatalf("%v", e)
+	}
+}
+
+// 括号里的段落标记和注释（音效、乐器、唱法说明）不唱，不送去对齐；跨行的括号整段去掉，只剩注释的行整行去掉。
+func TestSungLyricsDropsNotes(t *testing.T) {
+	lyrics := "[Verse]\n(音效：雨声、远处的钟声)\n雾把煤气灯 泡软（轻声）在街角\n【弦乐渐入\n紧接着小提琴】\n铜门环叩响三声 [whisper] 影子先到"
+	var draft schema.Draft
+	draft.Lyrics = lyrics
+	got := sungLyrics(draft)
+	if want := "雾把煤气灯 泡软在街角\n铜门环叩响三声 影子先到"; got != want {
+		t.Fatalf("sungLyrics = %q, want %q", got, want)
 	}
 }
