@@ -215,17 +215,20 @@
   "@yovoice.create.maxTokens": {
     "defaultMessage": "Comprimento máximo de geração"
   },
-  "@yovoice.create.mode.reference": {
+  "@yovoice.create.referencePerformance": {
     "defaultMessage": "Interpretação de referência"
   },
+  "@yovoice.create.mode.reference": {
+    "defaultMessage": "Imitar"
+  },
   "@yovoice.create.mode.speaker": {
-    "defaultMessage": "Seguir a voz"
+    "defaultMessage": "Auto"
   },
   "@yovoice.create.mode.text": {
-    "defaultMessage": "Orientação por texto"
+    "defaultMessage": "Texto"
   },
   "@yovoice.create.mode.vector": {
-    "defaultMessage": "Mistura de emoções"
+    "defaultMessage": "Emoção"
   },
   "@yovoice.create.model": {
     "defaultMessage": "Modelo"
@@ -6025,6 +6028,9 @@
   },
   "@yovoice.voice.noGenerated": {
     "defaultMessage": "Nenhuma voz gerada ainda. Gere uma voz para selecioná-la aqui como referência."
+  },
+  "@yovoice.voice.noVoices": {
+    "defaultMessage": "Nenhum áudio de referência ainda. Importe ou grave um áudio para usá-lo aqui."
   },
   "@yovoice.voice.excerptTranscriptHelp": {
     "defaultMessage": "A transcrição deve corresponder ao trecho. Após recortar, digite novamente ou transcreva mais tarde."

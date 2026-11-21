@@ -215,17 +215,20 @@
   "@yovoice.create.maxTokens": {
     "defaultMessage": "Longitud máxima de generación"
   },
-  "@yovoice.create.mode.reference": {
+  "@yovoice.create.referencePerformance": {
     "defaultMessage": "Interpretación de referencia"
   },
+  "@yovoice.create.mode.reference": {
+    "defaultMessage": "Imitar"
+  },
   "@yovoice.create.mode.speaker": {
-    "defaultMessage": "Seguir la voz"
+    "defaultMessage": "Auto"
   },
   "@yovoice.create.mode.text": {
-    "defaultMessage": "Guía por texto"
+    "defaultMessage": "Texto"
   },
   "@yovoice.create.mode.vector": {
-    "defaultMessage": "Mezcla de emociones"
+    "defaultMessage": "Emoción"
   },
   "@yovoice.create.model": {
     "defaultMessage": "Modelo"
@@ -6025,6 +6028,9 @@
   },
   "@yovoice.voice.noGenerated": {
     "defaultMessage": "Aún no hay voces generadas. Genera una para seleccionarla aquí como referencia."
+  },
+  "@yovoice.voice.noVoices": {
+    "defaultMessage": "Aún no hay audio de referencia. Importa o graba audio para usarlo aquí."
   },
   "@yovoice.voice.excerptTranscriptHelp": {
     "defaultMessage": "La transcripción debe coincidir con el fragmento. Tras recortarlo, vuelve a introducirla o transcríbela más tarde."

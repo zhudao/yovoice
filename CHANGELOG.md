@@ -6,6 +6,16 @@
 
 ### English
 
+- Exporting large scores to MIDI is faster, with identical output.
+- Fix the microphone staying active after rapidly starting a recording, cancelling microphone access, or leaving the page while access is pending.
+- Cancelling score rendering now stops promptly without saving a completed WAV.
+- Shorten Expression options and Speech sidebar labels across all interface languages to avoid clipped text, while keeping reference performance field headings in full.
+- Rapidly switching pages no longer reports an error when a visual transition is interrupted.
+- Browser preview: closing Stem Studio before its tracks finish loading no longer keeps their audio in memory.
+- Fix an error that could drop characters when typing quickly in a draft.
+- Fix a Linux desktop freeze when opening the Model menu or returning to the workbench from Settings on WebKitGTK 2.50.
+- Fix the first-run tour spotlight on Linux so its rounded highlight stays on the intended control without a large white wedge.
+- Windows: when GitHub rate-limits update checks, Check for updates now says so and when to try again, instead of reporting a network problem.
 - Fix data loss: generating speech no longer silently deletes older takes after ten versions. API history and completed story takes are also retained during generation, startup and residual cleanup until explicitly deleted.
 - Reference audio supports drag and drop and selecting generated speech from history, with audition, excerpt selection and an editable transcript. Saved references retain their source and remain usable after the original generation is deleted.
 - Qwen3 CustomVoice now labels its optional delivery instructions as style guidance and explains how they work with the built-in speaker.
@@ -14,8 +24,20 @@
 - Importing a book recognizes scripts written as “Name: line” and casts each name as a role; narrator lines and notes such as Scene or Time are not treated as roles. Import book is also in the New project menu.
 - Generation history shows model tags and a read-only configuration view with the saved text, time, seed and parameters, plus JSON export. The same view is available while selecting historical speech as a reference.
 - Ming 3.0 TTS adds control modes: built-in voices picked from a list (with emotion variants where available), emotion, dialect (Cantonese, Sichuan-Chongqing), speed / pitch / volume, and free-form instructions. Paralinguistic tags such as [Laughter] can be inserted into the text.
+- macOS: switching the interface language now relabels the whole native menu bar right away (Hide, Edit, Window and their items), without restarting the app.
+- Settings > Assets: table columns now widen to fit their content, so headers, sort icons, type tags and status labels are no longer cut off in any language.
+- Choose reference audio now says when the reference library is empty or a search has no matches, instead of showing a blank list.
 
 ### 简体中文
+- 修复快速重复开始录音、取消麦克风授权或等待授权时离开页面后，麦克风仍保持开启的问题。
+- 取消编曲渲染后及时停止，不再继续渲染并保存完整 WAV。
+- 缩短各语言界面的演绎选项和语音侧栏标签，避免文字被截断；参考演绎字段标题保留完整文案。
+- 快速切换页面时，切换动画被打断不再报错。
+- 浏览器预览：分轨工作台在音轨加载完之前关闭，不再把这些音频一直留在内存里。
+- 修复快速输入作品正文时可能报错并丢字的问题。
+- 修复 Linux 桌面版在 WebKitGTK 2.50 上打开模型菜单或从设置返回工作台时卡死的问题。
+- 修复 Linux 首次使用引导的聚光遮罩，让圆角高亮准确覆盖目标控件，不再出现大片白色楔形。
+- Windows：GitHub 限制更新检查次数时，“检查更新”会说明原因和可重试的时间，不再误报为无法连接网络。
 - 修复音频丢失：语音生成不再达到十次后自动删除较早版本及原音频；接口历史和已完成的故事逐句版本也不会在生成、启动或清理残留时自动删除，保留到用户明确删除。
 - 参考音频支持拖入文件，以及从生成历史选择语音、试听、截取节选并编辑原文；保存的样本保留来源，删除原生成记录后仍可使用。
 - Qwen3 CustomVoice 将可选的演绎指令标为“风格指导”，说明其与内置音色的关系。
@@ -24,6 +46,9 @@
 - 导入小说可识别“角色：台词”格式的剧本，按名字分角色；“旁白”行和“场景”“时间”等说明行不算角色。“新建作品”菜单里也可以直接导入小说。
 - 生成历史新增模型标签和只读的生成配置详情，可查看保存的文字、时间、随机种子与参数并导出 JSON；选择历史语音作为参考时也可查看。
 - Ming 3.0 TTS 新增控制方式：从列表选择内置音色（部分音色可选情感）、情感、方言（粤语、川渝话）、语速 / 音高 / 音量，以及自由指令；正文可插入 [Laughter] 等非语言声音标签。
+- macOS：切换界面语言后整个原生菜单栏立即换成新语言（隐藏、编辑、窗口及其菜单项），无需重启应用。
+- 设置 > 资源：表格各列按内容自动加宽，所有语言下的表头、排序图标、类型标签和状态都不再被截断。
+- 选择参考音频时，参考音频库为空或搜索没有结果会显示提示，不再是一片空白。
 
 ## [0.8.0] - 2026-11-15
 
@@ -43,6 +68,7 @@
 
 ### 简体中文
 
+- 加快大型乐谱导出 MIDI 的速度，导出内容保持不变。
 - 可以从播放器或版本菜单把歌曲分享到 yovoice 社区：在浏览器里登录，填写标题、标签和使用许可后连同对齐过的歌词提交审核，参考音色不会上传。歌曲生成好后 Ocho 会提示分享；设置 › 社区里可以查看分享过的作品和审核状态。
 - 歌曲封面按这首歌自己的响度起伏来画，和社区页一致；导出的 FLAC、M4A 和作品库唱片封套都用这张封面。
 - 快捷键：设置新增“快捷键”标签，按功能区列出全部快捷键，可修改、提示冲突与系统占用、恢复默认、按功能区关闭，导入导出时先预览变化；任意页面按 ⌘/（Ctrl+/）查看当前页可用的快捷键。快捷键不再作用到弹窗背后、不再吞掉 ⌥ / AltGr 打的字符或妨碍打字，部分默认按键避开了系统和输入法。

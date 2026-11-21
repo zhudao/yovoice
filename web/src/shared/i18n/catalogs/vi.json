@@ -215,17 +215,20 @@
   "@yovoice.create.maxTokens": {
     "defaultMessage": "Độ dài tạo tối đa"
   },
-  "@yovoice.create.mode.reference": {
+  "@yovoice.create.referencePerformance": {
     "defaultMessage": "Theo âm thanh tham chiếu"
   },
+  "@yovoice.create.mode.reference": {
+    "defaultMessage": "Nhại"
+  },
   "@yovoice.create.mode.speaker": {
-    "defaultMessage": "Theo giọng"
+    "defaultMessage": "Tự động"
   },
   "@yovoice.create.mode.text": {
-    "defaultMessage": "Hướng dẫn bằng văn bản"
+    "defaultMessage": "Văn bản"
   },
   "@yovoice.create.mode.vector": {
-    "defaultMessage": "Pha trộn cảm xúc"
+    "defaultMessage": "Cảm xúc"
   },
   "@yovoice.create.model": {
     "defaultMessage": "Mô hình"
@@ -6025,6 +6028,9 @@
   },
   "@yovoice.voice.noGenerated": {
     "defaultMessage": "Chưa có giọng nói đã tạo. Hãy tạo giọng nói để chọn làm âm thanh tham chiếu tại đây."
+  },
+  "@yovoice.voice.noVoices": {
+    "defaultMessage": "Chưa có âm thanh tham chiếu. Hãy nhập hoặc ghi âm để chọn tại đây."
   },
   "@yovoice.voice.excerptTranscriptHelp": {
     "defaultMessage": "Văn bản phải khớp với đoạn trích. Sau khi cắt, hãy nhập lại hoặc nhận dạng giọng nói sau."
