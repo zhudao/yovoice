@@ -6,6 +6,9 @@
 
 ### English
 
+- Fix enabling the Local API immediately after editing its port: one click now starts the listener on the new port.
+- CLI model downloads now use the saved download source by default; failed downloads no longer change it, and explicit sources are saved only after success.
+- Score stem export now refuses existing stem files before writing any audio, instead of silently overwriting them.
 - Exporting large scores to MIDI is faster, with identical output.
 - Fix the microphone staying active after rapidly starting a recording, cancelling microphone access, or leaving the page while access is pending.
 - Cancelling score rendering now stops promptly without saving a completed WAV.
@@ -27,8 +30,11 @@
 - macOS: switching the interface language now relabels the whole native menu bar right away (Hide, Edit, Window and their items), without restarting the app.
 - Settings > Assets: table columns now widen to fit their content, so headers, sort icons, type tags and status labels are no longer cut off in any language.
 - Choose reference audio now says when the reference library is empty or a search has no matches, instead of showing a blank list.
+- Sharing a song to the community adds a Share without lyrics option, so unaligned lyrics no longer hold up sharing.
 
 ### 简体中文
+- CLI 模型下载默认沿用已保存的下载来源；下载失败不再改变来源，显式指定的来源仅在下载成功后保存。
+- 编曲分轨导出会在写入音频前检查并拒绝已有分轨文件，不再静默覆盖。
 - 修复快速重复开始录音、取消麦克风授权或等待授权时离开页面后，麦克风仍保持开启的问题。
 - 取消编曲渲染后及时停止，不再继续渲染并保存完整 WAV。
 - 缩短各语言界面的演绎选项和语音侧栏标签，避免文字被截断；参考演绎字段标题保留完整文案。
@@ -49,6 +55,7 @@
 - macOS：切换界面语言后整个原生菜单栏立即换成新语言（隐藏、编辑、窗口及其菜单项），无需重启应用。
 - 设置 > 资源：表格各列按内容自动加宽，所有语言下的表头、排序图标、类型标签和状态都不再被截断。
 - 选择参考音频时，参考音频库为空或搜索没有结果会显示提示，不再是一片空白。
+- 分享歌曲到社区时新增“不带歌词分享”选项，歌词没对齐也可以直接跳过。
 
 ## [0.8.0] - 2026-11-15
 
@@ -68,6 +75,7 @@
 
 ### 简体中文
 
+- 修复修改本机接口端口后直接点击启用无效的问题，现在单击即可在新端口启动接口。
 - 加快大型乐谱导出 MIDI 的速度，导出内容保持不变。
 - 可以从播放器或版本菜单把歌曲分享到 yovoice 社区：在浏览器里登录，填写标题、标签和使用许可后连同对齐过的歌词提交审核，参考音色不会上传。歌曲生成好后 Ocho 会提示分享；设置 › 社区里可以查看分享过的作品和审核状态。
 - 歌曲封面按这首歌自己的响度起伏来画，和社区页一致；导出的 FLAC、M4A 和作品库唱片封套都用这张封面。
